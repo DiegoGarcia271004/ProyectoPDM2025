@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/SeaShellCalculator.iml" filepath="$PROJECT_DIR$/.idea/SeaShellCalculator.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/SeaShellCalculator.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/SeaShellCalculator.app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/SeaShellCalculator.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/SeaShellCalculator.app.androidTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/SeaShellCalculator.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/SeaShellCalculator.app.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/SeaShellCalculator.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/SeaShellCalculator.app.unitTest.iml" />
     </modules>
   </component>
 </project>

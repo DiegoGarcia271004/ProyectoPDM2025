@@ -58,6 +58,23 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.kotlinx.serialization.json)
 
+    // Room components
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-compiler:2.6.1")
+
+// Kotlin extensions and coroutines support for Room
+    implementation("androidx.room:room-ktx:2.6.1")
+
+// Retrofit for API communication
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+// Gson
+    implementation("com.google.code.gson:gson:2.10.1")
+
+// Coroutine support
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
