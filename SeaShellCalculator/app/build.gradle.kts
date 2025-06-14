@@ -75,6 +75,9 @@ dependencies {
 // Coroutine support
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
+    //billin
+    implementation("com.android.billingclient:billing:5.1.0")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

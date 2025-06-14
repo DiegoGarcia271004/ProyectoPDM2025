@@ -39,17 +39,47 @@ import com.proyectoPdm.seashellinc.presentation.ui.theme.DarkBlue
 import com.proyectoPdm.seashellinc.presentation.ui.theme.MainBlue
 import com.proyectoPdm.seashellinc.presentation.ui.theme.Marigold
 import com.proyectoPdm.seashellinc.presentation.ui.theme.MontserratFontFamily
+import android.app.Activity
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.navigation.NavController
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.proyectoPdm.seashellinc.billing.BillingClientManager
+import com.proyectoPdm.seashellinc.viewmodel.PremiumViewModel
 
 
 @Composable
-fun BuyPremiumScreen() {
+fun BuyPremiumScreen(
+    navController: NavController,
+    activity: Activity,
+    viewModel: PremiumViewModel = viewModel()
+) {
     val navigationBarHeigh = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+    val context = LocalContext.current
+    var statusMessage by remember { mutableStateOf("") }
+
+    val billingManager = remember {
+        BillingClientManager(context) { success ->
+            if (success) {
+                viewModel.updatePremiumStatus(true)
+                statusMessage = "Compra exitosa"
+                navController.popBackStack() // o navega al Main si querés
+            } else {
+                statusMessage = "Compra fallida o cancelada"
+            }
+        }
+    }
+
     val benefitList = listOf(
         "Sin anuncios",
         "Tabla periódica interactiva",
         "Balanceador de ecuaciones",
         "Lista de compuestos ilimitada!"
     )
+
     val gradientColors = listOf(
         Color(0xFF6881AB),
         DarkBlue
@@ -59,6 +89,7 @@ fun BuyPremiumScreen() {
         startY = 0.1f,
         endY = Float.POSITIVE_INFINITY
     )
+
     Scaffold(modifier = Modifier.fillMaxSize()) { paddingValues ->
         Box(
             modifier = Modifier
@@ -68,7 +99,9 @@ fun BuyPremiumScreen() {
         )
 
         Column(
-            modifier = Modifier.fillMaxSize().padding(bottom = navigationBarHeigh),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = navigationBarHeigh),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -83,8 +116,7 @@ fun BuyPremiumScreen() {
             )
             Spacer(Modifier.height(75.dp))
             Column(
-                modifier = Modifier
-                    .padding(start = 16.dp),
+                modifier = Modifier.padding(start = 16.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.Start
             ) {
@@ -96,33 +128,45 @@ fun BuyPremiumScreen() {
                             fontFamily = MontserratFontFamily,
                             fontWeight = FontWeight.Bold,
                             color = Color.White,
-                            textAlign = TextAlign.Center,
                             fontSize = 20.sp
                         )
                         Text(
-                            item, fontFamily = MontserratFontFamily,
+                            item,
+                            fontFamily = MontserratFontFamily,
                             fontWeight = FontWeight.Bold,
                             color = Color.White,
-                            textAlign = TextAlign.Center,
                             fontSize = 20.sp
                         )
                         Spacer(Modifier.height(50.dp))
                     }
                 }
             }
+
             Spacer(Modifier.height(70.dp))
+
             Button(
-                onClick = {},
+                onClick = {
+                    billingManager.launchPurchaseFlow(activity, "premium")
+                },
                 colors = ButtonDefaults.buttonColors(Background),
                 shape = RoundedCornerShape(5.dp),
                 modifier = Modifier.border(3.7.dp, Marigold, RoundedCornerShape(5.dp))
-                ) {
+            ) {
                 Text(
                     "Mejorar a Premium!",
                     color = CitrineBrown,
                     fontFamily = MontserratFontFamily,
                     fontWeight = FontWeight.Bold,
                     fontSize = 15.sp
+                )
+            }
+
+            if (statusMessage.isNotEmpty()) {
+                Spacer(Modifier.height(24.dp))
+                Text(
+                    statusMessage,
+                    color = Color.White,
+                    fontSize = 14.sp
                 )
             }
         }

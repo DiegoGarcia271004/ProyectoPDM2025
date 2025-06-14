@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
+import androidx.compose.ui.platform.LocalContext
 import com.proyectoPdm.seashellinc.presentation.ui.screens.BalEquationScreen
 import com.proyectoPdm.seashellinc.presentation.ui.screens.ChemicalUnitsScreen
 import com.proyectoPdm.seashellinc.presentation.ui.screens.LoadingScreen
@@ -14,6 +15,8 @@ import com.proyectoPdm.seashellinc.presentation.ui.screens.MolarMassScreen
 import com.proyectoPdm.seashellinc.presentation.ui.screens.PeriodicTable.PeriodicTableScreen
 import com.proyectoPdm.seashellinc.presentation.ui.screens.PhysicalUnitsScreen
 import com.proyectoPdm.seashellinc.presentation.ui.screens.RegisterScreen
+import com.proyectoPdm.seashellinc.premium.ui.PremiumFeaturesScreen
+import com.proyectoPdm.seashellinc.presentation.ui.screens.BuyPremiumScreen
 
 @Composable
 fun Navigation() {
@@ -60,5 +63,18 @@ fun Navigation() {
         composable<RegisterScreenSerializable> {
             RegisterScreen(navController)
         }
+
+        composable("premium_features") {
+            PremiumFeaturesScreen(navController)
+        }
+
+        composable("buy_premium") {
+            val context = LocalContext.current
+            val activity = context as android.app.Activity
+            BuyPremiumScreen(navController, activity)
+        }
+
+
+
     }
 }
