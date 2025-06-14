@@ -10,17 +10,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="40054d47-976a-4570-a125-6cab842ec29b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/billing/BillingClientManager.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/premium/data/PremiumRepository.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/premium/domain/CheckPremiumStatusUseCase.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/premium/iu/PremiumFeaturesScreen.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/premium/iu/components/PremiumUpgradeDialog.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/premium/util/PremiumManager.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/viewmodel/PremiumViewModel.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/navigation/Navigation.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/navigation/Navigation.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/BuyPremiumScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/BuyPremiumScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/billing/BillingClientManager.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/billing/BillingClientManager.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/LoadingScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/LoadingScreen.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

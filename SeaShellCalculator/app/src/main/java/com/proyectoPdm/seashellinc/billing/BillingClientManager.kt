@@ -50,6 +50,19 @@ class BillingClientManager(
         }
     }
 
+    fun verifyExistingPurchases() {
+        billingClient.queryPurchasesAsync(
+            QueryPurchasesParams.newBuilder()
+                .setProductType(BillingClient.ProductType.INAPP)
+                .build()
+        ) { result, purchases ->
+            val isPremium = purchases.any { it.products.contains("premium") }
+            PremiumManager.setPremium(isPremium)
+            onPurchaseComplete(isPremium)
+        }
+    }
+
+
     override fun onPurchasesUpdated(result: BillingResult, purchases: MutableList<Purchase>?) {
         if (result.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
             purchases.forEach { purchase ->
