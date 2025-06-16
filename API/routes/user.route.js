@@ -16,24 +16,63 @@ import {
     UserLoginValidationRules,
     userRegisterValidationRules,
     userUpdateCredentialsValidationRules,
-    userChangePasswordValidationRules
+    userChangePasswordValidationRules,
+    UserIdValidationRules,
+    deleteMolarMassValidationRules,
+    emailValidationRules,
+    resetPasswordValidationRules
 } from '../validators/user.validator.js';
 import { authenticate } from '../middlewares/auth.js';
 
 const router = express.Router();
 
-router.post("/register", userRegisterValidationRules, validate, registerController);
-router.post("/login", UserLoginValidationRules, validate, loginController);
+router.post("/register", 
+    userRegisterValidationRules, validate, 
+    registerController
+);
+router.post("/login", 
+    UserLoginValidationRules, validate, 
+    loginController
+);
 
-router.put("/premium/:id", authenticate, updateIsPremiumController);
-router.put("/credentials/:id", authenticate, userUpdateCredentialsValidationRules, validate, updateCredentialsController);
-router.put("/change-password/:id", authenticate, userChangePasswordValidationRules, validate, updatePasswordController);
+router.put("/premium/:id", 
+    authenticate, 
+    UserIdValidationRules, validate, 
+    updateIsPremiumController
+);
+router.put("/credentials/:id", 
+    authenticate, 
+    UserIdValidationRules, userUpdateCredentialsValidationRules, validate, 
+    updateCredentialsController
+);
+router.put("/change-password/:id", 
+    authenticate, UserIdValidationRules, userChangePasswordValidationRules, validate, 
+    updatePasswordController
+);
 
-router.put("/addMolarMass/:id", authenticate, addNewMolarMassController);
-router.get("/getMolarMassList/:id", authenticate, getMolarMassListController);
-router.delete("/deleteMolarMass/:userId/:molarMassId", authenticate, deleteMolarMassToListController);
+router.put("/addMolarMass/:id", 
+    authenticate, 
+    UserIdValidationRules, validate, 
+    addNewMolarMassController
+);
+router.get("/getMolarMassList/:id", 
+    authenticate, 
+    UserIdValidationRules, validate, 
+    getMolarMassListController
+);
+router.delete("/deleteMolarMass/:userId/:molarMassId",
+    authenticate, 
+    deleteMolarMassValidationRules, validate, 
+    deleteMolarMassToListController
+);
 
-router.post("/request-recovery", requestRecoveryController);
-router.put("/reset-password", resetPasswordController);
+router.post("/request-recovery",
+    emailValidationRules, validate, 
+    requestRecoveryController
+);
+router.put("/reset-password", 
+    resetPasswordValidationRules, validate, 
+    resetPasswordController
+);
 
 export default router;

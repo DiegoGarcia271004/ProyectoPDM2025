@@ -212,7 +212,7 @@ export const requestRecoveryController = async (req, res) => {
 
         await userServices.recoverPassword(email);
 
-        res.json({ message : "Correo de recuperacion enviado. Revisar Spam." });
+        res.json({ message : "Correo de recuperacion enviado. Revisar la bandeja de spam." });
 
     } catch (error) {
 
@@ -242,6 +242,11 @@ export const resetPasswordController = async (req, res) => {
 
             return res
                     .status(400).json({ message : error.message });
+
+        if (error.name === 'TokenExpiredError' || error.name === 'JsonWebTokenError')
+
+            return res
+                    .status(400).json({ message : "Fallo en la autenticacion. Solicite restablecimiento nuevamente."})
 
         res.status(500).json({ message : "Error : ", error : error.message });
     }

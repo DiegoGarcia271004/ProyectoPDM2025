@@ -138,12 +138,7 @@ export const resetPassword = async (token, newPassword) => {
 
     const decoded = jwt.verify(token, config.jwtSecret);
 
-    console.log(token);
-    console.log(decoded.id);
-
     const user = await userRepo.findUserById(decoded.id);
-
-    console.log(user);
 
     if (!user) throw new NotFoundUsers();
 

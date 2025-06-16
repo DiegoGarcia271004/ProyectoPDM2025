@@ -8,5 +8,6 @@ export const config = {
     MONGO_URI : process.env.MONGODB_URI,
     EMAIL_USER : process.env.EMAIL,
     RESET_URI : process.env.RESET_PASSWORD_URI,
-    API_KEY : process.env.API_KEY
+    API_KEY : process.env.API_KEY,
+    FETCH_URI : process.env.FETCH_URI
 }
