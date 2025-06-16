@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="40054d47-976a-4570-a125-6cab842ec29b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="40054d47-976a-4570-a125-6cab842ec29b" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -67,7 +65,7 @@
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
     "git-widget-placeholder": "feature/auth",
-    "last_opened_file_path": "C:/Users/user/Desktop/Work/PDM/Labos/laboratorios-GaboIraheta/Laboratorio8PDM-main/Laboratorio-5",
+    "last_opened_file_path": "C:/Users/user/Desktop/Work/PDM/ProyectoPDM2025/SeaShellCalculator",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.17",
     "project.structure.side.proportion": "0.2"
