@@ -36,8 +36,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.proyectoPdm.seashellinc.data.local.model.ToCalculate
 import com.proyectoPdm.seashellinc.presentation.ui.components.AppGoBackButton
 import com.proyectoPdm.seashellinc.presentation.ui.components.CalcTextField
@@ -56,8 +58,9 @@ import com.proyectoPdm.seashellinc.presentation.ui.theme.MainBlue
  *
  * TODO: Si por algún motivo no está, agregar la dependencia androidx.lifecycle.compose
  * **/
+@Preview
 @Composable
-fun MassOverMassCalculator(viewModel: PhysicalCalculatorViewModel /*= viewModel() */) {
+fun MassOverMassCalculator(viewModel: PhysicalCalculatorViewModel = hiltViewModel()) {
     val navigationBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
     var selectedOutput by remember { mutableStateOf(ToCalculate.CONCENTRATION) }

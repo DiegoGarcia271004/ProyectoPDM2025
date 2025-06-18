@@ -16,7 +16,7 @@
       <SelectionState runConfigName="CalculatorScreen1">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="CalculatorScreen1 (1)">
+      <SelectionState runConfigName="MassOverMassCalculator">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

@@ -3,13 +3,16 @@ package com.proyectoPdm.seashellinc.presentation.ui.screens.calculatorsPhysicalU
 import androidx.lifecycle.ViewModel
 import com.proyectoPdm.seashellinc.data.local.model.Calculator
 import com.proyectoPdm.seashellinc.data.local.model.Calculator.round
+import dagger.hilt.android.lifecycle.HiltViewModel
+import jakarta.inject.Inject
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 //TODO: If possible, figure out how to solve the floating point rounding issue
 
-class PhysicalCalculatorViewModel: ViewModel() {
+@HiltViewModel
+class PhysicalCalculatorViewModel @Inject constructor(): ViewModel() {
     private val _solute = MutableStateFlow<String>("")
     val solute: StateFlow<String> = _solute
 
