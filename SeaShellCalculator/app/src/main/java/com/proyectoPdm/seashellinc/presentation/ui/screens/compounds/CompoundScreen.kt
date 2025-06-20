@@ -1,4 +1,4 @@
-package com.proyectoPdm.seashellinc.presentation.ui.screens
+package com.proyectoPdm.seashellinc.presentation.ui.screens.compounds
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.proyectoPdm.seashellinc.presentation.ui.components.AppGoBackButton
@@ -26,7 +25,7 @@ import com.proyectoPdm.seashellinc.presentation.ui.theme.Background
 import com.proyectoPdm.seashellinc.presentation.ui.theme.MainBlue
 
 @Composable
-fun CompoundScreen(navController: NavController) {
+fun CompoundScreen(navController: NavController, compoundName : String) {
     val navigationBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     Scaffold(
         modifier = Modifier.fillMaxSize(),

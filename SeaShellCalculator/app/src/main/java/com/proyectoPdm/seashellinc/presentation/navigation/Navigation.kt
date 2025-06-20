@@ -4,12 +4,14 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.proyectoPdm.seashellinc.presentation.ui.screens.BalEquationScreen
 import com.proyectoPdm.seashellinc.presentation.ui.screens.ChemicalUnitsScreen
+import com.proyectoPdm.seashellinc.presentation.ui.screens.compounds.CompoundScreen
 import com.proyectoPdm.seashellinc.presentation.ui.screens.LoadingScreen
 import com.proyectoPdm.seashellinc.presentation.ui.screens.LoginScreen
 import com.proyectoPdm.seashellinc.presentation.ui.screens.MainScreen
-import com.proyectoPdm.seashellinc.presentation.ui.screens.MolarMassPersonalScreen
+import com.proyectoPdm.seashellinc.presentation.ui.screens.molarMasses.MolarMassPersonalScreen
 import com.proyectoPdm.seashellinc.presentation.ui.screens.MolarMassScreen
 import com.proyectoPdm.seashellinc.presentation.ui.screens.PeriodicTable.PeriodicTableScreen
 import com.proyectoPdm.seashellinc.presentation.ui.screens.PhysicalUnitsScreen
@@ -38,7 +40,8 @@ fun Navigation() {
         }
 
         composable<MolarMassScreenSerializable> {
-            MolarMassScreen(navController)
+            //MolarMassScreen(navController)
+            MolarMassPersonalScreen(navController)
         }
 
         composable<MolarMassPersonalScreenSerializable> {
@@ -59,6 +62,11 @@ fun Navigation() {
 
         composable<RegisterScreenSerializable> {
             RegisterScreen(navController)
+        }
+
+        composable<CompoundScreenSerializable>{ compoundName ->
+            val args = compoundName.toRoute<CompoundScreenSerializable>()
+            CompoundScreen(navController, compoundName = args.compoundName)
         }
     }
 }

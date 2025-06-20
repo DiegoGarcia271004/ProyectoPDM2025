@@ -15,7 +15,7 @@ object BuyPremiumScreenSerializable
 object ChemicalUnitsScreenSerializable
 
 @Serializable
-object CompoundScreenSerializable
+data class CompoundScreenSerializable(val compoundName : String)
 
 @Serializable
 object LoadingScreenSerializable

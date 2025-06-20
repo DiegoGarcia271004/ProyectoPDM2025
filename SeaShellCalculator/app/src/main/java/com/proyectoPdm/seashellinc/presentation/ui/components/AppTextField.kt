@@ -28,7 +28,6 @@ fun AppTextField(
     label: String,
     isPassword: Boolean = false
 ) {
-    var query by remember { mutableStateOf("") }
 
     val visualTransformation: VisualTransformation = if (isPassword) {
         PasswordVisualTransformation()
@@ -37,8 +36,8 @@ fun AppTextField(
     }
 
     TextField(
-        value = query,
-        onValueChange = {query = it},
+        value = value,
+        onValueChange = onValueChange,
         label = {
             Text(label, fontFamily = MontserratFontFamily, fontWeight = FontWeight.Bold)
         },
