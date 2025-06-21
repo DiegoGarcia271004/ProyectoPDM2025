@@ -1,4 +1,4 @@
-package com.proyectoPdm.seashellinc.presentation.ui.screens
+package com.proyectoPdm.seashellinc.presentation.ui.screens.calculatorsChemicalUnits
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

@@ -12,7 +12,9 @@ import com.proyectoPdm.seashellinc.presentation.navigation.Navigation
 import com.proyectoPdm.seashellinc.presentation.ui.screens.ChemicalUnitsScreen
 import com.proyectoPdm.seashellinc.presentation.ui.screens.PhysicalUnitsScreen
 import com.proyectoPdm.seashellinc.presentation.ui.theme.SeaShellCalculatorTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
