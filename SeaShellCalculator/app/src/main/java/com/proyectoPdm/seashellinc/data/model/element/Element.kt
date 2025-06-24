@@ -1,4 +1,4 @@
-package com.proyectoPdm.seashellinc.data.model
+package com.proyectoPdm.seashellinc.data.model.element
 
 data class Element(
     val symbol: String,

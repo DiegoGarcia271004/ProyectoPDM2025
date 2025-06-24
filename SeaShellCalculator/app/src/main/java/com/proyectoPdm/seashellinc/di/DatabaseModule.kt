@@ -2,8 +2,9 @@ package com.proyectoPdm.seashellinc.di
 
 import android.content.Context
 import androidx.room.Room
-import com.proyectoPdm.seashellinc.data.database.CompoundDatabase
+import com.proyectoPdm.seashellinc.data.database.SeaShellChemistryDatabase
 import com.proyectoPdm.seashellinc.data.database.daos.CompoundDao
+import com.proyectoPdm.seashellinc.data.database.daos.UserDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,11 +20,21 @@ object DatabaseModule {
     @Singleton
     fun provideDatabase(
         @ApplicationContext context : Context
-    ) : CompoundDatabase {
+    ) : SeaShellChemistryDatabase {
         return Room.databaseBuilder(
             context,
-            CompoundDatabase::class.java,
-            "CompoundDatabase"
+            SeaShellChemistryDatabase::class.java,
+            "SeaShellCalculatorDatabase"
         ).fallbackToDestructiveMigration().build()
+    }
+
+    @Provides
+    fun providesUserDao(db : SeaShellChemistryDatabase) : UserDao {
+        return db.UserDao()
+    }
+
+    @Provides
+    fun providesCompoundDao(db : SeaShellChemistryDatabase) : CompoundDao {
+        return db.CompoundDao()
     }
 }

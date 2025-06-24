@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.proyectoPdm.seashellinc.data.model.Element
+import com.proyectoPdm.seashellinc.data.model.element.Element
 import com.proyectoPdm.seashellinc.presentation.ui.theme.MontserratFontFamily
 import com.proyectoPdm.seashellinc.presentation.ui.theme.getCategoryColor
 

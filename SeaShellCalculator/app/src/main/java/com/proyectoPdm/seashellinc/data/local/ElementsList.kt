@@ -1,7 +1,7 @@
 package com.proyectoPdm.seashellinc.data.local
 
-import com.proyectoPdm.seashellinc.data.model.Element
-import com.proyectoPdm.seashellinc.data.model.ElementCategory
+import com.proyectoPdm.seashellinc.data.model.element.Element
+import com.proyectoPdm.seashellinc.data.model.element.ElementCategory
 
 val elements = listOf<Element>(
     Element("H", "Hidrógeno", 1, 1, 1, ElementCategory.NONMETAL, 1.008),

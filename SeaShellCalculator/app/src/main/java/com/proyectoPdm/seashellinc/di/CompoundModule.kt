@@ -1,9 +1,11 @@
 package com.proyectoPdm.seashellinc.di
 
 import android.content.Context
-import com.proyectoPdm.seashellinc.data.database.CompoundDatabase
-import com.proyectoPdm.seashellinc.data.remote.CompoundApiService
-import com.proyectoPdm.seashellinc.data.repository.CompoundRepository
+import com.proyectoPdm.seashellinc.data.database.SeaShellChemistryDatabase
+import com.proyectoPdm.seashellinc.data.database.daos.CompoundDao
+import com.proyectoPdm.seashellinc.data.database.daos.UserDao
+import com.proyectoPdm.seashellinc.data.remote.ApiService
+import com.proyectoPdm.seashellinc.data.repository.UserRepository
 import com.proyectoPdm.seashellinc.utils.ConnectivityHelper
 import dagger.Module
 import dagger.Provides
@@ -18,7 +20,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object CompoundModule {
-    private const val BASE_URL = "https://dog.ceo/api/" //TODO: Agregar la url de la api (investigar como aplicar variables de entorno)
+    private const val BASE_URL = "http://137.184.61.16:80/api/SeaShellCalculator/" //TODO: Agregar la url de la api (investigar como aplicar variables de entorno)
 
     @Provides
     @Singleton
@@ -31,14 +33,14 @@ object CompoundModule {
 
     @Provides
     @Singleton
-    fun provideCompoundApiService(retrofit: Retrofit) : CompoundApiService{
-        return retrofit.create(CompoundApiService::class.java)
+    fun provideSeaShellChemistryApiService(retrofit: Retrofit) : ApiService {
+        return retrofit.create(ApiService::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideCompoundRepository(compoundApiService: CompoundApiService) : CompoundRepository {
-        return CompoundRepository(compoundApiService)
+    fun provideSeaShellChemistryRepository(userDao : UserDao, molarMassDao : CompoundDao, apiService: ApiService) : UserRepository {
+        return UserRepository(userDao, molarMassDao, apiService)
     }
 
     @Provides

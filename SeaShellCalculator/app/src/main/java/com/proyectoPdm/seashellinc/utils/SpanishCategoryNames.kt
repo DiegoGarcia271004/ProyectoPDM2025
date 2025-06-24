@@ -1,6 +1,6 @@
 package com.proyectoPdm.seashellinc.utils
 
-import com.proyectoPdm.seashellinc.data.model.ElementCategory
+import com.proyectoPdm.seashellinc.data.model.element.ElementCategory
 
 fun ElementCategory.getSpanishName(): String = when (this) {
     ElementCategory.ALKALI_METAL -> "Metal alcalino"

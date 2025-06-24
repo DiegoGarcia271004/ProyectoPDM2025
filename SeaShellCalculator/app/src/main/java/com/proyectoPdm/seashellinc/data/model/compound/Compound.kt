@@ -1,4 +1,4 @@
-package com.proyectoPdm.seashellinc.data.model
+package com.proyectoPdm.seashellinc.data.model.compound
 
 data class Compound (
     val compoundName : String,

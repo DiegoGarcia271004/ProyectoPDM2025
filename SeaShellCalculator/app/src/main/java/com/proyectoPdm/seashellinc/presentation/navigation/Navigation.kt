@@ -9,13 +9,13 @@ import com.proyectoPdm.seashellinc.presentation.ui.screens.BalEquationScreen
 import com.proyectoPdm.seashellinc.presentation.ui.screens.ChemicalUnitsScreen
 import com.proyectoPdm.seashellinc.presentation.ui.screens.compounds.CompoundScreen
 import com.proyectoPdm.seashellinc.presentation.ui.screens.LoadingScreen
-import com.proyectoPdm.seashellinc.presentation.ui.screens.LoginScreen
+import com.proyectoPdm.seashellinc.presentation.ui.screens.access.LoginScreen
 import com.proyectoPdm.seashellinc.presentation.ui.screens.MainScreen
+import com.proyectoPdm.seashellinc.presentation.ui.screens.molarMasses.MolarMassScreen
 import com.proyectoPdm.seashellinc.presentation.ui.screens.molarMasses.MolarMassPersonalScreen
-import com.proyectoPdm.seashellinc.presentation.ui.screens.MolarMassScreen
 import com.proyectoPdm.seashellinc.presentation.ui.screens.PeriodicTable.PeriodicTableScreen
 import com.proyectoPdm.seashellinc.presentation.ui.screens.PhysicalUnitsScreen
-import com.proyectoPdm.seashellinc.presentation.ui.screens.RegisterScreen
+import com.proyectoPdm.seashellinc.presentation.ui.screens.access.RegisterScreen
 
 @Composable
 fun Navigation() {
@@ -40,8 +40,7 @@ fun Navigation() {
         }
 
         composable<MolarMassScreenSerializable> {
-            //MolarMassScreen(navController)
-            MolarMassPersonalScreen(navController)
+            MolarMassScreen(navController)
         }
 
         composable<MolarMassPersonalScreenSerializable> {

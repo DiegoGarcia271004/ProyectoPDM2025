@@ -1,7 +1,7 @@
 package com.proyectoPdm.seashellinc.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
-import com.proyectoPdm.seashellinc.data.model.ElementCategory
+import com.proyectoPdm.seashellinc.data.model.element.ElementCategory
 
 val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)

@@ -1,13 +1,18 @@
 package com.proyectoPdm.seashellinc.presentation.ui.screens.molarMasses
 
 
+import android.util.Log
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.proyectoPdm.seashellinc.data.database.CompoundDatabase
+import com.proyectoPdm.seashellinc.data.database.SeaShellChemistryDatabase
+import com.proyectoPdm.seashellinc.data.database.daos.UserDao
 import com.proyectoPdm.seashellinc.data.database.entity.CompoundEntity
-import com.proyectoPdm.seashellinc.data.model.Compound
+import com.proyectoPdm.seashellinc.data.model.compound.Compound
 import com.proyectoPdm.seashellinc.data.model.Result
-import com.proyectoPdm.seashellinc.data.repository.CompoundRepository
+import com.proyectoPdm.seashellinc.data.repository.UserRepository
+import com.proyectoPdm.seashellinc.presentation.ui.screens.access.LoginScreen
+import com.proyectoPdm.seashellinc.presentation.ui.screens.access.UserViewModel
 import com.proyectoPdm.seashellinc.utils.ConnectivityHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.TimeoutCancellationException
@@ -24,11 +29,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MolarMassPersonalViewModel @Inject constructor(
-    private val compoundRepository: CompoundRepository,
+    private val userDao: UserDao,
+    private val userRepository: UserRepository,
     private val connectivityHelper: ConnectivityHelper,
-    private val db : CompoundDatabase
+    private val db : SeaShellChemistryDatabase
 ) : ViewModel() {
-    private val _compoundList = MutableStateFlow<List<Compound>>(emptyList())
+    private val _compoundList = MutableStateFlow<List<CompoundEntity>>(emptyList())
 
     private val _query = MutableStateFlow<String>("")
     val query = _query.asStateFlow()
@@ -39,10 +45,10 @@ class MolarMassPersonalViewModel @Inject constructor(
     private val _errorMessage = MutableStateFlow<String>("")
     val errorMessage = _errorMessage.asStateFlow()
 
-    val filteredList : StateFlow<List<Compound>> = combine(query, _compoundList) { text, list ->
+    val filteredList : StateFlow<List<CompoundEntity>> = combine(query, _compoundList) { text, list ->
         if (text.isBlank()) list
         else list.filter { item ->
-            item.compoundName.contains(text, ignoreCase = true) || item.chemicalFormula.contains(
+            item.compound.compoundName.contains(text, ignoreCase = true) || item.compound.chemicalFormula.contains(
                 text,
                 ignoreCase = true
             )
@@ -56,7 +62,12 @@ class MolarMassPersonalViewModel @Inject constructor(
 
             try {
                 if (connectivityHelper.isNetworkAvailable()){
-                    when(val result = compoundRepository.getCompoundList()){
+
+                    val user = userDao.getLoggedUser()
+                    Log.d("GetMolarMassList", user.token)
+                    Log.d("GetMolarMassList", user.id)
+
+                    when(val result = userRepository.getMolarMassList(user.token, user.id)){
                         is Result.Success -> {
                             _compoundList.value = result.data
                         }
@@ -65,7 +76,11 @@ class MolarMassPersonalViewModel @Inject constructor(
                         }
                     }
                     _compoundList.value.map { item ->
-                        db.CompoundDao().addCompound(CompoundEntity(compound = item))
+                        db.CompoundDao().addCompound(CompoundEntity(
+                            compound = item.compound,
+                            id = item.id,
+                            userId = item.userId
+                        ))
                     }
                 } else {
                     try {

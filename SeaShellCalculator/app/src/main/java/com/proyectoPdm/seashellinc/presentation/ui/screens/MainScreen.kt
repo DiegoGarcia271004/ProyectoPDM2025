@@ -35,6 +35,7 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -45,6 +46,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.proyectoPdm.seashellinc.R
 import com.proyectoPdm.seashellinc.presentation.navigation.BalEquationScreenSerializable
@@ -56,17 +59,26 @@ import com.proyectoPdm.seashellinc.presentation.navigation.PhysicalUnitsScreenSe
 import com.proyectoPdm.seashellinc.presentation.navigation.RegisterScreenSerializable
 import com.proyectoPdm.seashellinc.presentation.ui.components.AppButton
 import com.proyectoPdm.seashellinc.presentation.ui.components.LogoComponent
+import com.proyectoPdm.seashellinc.presentation.ui.screens.access.UserViewModel
 import com.proyectoPdm.seashellinc.presentation.ui.theme.Background
 import com.proyectoPdm.seashellinc.presentation.ui.theme.Buff
 import com.proyectoPdm.seashellinc.presentation.ui.theme.CitrineBrown
 import com.proyectoPdm.seashellinc.presentation.ui.theme.MainBlue
 import com.proyectoPdm.seashellinc.presentation.ui.theme.MontserratFontFamily
-
+import androidx.compose.runtime.getValue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(navController: NavController) {
+fun MainScreen(
+    navController: NavController,
+    userViewModel: UserViewModel = hiltViewModel()
+) {
+
     val navigationBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+
+    val currentUser by userViewModel.currentUser.collectAsState()
+    val isLoggedUser by userViewModel.isLoggedUser.collectAsState()
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets.navigationBars,
@@ -182,48 +194,46 @@ fun MainScreen(navController: NavController) {
             }
             Spacer(Modifier.height(50.dp))
 
-            //if(userIsLogged){ //TODO: implementar lógica de inicio de sesión
-            //      Row(verticalAlignment = Alignment.CenterVertically) {
-            //                IconButton(
-            //                    onClick = {},
-            //                    modifier = Modifier.size(50.dp),
-            //                    colors = IconButtonDefaults.iconButtonColors(MainBlue)
-            //                ) {
-            //                    Icon(
-            //                        imageVector = Icons.Outlined.AccountCircle,
-            //                        contentDescription = "",
-            //                        tint = Buff,
-            //                        modifier = Modifier.size(45.dp)
-            //                    )
-            //                }
-            //                Spacer(Modifier.width(10.dp))
-            //                Text(
-            //                    "UserName",//TODO: poner email de usuario
-            //                    fontFamily = MontserratFontFamily,
-            //                    fontWeight = FontWeight.Bold,
-            //                    color = CitrineBrown,
-            //                    fontSize = 20.sp
-            //                )
-            //            }
-            // } else {
-
-            Button(
-                onClick = { navController.navigate(LoginScreenSerializable) },
-                modifier = Modifier
-                    .width(170.dp)
-                    .border(1.dp, MainBlue, RoundedCornerShape(5.dp)),
-                colors = ButtonDefaults.buttonColors(Color.Transparent)
-            ) {
-                Text(
-                    "Iniciar Sesión",
-                    fontFamily = MontserratFontFamily,
-                    fontWeight = FontWeight.Bold,
-                    color = CitrineBrown,
-                    style = TextStyle(fontSize = 16.sp)
-                )
+            if(isLoggedUser) { //TODO: implementar lógica de inicio de sesión
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    IconButton(
+                        onClick = {},
+                        modifier = Modifier.size(50.dp),
+                        colors = IconButtonDefaults.iconButtonColors(MainBlue)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.AccountCircle,
+                            contentDescription = "",
+                            tint = Buff,
+                            modifier = Modifier.size(45.dp)
+                        )
+                    }
+                    Spacer(Modifier.width(10.dp))
+                    Text(
+                        currentUser?.user?.email ?: "Usuario",//TODO: poner email de usuario
+                        fontFamily = MontserratFontFamily,
+                        fontWeight = FontWeight.Bold,
+                        color = CitrineBrown,
+                        fontSize = 20.sp
+                    )
+                }
+            } else {
+                Button(
+                    onClick = { navController.navigate(LoginScreenSerializable) },
+                    modifier = Modifier
+                        .width(170.dp)
+                        .border(1.dp, MainBlue, RoundedCornerShape(5.dp)),
+                    colors = ButtonDefaults.buttonColors(Color.Transparent)
+                ) {
+                    Text(
+                        "Iniciar Sesión",
+                        fontFamily = MontserratFontFamily,
+                        fontWeight = FontWeight.Bold,
+                        color = CitrineBrown,
+                        style = TextStyle(fontSize = 16.sp)
+                    )
+                }
             }
-
-            //}
         }
     }
 }
