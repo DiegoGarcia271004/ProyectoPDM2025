@@ -20,14 +20,14 @@ fun PremiumFeaturesScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text("✓ Lista de compuestos ilimitada")
-        Text("✓ Balanceador de ecuaciones químicas")
-        Text("✓ Sin anuncios")
+        Text("Lista de compuestos ilimitada")
+        Text("Balanceador de ecuaciones químicas")
+        Text("Sin anuncios")
 
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(onClick = {
-            navController.navigate("BuyPremiumScreen")
+            navController.navigate("buy_premium")
         }) {
             Text("Actualizar a Premium")
         }

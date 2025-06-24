@@ -10,9 +10,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="40054d47-976a-4570-a125-6cab842ec29b" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/billing/BillingClientManager.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/billing/BillingClientManager.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/LoadingScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/LoadingScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/premium/iu/PremiumFeaturesScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/premium/iu/PremiumFeaturesScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/MolarMassScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/MolarMassScreen.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,7 +76,7 @@
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
     "git-widget-placeholder": "feature/premium",
-    "last_opened_file_path": "/home/jonatan/Downloads/2025/ProyectoPDM2025/SeaShellCalculator",
+    "last_opened_file_path": "/home/jonatan/Downloads/ProyectoPDM2025/SeaShellCalculator",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.17",
     "project.structure.side.proportion": "0.2"
