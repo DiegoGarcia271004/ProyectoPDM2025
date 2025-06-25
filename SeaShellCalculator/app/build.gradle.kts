@@ -44,41 +44,30 @@ android {
 
 dependencies {
     //Retrofit
-    implementation(libs.retrofit)
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("androidx.fragment:fragment-ktx:1.6.1")
     implementation("androidx.activity:activity-ktx:1.7.2")
-    implementation(libs.converter.gson)
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
     //Hilt
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
+    implementation("com.google.dagger:hilt-android:2.50")
+    kapt("com.google.dagger:hilt-compiler:2.50")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+
 
     //navegación
     implementation(libs.androidx.navigation.compose)
     implementation(libs.coil.compose)
     implementation(libs.kotlinx.serialization.json)
 
-    // Room components
-    implementation("androidx.room:room-runtime:2.6.1")
-    implementation("androidx.room:room-compiler:2.6.1")
+    implementation("com.google.android.gms:play-services-ads:23.1.0")
 
-// Kotlin extensions and coroutines support for Room
-    implementation("androidx.room:room-ktx:2.6.1")
+    //billing
+    implementation("com.android.billingclient:billing:6.1.0")
 
-// Retrofit for API communication
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    //livedata
+    implementation("androidx.compose.runtime:runtime-livedata:1.4.3")
 
-// Gson
-    implementation("com.google.code.gson:gson:2.10.1")
-
-// Coroutine support
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
-
-    //billin
-    implementation("com.android.billingclient:billing:6.2.1")
-
-    implementation("androidx.compose.runtime:runtime-livedata:<version-de-compose>")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

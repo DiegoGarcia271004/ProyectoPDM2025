@@ -15,7 +15,7 @@ object BuyPremiumScreenSerializable
 object ChemicalUnitsScreenSerializable
 
 @Serializable
-object CompoundScreenSerializable
+data class CompoundScreenSerializable(val compoundName : String, val static : Boolean = true)
 
 @Serializable
 object LoadingScreenSerializable
@@ -38,4 +38,14 @@ object PhysicalUnitsScreenSerializable
 @Serializable
 object RegisterScreenSerializable
 
-//TODO: Agregar los serializables para las páginas de calculadora
+@Serializable
+object MassOverMassCalculatorSerializable
+
+@Serializable
+object MassOverVolumeCalculatorSerializable
+
+@Serializable
+object PartsPerMillionCalculatorSerializable
+
+@Serializable
+object VolumeOverVolumeCalculatorSerializable

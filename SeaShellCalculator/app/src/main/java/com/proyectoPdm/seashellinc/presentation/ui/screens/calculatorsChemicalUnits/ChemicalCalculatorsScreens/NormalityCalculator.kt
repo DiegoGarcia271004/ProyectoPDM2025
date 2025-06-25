@@ -1,4 +1,4 @@
-package com.proyectoPdm.seashellinc.presentation.ui.screens
+package com.proyectoPdm.seashellinc.presentation.ui.screens.calculatorsChemicalUnits.ChemicalCalculatorsScreens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -35,7 +35,7 @@ import com.proyectoPdm.seashellinc.presentation.ui.theme.MainBlue
  * **/
 @Preview
 @Composable
-fun CalculatorScreen2() {
+fun NormalityCalculator() {
     val navigationBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     Scaffold(
         modifier = Modifier.fillMaxSize(),

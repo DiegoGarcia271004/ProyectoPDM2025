@@ -1,75 +1,49 @@
 package com.proyectoPdm.seashellinc.presentation.ui.screens
 
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.proyectoPdm.seashellinc.presentation.ui.components.AppButton
-import com.proyectoPdm.seashellinc.presentation.ui.components.LogoComponent
-import com.proyectoPdm.seashellinc.presentation.ui.theme.Background
-import com.proyectoPdm.seashellinc.presentation.ui.theme.Buff
-import com.proyectoPdm.seashellinc.presentation.ui.theme.CitrineBrown
-import com.proyectoPdm.seashellinc.presentation.ui.theme.DarkBlue
-import com.proyectoPdm.seashellinc.presentation.ui.theme.MainBlue
-import com.proyectoPdm.seashellinc.presentation.ui.theme.Marigold
-import com.proyectoPdm.seashellinc.presentation.ui.theme.MontserratFontFamily
-import android.app.Activity
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.proyectoPdm.seashellinc.billing.BillingClientManager
-import com.proyectoPdm.seashellinc.viewmodel.PremiumViewModel
+import com.proyectoPdm.seashellinc.billing.PurchaseStatus
+import com.proyectoPdm.seashellinc.presentation.ui.components.LogoComponent
+import com.proyectoPdm.seashellinc.presentation.ui.theme.*
 
+import com.proyectoPdm.seashellinc.viewmodel.BillingViewModel
+import com.proyectoPdm.seashellinc.viewmodel.PremiumViewModel
 
 @Composable
 fun BuyPremiumScreen(
     navController: NavController,
     activity: Activity,
-    viewModel: PremiumViewModel = viewModel()
+    billingViewModel: BillingViewModel = hiltViewModel(),
+    premiumViewModel: PremiumViewModel = hiltViewModel()
 ) {
-    val navigationBarHeigh = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-    val context = LocalContext.current
-    var statusMessage by remember { mutableStateOf("") }
+    val navigationBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+    val status by billingViewModel.purchaseStatus.collectAsState()
 
-    val billingManager = remember {
-        BillingClientManager(context) { success ->
-            if (success) {
-                viewModel.updatePremiumStatus(true)
-                statusMessage = "Compra exitosa"
-                navController.popBackStack() // o navega al Main si querés
-            } else {
-                statusMessage = "Compra fallida o cancelada"
-            }
+    LaunchedEffect(Unit) {
+        billingViewModel.initBillingManager()
+    }
+
+    LaunchedEffect(status) {
+        if (status is PurchaseStatus.Success) {
+            premiumViewModel.updatePremiumStatus(true)
+            navController.popBackStack()
+            billingViewModel.resetStatus()
         }
     }
 
@@ -80,12 +54,8 @@ fun BuyPremiumScreen(
         "Lista de compuestos ilimitada!"
     )
 
-    val gradientColors = listOf(
-        Color(0xFF6881AB),
-        DarkBlue
-    )
     val gradient = Brush.verticalGradient(
-        colors = gradientColors,
+        colors = listOf(Color(0xFF6881AB), DarkBlue),
         startY = 0.1f,
         endY = Float.POSITIVE_INFINITY
     )
@@ -101,11 +71,12 @@ fun BuyPremiumScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = navigationBarHeigh),
+                .padding(bottom = navigationBarHeight),
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             LogoComponent(modifier = Modifier.size(200.dp), 1f)
+
             Text(
                 "SeaShell Premium\n$0.99",
                 fontFamily = MontserratFontFamily,
@@ -114,7 +85,9 @@ fun BuyPremiumScreen(
                 textAlign = TextAlign.Center,
                 fontSize = 36.sp
             )
+
             Spacer(Modifier.height(75.dp))
+
             Column(
                 modifier = Modifier.padding(start = 16.dp),
                 verticalArrangement = Arrangement.Center,
@@ -146,7 +119,7 @@ fun BuyPremiumScreen(
 
             Button(
                 onClick = {
-                    billingManager.launchPurchaseFlow(activity, "premium")
+                    billingViewModel.launchPurchase(activity, "premium")
                 },
                 colors = ButtonDefaults.buttonColors(Background),
                 shape = RoundedCornerShape(5.dp),
@@ -161,13 +134,20 @@ fun BuyPremiumScreen(
                 )
             }
 
-            if (statusMessage.isNotEmpty()) {
-                Spacer(Modifier.height(24.dp))
-                Text(
-                    statusMessage,
-                    color = Color.White,
-                    fontSize = 14.sp
-                )
+            Spacer(Modifier.height(24.dp))
+
+            when (status) {
+                is PurchaseStatus.Loading -> {
+                    Text("Procesando compra...", color = Color.White, fontSize = 14.sp)
+                }
+                is PurchaseStatus.Error -> {
+                    Text(
+                        (status as PurchaseStatus.Error).message,
+                        color = Color.Red,
+                        fontSize = 14.sp
+                    )
+                }
+                else -> {}
             }
         }
     }

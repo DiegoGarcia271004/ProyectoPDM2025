@@ -18,10 +18,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,41 +27,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.proyectoPdm.seashellinc.data.local.elements
-import com.proyectoPdm.seashellinc.data.local.model.Element
 import com.proyectoPdm.seashellinc.presentation.ui.components.AppGoBackButton
 import com.proyectoPdm.seashellinc.presentation.ui.components.ElementCard
+import com.proyectoPdm.seashellinc.presentation.ui.components.ElementDialog
 import com.proyectoPdm.seashellinc.presentation.ui.components.LogoComponent
 import com.proyectoPdm.seashellinc.presentation.ui.theme.Background
 import com.proyectoPdm.seashellinc.presentation.ui.theme.CitrineBrown
-import com.proyectoPdm.seashellinc.presentation.ui.theme.DarkBlue
-import com.proyectoPdm.seashellinc.presentation.ui.theme.LightDarkBlue
 import com.proyectoPdm.seashellinc.presentation.ui.theme.MainBlue
 import com.proyectoPdm.seashellinc.presentation.ui.theme.MontserratFontFamily
 
 @Composable
-fun PeriodicTableScreen(navController: NavController/*periodicTableViewModel: PeriodicTableViewModel*/) {
+fun PeriodicTableScreen(
+    navController: NavController,
+    periodicTableViewModel: PeriodicTableViewModel = hiltViewModel()
+) {
     val navigationBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-    // TODO Esta parte se debe de poner en el viewModel
-    //TODO Hasta aqui
-    val elements: List<Element> = elements
-    val maxPeriod = elements.maxOf { it.period }
-    val maxGroup = 19
-
-    val table = Array(maxPeriod + 1) { Array<Element?>(maxGroup + 1) { null } }
-    elements.forEach { element ->
-        table[element.period][element.group] = element
-    }
-
-    val tableByGroup = (1..maxGroup).map { group ->
-        (1..maxPeriod).map { period ->
-            table[period][group]
-        }
-    }
+    val tableByGroup = periodicTableViewModel.tableByGroup.value
+    val isLoading = periodicTableViewModel.isLoading.value
+    val errorMessage = periodicTableViewModel.errorMessage.value
+    val showDialog = periodicTableViewModel.showDialog.value
+    val element = periodicTableViewModel.element.value
 
     Scaffold(
         containerColor = Background,
@@ -92,10 +79,15 @@ fun PeriodicTableScreen(navController: NavController/*periodicTableViewModel: Pe
                 .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Column(modifier = Modifier.padding(paddingValues), horizontalAlignment = Alignment.CenterHorizontally) {
-                Row(modifier = Modifier
-                    .height(50.dp)
-                    .fillMaxWidth()) {
+            Column(
+                modifier = Modifier.padding(paddingValues),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Row(
+                    modifier = Modifier
+                        .height(50.dp)
+                        .fillMaxWidth()
+                ) {
                     Spacer(Modifier.width(10.dp))
                     AppGoBackButton(75.dp) {
                         navController.popBackStack()
@@ -110,38 +102,51 @@ fun PeriodicTableScreen(navController: NavController/*periodicTableViewModel: Pe
                         fontSize = 20.sp
                     )
                 }
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
-                    item {
 
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .heightIn(min = 600.dp)
-                        ) {
-                            val scrollState = rememberScrollState()
+                if (isLoading) {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        CircularProgressIndicator(color = MainBlue)
+                    }
+                } else {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                    ) {
+                        item {
 
-                            Row(
+                            Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .horizontalScroll(scrollState)
-                                    .padding(8.dp)
+                                    .heightIn(min = 600.dp)
                             ) {
-                                tableByGroup.forEachIndexed { groupIndex, column ->
-                                    Column(
-                                        horizontalAlignment = Alignment.CenterHorizontally,
-                                        //modifier = Modifier.padding(horizontal = 4.dp)
-                                    ) {
-                                        column.forEachIndexed { periodIndex, element ->
-                                            if (periodIndex == 7) {
-                                                Spacer(modifier = Modifier.height(16.dp))
-                                            }
-                                            if (element != null) {
-                                                ElementCard(element = element, onClick = {})
-                                            } else {
-                                                Spacer(modifier = Modifier.size(75.dp))
+                                val scrollState = rememberScrollState()
+
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .horizontalScroll(scrollState)
+                                        .padding(8.dp)
+                                ) {
+                                    tableByGroup.forEachIndexed { groupIndex, column ->
+                                        Column(
+                                            horizontalAlignment = Alignment.CenterHorizontally,
+                                            //modifier = Modifier.padding(horizontal = 4.dp)
+                                        ) {
+                                            column.forEachIndexed { periodIndex, element ->
+                                                if (periodIndex == 7) {
+                                                    Spacer(modifier = Modifier.height(16.dp))
+                                                }
+                                                if (element != null) {
+                                                    ElementCard(element = element, onClick = {
+                                                        periodicTableViewModel.changeShowPopUp(element)
+                                                    })
+                                                } else {
+                                                    Spacer(modifier = Modifier.size(75.dp))
+                                                }
                                             }
                                         }
                                     }
@@ -151,6 +156,12 @@ fun PeriodicTableScreen(navController: NavController/*periodicTableViewModel: Pe
                     }
                 }
             }
+        }
+
+        if (showDialog){
+            ElementDialog(
+                element, changeShowDialog = { periodicTableViewModel.changeShowPopUp(element) },
+            )
         }
     }
 }

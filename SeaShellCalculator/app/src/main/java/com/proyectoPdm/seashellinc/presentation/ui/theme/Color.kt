@@ -1,7 +1,7 @@
 package com.proyectoPdm.seashellinc.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
-import com.proyectoPdm.seashellinc.data.local.model.ElementCategory
+import com.proyectoPdm.seashellinc.data.model.ElementCategory
 
 val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)
@@ -14,12 +14,13 @@ val Pink40 = Color(0xFF7D5260)
 val Background: Color = Color(0xFFEBDDC5)
 val MainBlue: Color = Color(0xFF2E4365)
 val LightDarkBlue: Color = Color(0xFF3E5271)
+val LightBlue: Color = Color(0xFFD9D9D9)
 val DarkBlue: Color = Color(0xFF2A3445)
 val CitrineBrown: Color = Color(0xFF8A3B08)
 val Buff: Color = Color(0xFFF3D58D)
 val Marigold: Color = Color(0xFFE59D2C)
 
-fun getCategoryColor(category: ElementCategory): Color {
+fun getCategoryColor(category: ElementCategory?): Color {
     return when (category) {
         ElementCategory.ALKALI_METAL -> Color(0xFF739977)         // Verde suave
         ElementCategory.ALKALINE_EARTH_METAL -> Color(0xFF832222)  // Rojo oscuro
@@ -31,5 +32,6 @@ fun getCategoryColor(category: ElementCategory): Color {
         ElementCategory.LANTHANIDE -> Color(0xFF4D3F9D)            // Azul lavanda
         ElementCategory.ACTINIDE -> Color(0xFFA27536)              // Marrón mostaza
         ElementCategory.UNKNOWN -> Color.Gray
+        null -> TODO()
     }
 }

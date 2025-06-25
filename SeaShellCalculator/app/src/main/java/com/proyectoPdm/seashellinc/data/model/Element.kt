@@ -1,4 +1,4 @@
-package com.proyectoPdm.seashellinc.data.local.model
+package com.proyectoPdm.seashellinc.data.model
 
 data class Element(
     val symbol: String,
@@ -6,5 +6,6 @@ data class Element(
     val atomicNumber: Int,
     val group: Int,
     val period: Int,
-    val category: ElementCategory
+    val category: ElementCategory,
+    val atomicMass: Double
 )

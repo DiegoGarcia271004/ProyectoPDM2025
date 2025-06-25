@@ -17,9 +17,17 @@ class BillingClientManager(
             .enablePendingPurchases()
             .setListener(this)
             .build()
+
         billingClient.startConnection(object : BillingClientStateListener {
-            override fun onBillingServiceDisconnected() {}
-            override fun onBillingSetupFinished(billingResult: BillingResult) {}
+            override fun onBillingServiceDisconnected() {
+                billingClient.startConnection(this)
+            }
+
+            override fun onBillingSetupFinished(billingResult: BillingResult) {
+                if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                    verifyExistingPurchases()
+                }
+            }
         })
     }
 
@@ -34,7 +42,7 @@ class BillingClientManager(
                 )
             ).build()
 
-        billingClient.queryProductDetailsAsync(queryParams) { _, products ->
+        billingClient.queryProductDetailsAsync(queryParams) { billingResult, products ->
             val product = products.firstOrNull()
             product?.let {
                 val billingFlowParams = BillingFlowParams.newBuilder()
@@ -62,13 +70,27 @@ class BillingClientManager(
         }
     }
 
-
     override fun onPurchasesUpdated(result: BillingResult, purchases: MutableList<Purchase>?) {
         if (result.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
             purchases.forEach { purchase ->
                 if (purchase.products.contains("premium")) {
-                    PremiumManager.setPremium(true)
-                    onPurchaseComplete(true)
+                    if (!purchase.isAcknowledged) {
+                        val params = AcknowledgePurchaseParams.newBuilder()
+                            .setPurchaseToken(purchase.purchaseToken)
+                            .build()
+
+                        billingClient.acknowledgePurchase(params) { ackResult ->
+                            if (ackResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                                PremiumManager.setPremium(true)
+                                onPurchaseComplete(true)
+                            } else {
+                                onPurchaseComplete(false)
+                            }
+                        }
+                    } else {
+                        PremiumManager.setPremium(true)
+                        onPurchaseComplete(true)
+                    }
                 }
             }
         } else {

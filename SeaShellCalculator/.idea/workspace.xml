@@ -10,11 +10,95 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="40054d47-976a-4570-a125-6cab842ec29b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../API/app.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../API/config/config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../API/config/database.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../API/controllers/user.controller.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../API/errors/errors.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../API/middlewares/auth.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../API/middlewares/validator.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../API/models/user.model.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../API/public/reset-password.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../API/public/script.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../API/public/style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../API/repositories/user.repository.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../API/routes/user.route.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../API/server.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../API/services/user.service.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../API/utils/utils.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../API/validators/user.validator.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_20_6_2025_18_25_[Changes]/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_20_6_2025_18_25_[Changes]1/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_20_6_2025_18_25__Changes_.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/data/database/CompoundDatabase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/data/database/daos/CompoundDao.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/data/database/entity/CompoundEntity.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/data/local/CompoundList.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/data/local/model/CalculationResult.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/data/local/model/Calculator.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/data/local/model/ToCalculate.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/data/model/Compound.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/data/model/CompoundApiResponse.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/data/model/CompoundResponse.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/data/model/Result.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/data/remote/CompoundApiService.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/data/repository/CompoundRepository.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/di/CompoundModule.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/di/DatabaseModule.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/components/AppButton/AppButtonViewModel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/components/CalcTextField.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/components/ElementDialog.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/components/SelectionMenu.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/calculatorsChemicalUnits/ChemicalCalculatorsScreens/MolarFractionCalculator.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/calculatorsChemicalUnits/ChemicalCalculatorsScreens/NormalityCalculator.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/calculatorsChemicalUnits/ChemicalCalculatorsViewModel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/calculatorsPhysicalUnits/PhysicalCalculatorViewModel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/calculatorsPhysicalUnits/PhysicalCalculatorsScreens/MassOverMassCalculator.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/calculatorsPhysicalUnits/PhysicalCalculatorsScreens/MassOverVolumeCalculator.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/calculatorsPhysicalUnits/PhysicalCalculatorsScreens/PartsPerMillionCalculator.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/calculatorsPhysicalUnits/PhysicalCalculatorsScreens/VolumeOverVolumeCalculator.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/compounds/CompoundScreen.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/compounds/CompoundViewModel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/molarMasses/MolarMassPersonalScreen.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/molarMasses/MolarMassPersonalViewModel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/molarMasses/MolarMassScreen.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/molarMasses/MolarMassViewModel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/utils/ConnectivityHelper.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/utils/SpanishCategoryNames.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/deploymentTargetSelector.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deploymentTargetSelector.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/premium/iu/PremiumFeaturesScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/premium/iu/PremiumFeaturesScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/MainActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/billing/BillingClientManager.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/billing/BillingClientManager.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/data/local/ElementsList.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/data/local/ElementsList.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/data/local/model/Element.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/data/model/Element.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/data/local/model/ElementCategory.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/data/model/ElementCategory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/navigation/Navigation.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/navigation/Navigation.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/navigation/Screens.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/navigation/Screens.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/components/AppButton.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/components/AppButton/AppButton.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/components/AppGoBackButton.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/components/AppGoBackButton.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/components/AppTextField.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/components/AppTextField.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/components/ElementCard.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/components/ElementCard.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/BuyPremiumScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/BuyPremiumScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/CalculatorScreen1.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/calculatorsChemicalUnits/ChemicalCalculatorsScreens/MolarityCalculator.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/CalculatorScreen2.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/calculatorsChemicalUnits/ChemicalCalculatorsScreens/MolalityCalculator.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/ChemicalUnitsScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/ChemicalUnitsScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/CompoundScreen.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/MainScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/MainScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/MolarMassPersonalScreen.kt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/MolarMassScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/MolarMassScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/PeriodicTable/PeriodicTableScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/PeriodicTable/PeriodicTableScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/PeriodicTable/PeriodicTableViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/PeriodicTable/PeriodicTableViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/PhysicalUnitsScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/PhysicalUnitsScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/RegisterScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/RegisterScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/theme/Color.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/theme/Color.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/libs.versions.toml" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/libs.versions.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,8 +134,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Kotlin Class" />
         <option value="Kotlin File" />
+        <option value="Kotlin Class" />
       </list>
     </option>
   </component>
@@ -75,7 +159,7 @@
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "feature/premium",
+    "git-widget-placeholder": "Merging feature/premium",
     "last_opened_file_path": "/home/jonatan/Downloads/ProyectoPDM2025/SeaShellCalculator",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.17",
