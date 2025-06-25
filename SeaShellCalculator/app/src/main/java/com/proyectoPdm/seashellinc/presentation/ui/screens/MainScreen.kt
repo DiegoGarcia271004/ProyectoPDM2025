@@ -260,15 +260,7 @@ fun MainScreen(
             }
             Spacer(Modifier.height(20.dp))
             AppButton("Tabla Periódica", 240.dp, true) {
-                if (isLoggedUser) {
-                    Log.d("UserLogged", currentUser?.user?.email ?: "Usuario nulo")
-                    if (currentUser?.user?.isPremium == true) navController.navigate(
-                        PeriodicTableScreenSerializable)
-                    else navController.navigate(BuyPremiumScreenSerializable)
-                } else {
-                    errorViewModel.setError("Necesitas estar autenticado/a para usar las funciones Premium. Por favor, inicia sesion en tu cuenta de SeaShellCalculator o registrate.")
-                    navController.navigate(ErrorScreenSerializable)
-                }
+                verifyScreenToChange("PeriodicTable")
             }
             Spacer(Modifier.height(50.dp))
 
