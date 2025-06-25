@@ -45,15 +45,22 @@ class MolarMassPersonalViewModel @Inject constructor(
     private val _errorMessage = MutableStateFlow<String>("")
     val errorMessage = _errorMessage.asStateFlow()
 
+    private val _showDialog = MutableStateFlow<Boolean>(false)
+    val showDialog = _showDialog.asStateFlow()
+
     val filteredList : StateFlow<List<CompoundEntity>> = combine(query, _compoundList) { text, list ->
         if (text.isBlank()) list
         else list.filter { item ->
-            item.compound.compoundName.contains(text, ignoreCase = true) || item.compound.chemicalFormula.contains(
+            item.compound.compoundName.contains(text, ignoreCase = true) || item.compound.chemicalFormula?.contains(
                 text,
                 ignoreCase = true
-            )
+            ) == true
         }
     }.stateIn(viewModelScope, SharingStarted.Companion.Lazily, emptyList())
+
+    fun changeShowDialog() {
+        _showDialog.value = !_showDialog.value
+    }
 
     fun loadData() {
         viewModelScope.launch {
@@ -84,7 +91,7 @@ class MolarMassPersonalViewModel @Inject constructor(
                     }
                 } else {
                     try {
-                        withTimeout(3_000L) {
+                        withTimeout(5_000L) {
                             val result = db.CompoundDao().getCompoundList().firstOrNull()
 
                             if (result?.isEmpty() == true) {

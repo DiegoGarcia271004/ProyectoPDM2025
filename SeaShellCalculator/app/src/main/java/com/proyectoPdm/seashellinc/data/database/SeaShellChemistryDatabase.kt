@@ -9,7 +9,7 @@ import com.proyectoPdm.seashellinc.data.database.daos.UserDao
 import com.proyectoPdm.seashellinc.data.database.entity.CompoundEntity
 import com.proyectoPdm.seashellinc.data.database.entity.UserEntity
 
-@Database(entities = [CompoundEntity::class, UserEntity::class], version = 1)
+@Database(entities = [CompoundEntity::class, UserEntity::class], version = 2, exportSchema = true)
 abstract class SeaShellChemistryDatabase : RoomDatabase() {
     abstract fun CompoundDao() : CompoundDao
     abstract fun UserDao() : UserDao

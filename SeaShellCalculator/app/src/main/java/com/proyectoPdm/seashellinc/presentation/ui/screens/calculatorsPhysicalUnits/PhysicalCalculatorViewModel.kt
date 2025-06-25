@@ -1,10 +1,10 @@
 package com.proyectoPdm.seashellinc.presentation.ui.screens.calculatorsPhysicalUnits
 
 import androidx.lifecycle.ViewModel
-import com.proyectoPdm.seashellinc.data.local.model.CalculationResult
-import com.proyectoPdm.seashellinc.data.local.model.Calculator
-import com.proyectoPdm.seashellinc.data.local.model.Calculator.HUNDRED
-import com.proyectoPdm.seashellinc.data.local.model.Calculator.ZERO
+import com.proyectoPdm.seashellinc.data.model.calculators.CalculationResult
+import com.proyectoPdm.seashellinc.data.model.calculators.Calculator
+import com.proyectoPdm.seashellinc.data.model.calculators.Calculator.HUNDRED
+import com.proyectoPdm.seashellinc.data.model.calculators.Calculator.ZERO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.math.BigDecimal

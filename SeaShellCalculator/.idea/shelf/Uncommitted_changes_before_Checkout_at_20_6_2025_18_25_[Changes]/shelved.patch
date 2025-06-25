@@ -1,0 +1,20 @@
+Index: app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/PeriodicTable/PeriodicTableViewModel.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.proyectoPdm.seashellinc.presentation.ui.screens.PeriodicTable\r\n\r\nimport androidx.compose.runtime.State\r\nimport androidx.compose.runtime.mutableStateOf\r\nimport androidx.lifecycle.ViewModel\r\nimport androidx.lifecycle.viewModelScope\r\nimport com.proyectoPdm.seashellinc.data.local.elements\r\nimport com.proyectoPdm.seashellinc.data.model.Element\r\nimport kotlinx.coroutines.launch\r\nimport dagger.hilt.android.lifecycle.HiltViewModel\r\nimport jakarta.inject.Inject\r\n@HiltViewModel\r\n\r\nclass PeriodicTableViewModel @Inject constructor() : ViewModel() {\r\n\r\n    private val _elementList = mutableStateOf<List<Element>>(emptyList())\r\n\r\n    private val _tableByGroup = mutableStateOf<List<List<Element?>>>(emptyList())\r\n    val tableByGroup: State<List<List<Element?>>> = _tableByGroup\r\n\r\n    private val _isLoading = mutableStateOf(true)\r\n    val isLoading: State<Boolean> = _isLoading\r\n\r\n    private val _errorMessage = mutableStateOf<String?>(null)\r\n    val errorMessage: State<String?> = _errorMessage\r\n\r\n    private val _showDialog = mutableStateOf<Boolean>(false)\r\n    val showDialog : State<Boolean> = _showDialog\r\n\r\n    private val _element = mutableStateOf<Element?>(null)\r\n    val element : State<Element?> = _element\r\n\r\n    fun changeShowPopUp(element: Element?) {\r\n        _element.value = element\r\n        _showDialog.value = !_showDialog.value\r\n    }\r\n\r\n    init {\r\n        viewModelScope.launch {\r\n            _isLoading.value = true\r\n            try {\r\n                val listOfElements = elements\r\n                if (listOfElements.isNotEmpty()) {\r\n                    _elementList.value = listOfElements\r\n\r\n                    //Se establecen las constantes para las dimensiones de la tabla\r\n                    val maxPeriod = _elementList.value.maxOf { it.period }\r\n                    val maxGroup = 19\r\n                    //Se llena la tabla con los elementos colocados en su periodo y grupo respectivo\r\n                    val table = Array(maxPeriod + 1) { Array<Element?>(maxGroup + 1) { null } }\r\n                    elements.forEach { element ->\r\n                        table[element.period][element.group] = element\r\n                    }\r\n                    _tableByGroup.value = (1..maxGroup).map { group ->\r\n                        (1..maxPeriod).map { period ->\r\n                            table[period][group]\r\n                        }\r\n                    }\r\n                } else {\r\n                    _errorMessage.value = \"No se encontraron elementos\"\r\n                }\r\n            } catch (e: Exception) {\r\n                _errorMessage.value = \"Error: ${e.localizedMessage}\"\r\n            } finally {\r\n                _isLoading.value = false\r\n            }\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/PeriodicTable/PeriodicTableViewModel.kt b/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/PeriodicTable/PeriodicTableViewModel.kt
+--- a/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/PeriodicTable/PeriodicTableViewModel.kt	(revision 55e8a896b060eb0c1a6c91a6e3dba9418ab2b3b8)
++++ b/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/PeriodicTable/PeriodicTableViewModel.kt	(date 1750461554790)
+@@ -9,8 +9,8 @@
+ import kotlinx.coroutines.launch
+ import dagger.hilt.android.lifecycle.HiltViewModel
+ import jakarta.inject.Inject
++
+ @HiltViewModel
+-
+ class PeriodicTableViewModel @Inject constructor() : ViewModel() {
+ 
+     private val _elementList = mutableStateOf<List<Element>>(emptyList())

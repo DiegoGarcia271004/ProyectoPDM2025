@@ -174,7 +174,6 @@ fun RegisterScreen(
                     navController.popBackStack()
                 }
             }
-
         }
         Column(
             Modifier

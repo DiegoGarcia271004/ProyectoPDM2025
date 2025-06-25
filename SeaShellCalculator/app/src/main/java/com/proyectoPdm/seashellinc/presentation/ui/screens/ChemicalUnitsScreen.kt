@@ -25,12 +25,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.proyectoPdm.seashellinc.R
-import com.proyectoPdm.seashellinc.presentation.ui.components.AppButton
+import com.proyectoPdm.seashellinc.presentation.ui.components.AppButton.AppButton
 import com.proyectoPdm.seashellinc.presentation.ui.components.AppGoBackButton
 import com.proyectoPdm.seashellinc.presentation.ui.theme.Background
 import com.proyectoPdm.seashellinc.presentation.ui.theme.Buff
@@ -88,7 +87,9 @@ fun ChemicalUnitsScreen(navController: NavController) {
         }
     ) { innerPadding ->
         Box(
-            modifier = Modifier.fillMaxSize().padding(innerPadding)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.seashelllogo),
@@ -121,13 +122,25 @@ fun ChemicalUnitsScreen(navController: NavController) {
 
             Spacer(Modifier.height(70.dp))
 
-            AppButton("Molaridad", 300.dp){}
+            AppButton(
+                "Molaridad", 300.dp,
+                onClick = {}
+            )
             Spacer(Modifier.height(20.dp))
-            AppButton("Molalidad", 300.dp){}
+            AppButton(
+                "Molalidad", 300.dp,
+                onClick = {  }
+            )
             Spacer(Modifier.height(20.dp))
-            AppButton("Normalidad", 300.dp){}
+            AppButton(
+                "Normalidad", 300.dp,
+                onClick = {}
+            )
             Spacer(Modifier.height(20.dp))
-            AppButton("Fracción molar", 300.dp){}
+            AppButton(
+                "Fracción molar", 300.dp,
+                onClick = {}
+            )
             Spacer(Modifier.height(70.dp))
 
             AppGoBackButton(112.dp, {

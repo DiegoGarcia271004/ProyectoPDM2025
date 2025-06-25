@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.proyectoPdm.seashellinc.R
 import com.proyectoPdm.seashellinc.data.model.requests.UserLoginRequest
 import com.proyectoPdm.seashellinc.data.model.requests.UserRegisterRequest
@@ -303,3 +304,10 @@ fun LoginScreen(
         }
     }
 }
+
+//@Preview
+//@Composable
+//fun LoginScreenPreview(){
+//    val navController = rememberNavController()
+//    LoginScreen(navController)
+//}

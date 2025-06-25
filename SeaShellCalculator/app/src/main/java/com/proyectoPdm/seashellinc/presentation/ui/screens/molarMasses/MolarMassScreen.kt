@@ -48,8 +48,8 @@ import com.proyectoPdm.seashellinc.presentation.ui.theme.MontserratFontFamily
 import androidx.compose.runtime.getValue
 import com.proyectoPdm.seashellinc.presentation.navigation.BuyPremiumScreenSerializable
 import com.proyectoPdm.seashellinc.presentation.navigation.MolarMassPersonalScreenSerializable
-import com.proyectoPdm.seashellinc.presentation.ui.components.AppButton
 import com.proyectoPdm.seashellinc.presentation.ui.screens.access.UserViewModel
+import com.proyectoPdm.seashellinc.presentation.ui.components.AppButton.AppButton
 
 @Composable
 fun MolarMassScreen(
@@ -216,15 +216,15 @@ fun MolarMassScreen(
                 }
                 Spacer(Modifier.height(30.dp))
                 if (isLoggedUser) {
-                    AppButton("Ir a lista personal", 190.dp) {
+                    AppButton("Ir a lista personal", 190.dp, onClick =  {
                         if (currentUser?.user?.isPremium == true) {
                             navController.navigate(MolarMassPersonalScreenSerializable)
                         } else {
                             navController.navigate(BuyPremiumScreenSerializable)
-                        }
-                    }
+                        }                    })
                 }
             }
         }
     }
 }
+

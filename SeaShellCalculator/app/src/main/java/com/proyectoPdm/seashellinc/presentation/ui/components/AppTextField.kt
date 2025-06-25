@@ -47,13 +47,13 @@ fun AppTextField(
             Text(label, fontFamily = MontserratFontFamily, fontWeight = FontWeight.Bold)
         },
         colors = TextFieldDefaults.colors(
-            unfocusedContainerColor = Color(0xFFD9D9D9),
-            focusedContainerColor = Color(0xFFD9D9D9),
-            unfocusedTextColor = MainBlue,
+            unfocusedTextColor = Color.Black,
             focusedTextColor = MainBlue,
             focusedIndicatorColor = MainBlue,
             focusedLabelColor = MainBlue,
             cursorColor = MainBlue,
+            unfocusedContainerColor = Color(0xFFD9D9D9),
+            focusedContainerColor = Color(0xFFD9D9D9),
         ),
         modifier = Modifier.height(60.dp),
         visualTransformation = visualTransformation

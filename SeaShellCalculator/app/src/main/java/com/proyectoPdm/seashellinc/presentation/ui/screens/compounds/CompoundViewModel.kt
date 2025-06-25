@@ -7,10 +7,12 @@ import com.proyectoPdm.seashellinc.data.database.SeaShellChemistryDatabase
 import com.proyectoPdm.seashellinc.data.database.entity.CompoundEntity
 import com.proyectoPdm.seashellinc.data.local.compounds
 import com.proyectoPdm.seashellinc.data.model.compound.Compound
+import com.proyectoPdm.seashellinc.data.local.compounds
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,13 +27,12 @@ class CompoundViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow<Boolean>(false)
     val isLoading = _isLoading.asStateFlow()
 
-    private val _errorMessage = MutableStateFlow<String>("")
+    private val _errorMessage = MutableStateFlow<String?>("")
     val errorMessage = _errorMessage.asStateFlow()
 
     init {
         viewModelScope.launch {
             _isLoading.value = true
-
             try {
                 val staticCompounds = compounds
                 if (compounds.isNotEmpty()) {
@@ -40,11 +41,11 @@ class CompoundViewModel @Inject constructor(
                     _errorMessage.value = "No se ha podido obtener los datos"
                 }
             } catch (e: Exception) {
-                _errorMessage.value = e.message.toString()
+                _errorMessage.value = e.message
             }
 
             try {
-                var compound = db.CompoundDao().getCompoundList().firstOrNull()
+                val compound = db.CompoundDao().getCompoundList().firstOrNull()
 
                 if (compound?.isEmpty() == true) {
                     return@launch
@@ -86,4 +87,5 @@ class CompoundViewModel @Inject constructor(
             } else null
         }
     }
+
 }

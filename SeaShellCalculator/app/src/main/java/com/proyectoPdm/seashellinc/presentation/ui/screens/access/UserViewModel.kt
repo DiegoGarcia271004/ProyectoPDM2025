@@ -125,9 +125,13 @@ class UserViewModel @Inject constructor (
                 }
 
                 is Result.Failure -> {
+
                     _accessSuccess.value = false
                     _errorMessage.value =
                         result.message ?: "Ha ocurrido un error en el inicio de sesion"
+
+                    _email.value = ""
+                    _password.value = ""
                 }
             }
 
@@ -162,9 +166,14 @@ class UserViewModel @Inject constructor (
                 }
 
                 is Result.Failure -> {
+
                     _accessSuccess.value = false
                     _errorMessage.value =
                         result.message ?: "Ha ocurrido un error en el registro"
+
+                    _username.value = ""
+                    _email.value = ""
+                    _password.value = ""
                 }
             }
 

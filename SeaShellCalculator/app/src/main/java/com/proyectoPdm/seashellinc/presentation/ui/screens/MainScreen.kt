@@ -5,7 +5,6 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -61,8 +59,7 @@ import com.proyectoPdm.seashellinc.presentation.navigation.LoginScreenSerializab
 import com.proyectoPdm.seashellinc.presentation.navigation.MolarMassScreenSerializable
 import com.proyectoPdm.seashellinc.presentation.navigation.PeriodicTableScreenSerializable
 import com.proyectoPdm.seashellinc.presentation.navigation.PhysicalUnitsScreenSerializable
-import com.proyectoPdm.seashellinc.presentation.navigation.RegisterScreenSerializable
-import com.proyectoPdm.seashellinc.presentation.ui.components.AppButton
+import com.proyectoPdm.seashellinc.presentation.ui.components.AppButton.AppButton
 import com.proyectoPdm.seashellinc.presentation.ui.components.LogoComponent
 import com.proyectoPdm.seashellinc.presentation.ui.screens.access.UserViewModel
 import com.proyectoPdm.seashellinc.presentation.ui.theme.Background
@@ -243,25 +240,26 @@ fun MainScreen(
                 style = TextStyle(fontSize = 20.sp)
             )
             Spacer(Modifier.height(60.dp))
-            AppButton("Unidades físicas\nde concentración", 240.dp) {
-                navController.navigate(PhysicalUnitsScreenSerializable)
-            }
+            AppButton("Unidades físicas\nde concentración", 240.dp, onClick = {
+                navController.navigate(
+                    PhysicalUnitsScreenSerializable
+                )
+            })
             Spacer(Modifier.height(20.dp))
-            AppButton("Unidades químicas\nde concentración", 240.dp) {
+            AppButton("Unidades químicas\nde concentración", 240.dp, onClick =  {
                 navController.navigate(ChemicalUnitsScreenSerializable)
-            }
+            })
             Spacer(Modifier.height(20.dp))
-            AppButton("Lista de masas\nmolares", 240.dp) {
+            AppButton("Lista de masas\nmolares", 240.dp, onClick =  {
                 navController.navigate(MolarMassScreenSerializable)
-            }
+            })
             Spacer(Modifier.height(20.dp))
-            AppButton("Balanceador de\necuaciones químicas", 240.dp, true) {
+            AppButton("Balanceador de\necuaciones químicas", 240.dp, isPremium = true, onClick =  {
                 verifyScreenToChange("BalEquation")
-            }
+            })
             Spacer(Modifier.height(20.dp))
-            AppButton("Tabla Periódica", 240.dp, true) {
-                verifyScreenToChange("PeriodicTable")
-            }
+            AppButton("Tabla Periódica", 240.dp, isPremium = true, onClick =  {
+                verifyScreenToChange("PeriodicTable")            })
             Spacer(Modifier.height(50.dp))
 
             if(isLoggedUser) {
@@ -304,6 +302,8 @@ fun MainScreen(
                     )
                 }
             }
+
+            //}
         }
     }
 }

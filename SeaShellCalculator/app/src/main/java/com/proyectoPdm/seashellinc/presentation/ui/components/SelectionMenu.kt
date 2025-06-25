@@ -19,14 +19,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.proyectoPdm.seashellinc.data.local.model.ToCalculate
+import com.proyectoPdm.seashellinc.data.model.calculators.ToCalculate
 import com.proyectoPdm.seashellinc.presentation.ui.theme.DarkBlue
 import com.proyectoPdm.seashellinc.presentation.ui.theme.LightBlue
 

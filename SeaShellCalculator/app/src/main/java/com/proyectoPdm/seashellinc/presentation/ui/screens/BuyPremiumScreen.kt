@@ -10,11 +10,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -27,22 +27,20 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.proyectoPdm.seashellinc.presentation.ui.components.AppButton
+import androidx.navigation.NavController
+import com.proyectoPdm.seashellinc.presentation.ui.components.AppGoBackButton
 import com.proyectoPdm.seashellinc.presentation.ui.components.LogoComponent
 import com.proyectoPdm.seashellinc.presentation.ui.theme.Background
-import com.proyectoPdm.seashellinc.presentation.ui.theme.Buff
 import com.proyectoPdm.seashellinc.presentation.ui.theme.CitrineBrown
 import com.proyectoPdm.seashellinc.presentation.ui.theme.DarkBlue
-import com.proyectoPdm.seashellinc.presentation.ui.theme.MainBlue
 import com.proyectoPdm.seashellinc.presentation.ui.theme.Marigold
 import com.proyectoPdm.seashellinc.presentation.ui.theme.MontserratFontFamily
 
 
 @Composable
-fun BuyPremiumScreen() {
+fun BuyPremiumScreen(navController : NavController) {
     val navigationBarHeigh = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     val benefitList = listOf(
         "Sin anuncios",
@@ -66,7 +64,16 @@ fun BuyPremiumScreen() {
                 .fillMaxSize()
                 .background(gradient)
         )
-
+        Column(Modifier.padding(paddingValues)) {
+            Spacer(Modifier.height(20.dp))
+            Row(modifier = Modifier.height(70.dp)) {
+                Spacer(Modifier.width(20.dp))
+                AppGoBackButton(80.dp) {
+                    navController.popBackStack()
+                }
+            }
+        }
+        Spacer(Modifier.height(40.dp))
         Column(
             modifier = Modifier.fillMaxSize().padding(bottom = navigationBarHeigh),
             verticalArrangement = Arrangement.Center,

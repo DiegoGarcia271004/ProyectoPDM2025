@@ -26,11 +26,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.proyectoPdm.seashellinc.presentation.ui.components.AppButton
+import com.proyectoPdm.seashellinc.presentation.ui.components.AppButton.AppButton
+import com.proyectoPdm.seashellinc.presentation.navigation.MassOverMassCalculatorSerializable
+import com.proyectoPdm.seashellinc.presentation.navigation.MassOverVolumeCalculatorSerializable
+import com.proyectoPdm.seashellinc.presentation.navigation.PartsPerMillionCalculatorSerializable
+import com.proyectoPdm.seashellinc.presentation.navigation.VolumeOverVolumeCalculatorSerializable
+import com.proyectoPdm.seashellinc.presentation.ui.components.AppButton.AppButton
 import com.proyectoPdm.seashellinc.presentation.ui.components.AppGoBackButton
 import com.proyectoPdm.seashellinc.presentation.ui.theme.Background
 import com.proyectoPdm.seashellinc.presentation.ui.theme.Buff
@@ -121,13 +125,21 @@ fun PhysicalUnitsScreen(navController: NavController) {
 
             Spacer(Modifier.height(100.dp))
 
-            AppButton("Porcentaje referido a la masa", 300.dp){}
+            AppButton("Porcentaje referido a la masa", 300.dp, onClick = {
+                navController.navigate(MassOverMassCalculatorSerializable)
+            })
             Spacer(Modifier.height(20.dp))
-            AppButton("Porcentaje referido al volumen", 300.dp){}
+            AppButton("Porcentaje referido al volumen", 300.dp, onClick = {
+                navController.navigate(VolumeOverVolumeCalculatorSerializable)
+            })
             Spacer(Modifier.height(20.dp))
-            AppButton("Porcentaje masa-volumen", 300.dp){}
+            AppButton("Porcentaje masa-volumen", 300.dp, onClick = {
+                navController.navigate(MassOverVolumeCalculatorSerializable)
+            })
             Spacer(Modifier.height(20.dp))
-            AppButton("Partes por millon", 300.dp){}
+            AppButton("Partes por millon", 300.dp, onClick = {
+                navController.navigate(PartsPerMillionCalculatorSerializable)
+            })
             Spacer(Modifier.height(70.dp))
 
             AppGoBackButton(112.dp, {

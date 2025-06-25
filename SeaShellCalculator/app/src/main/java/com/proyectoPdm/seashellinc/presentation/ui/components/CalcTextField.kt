@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -44,7 +45,6 @@ fun CalcTextField(
 ){
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
-    val focusRequester = remember { FocusRequester() }
 
     var textFieldValueState by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(TextFieldValue(text = input))
@@ -81,7 +81,11 @@ fun CalcTextField(
                 focusedIndicatorColor = MainBlue,
                 unfocusedIndicatorColor = MainBlue,
                 disabledIndicatorColor = MainBlue,
-                disabledTextColor = CitrineBrown
+                disabledTextColor = CitrineBrown,
+
+                // esto debería forzar a utilizar negro, en vez de por defecto (que podría ser blanco)
+                focusedTextColor = Color.Black,
+                unfocusedTextColor = Color.Black
             ),
             textStyle = TextStyle(
                 fontWeight = if (!enable) FontWeight.Bold else FontWeight.Normal
