@@ -1,5 +1,7 @@
 package com.proyectoPdm.seashellinc.presentation.ui.screens
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -24,17 +26,20 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ExitToApp
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -66,18 +71,56 @@ import com.proyectoPdm.seashellinc.presentation.ui.theme.CitrineBrown
 import com.proyectoPdm.seashellinc.presentation.ui.theme.MainBlue
 import com.proyectoPdm.seashellinc.presentation.ui.theme.MontserratFontFamily
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.AbsoluteAlignment
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.zIndex
+import com.proyectoPdm.seashellinc.presentation.navigation.BuyPremiumScreenSerializable
+import com.proyectoPdm.seashellinc.presentation.navigation.ErrorScreenSerializable
+import com.proyectoPdm.seashellinc.presentation.ui.screens.error.ErrorViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
     navController: NavController,
-    userViewModel: UserViewModel = hiltViewModel()
+    userViewModel: UserViewModel,
+    errorViewModel : ErrorViewModel
 ) {
 
     val navigationBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+    val context = LocalContext.current
 
     val currentUser by userViewModel.currentUser.collectAsState()
+
     val isLoggedUser by userViewModel.isLoggedUser.collectAsState()
+    val successMessage by userViewModel.successMessage.collectAsState()
+    val errorMessage by userViewModel.errorMessage.collectAsState()
+
+    LaunchedEffect(successMessage) {
+        if (successMessage.isNotEmpty()) {
+            Toast.makeText(context, successMessage, Toast.LENGTH_SHORT).show()
+        }
+        userViewModel.clearSuccessOrErrorMessage()
+    }
+
+    LaunchedEffect(errorMessage) {
+        if (successMessage.isNotEmpty()) {
+            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+        }
+        userViewModel.clearSuccessOrErrorMessage()
+    }
+
+    fun verifyScreenToChange(screen : String) {
+        if (isLoggedUser) {
+            if (currentUser?.user?.isPremium == true) {
+                navController.navigate(if (screen == "PeriodicTable") PeriodicTableScreenSerializable else BalEquationScreenSerializable)
+            } else {
+                navController.navigate(BuyPremiumScreenSerializable)
+            }
+        } else {
+            errorViewModel.setError("Necesitas estar autenticado/a para usar las funciones Premium. Por favor, inicia sesion en tu cuenta de SeaShellCalculator o registrate.")
+            navController.navigate(ErrorScreenSerializable)
+        }
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -156,6 +199,33 @@ fun MainScreen(
                 alpha = 0.2f
             )
         }
+        if (isLoggedUser) {
+            Box (
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .zIndex(100f)
+            ) {
+                IconButton(
+                    onClick = {
+                        Log.d("IconButtonOnClick", "Se ejecuta el onClick del boton")
+                        userViewModel.logout()
+                        Log.d("IconButtonOnClick", "En teoria se ejecuto executeLogout()")
+                    },
+                    modifier = Modifier
+                        .size(70.dp)
+                        .align(Alignment.TopEnd)
+                        .padding(16.dp)
+                        .zIndex(101f),
+                    colors = IconButtonDefaults.iconButtonColors(MainBlue)) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Outlined.ExitToApp,
+                        contentDescription = "Cerrar sesión",
+                        tint = Buff
+                    )
+                }
+            }
+        }
         Column(
             Modifier
                 .fillMaxSize()
@@ -186,19 +256,27 @@ fun MainScreen(
             }
             Spacer(Modifier.height(20.dp))
             AppButton("Balanceador de\necuaciones químicas", 240.dp, true) {
-                /*if (user.IsPremium) */navController.navigate(BalEquationScreenSerializable) /*else navController.navigate(BuyPremiumScreenSerializable)*/
+                verifyScreenToChange("BalEquation")
             }
             Spacer(Modifier.height(20.dp))
             AppButton("Tabla Periódica", 240.dp, true) {
-                /*if (user.IsPremium) */ navController.navigate(PeriodicTableScreenSerializable) /*else navController.navigate(BuyPremiumScreenSerializable)*/
+                if (isLoggedUser) {
+                    Log.d("UserLogged", currentUser?.user?.email ?: "Usuario nulo")
+                    if (currentUser?.user?.isPremium == true) navController.navigate(
+                        PeriodicTableScreenSerializable)
+                    else navController.navigate(BuyPremiumScreenSerializable)
+                } else {
+                    errorViewModel.setError("Necesitas estar autenticado/a para usar las funciones Premium. Por favor, inicia sesion en tu cuenta de SeaShellCalculator o registrate.")
+                    navController.navigate(ErrorScreenSerializable)
+                }
             }
             Spacer(Modifier.height(50.dp))
 
-            if(isLoggedUser) { //TODO: implementar lógica de inicio de sesión
+            if(isLoggedUser) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     IconButton(
                         onClick = {},
-                        modifier = Modifier.size(50.dp),
+                        modifier = Modifier.size(40.dp),
                         colors = IconButtonDefaults.iconButtonColors(MainBlue)
                     ) {
                         Icon(
@@ -210,7 +288,7 @@ fun MainScreen(
                     }
                     Spacer(Modifier.width(10.dp))
                     Text(
-                        currentUser?.user?.email ?: "Usuario",//TODO: poner email de usuario
+                        currentUser?.user?.username ?: "Usuario",
                         fontFamily = MontserratFontFamily,
                         fontWeight = FontWeight.Bold,
                         color = CitrineBrown,

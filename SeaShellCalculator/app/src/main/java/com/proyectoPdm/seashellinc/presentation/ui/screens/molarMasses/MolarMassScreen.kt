@@ -46,13 +46,16 @@ import com.proyectoPdm.seashellinc.presentation.ui.theme.CitrineBrown
 import com.proyectoPdm.seashellinc.presentation.ui.theme.MainBlue
 import com.proyectoPdm.seashellinc.presentation.ui.theme.MontserratFontFamily
 import androidx.compose.runtime.getValue
+import com.proyectoPdm.seashellinc.presentation.navigation.BuyPremiumScreenSerializable
 import com.proyectoPdm.seashellinc.presentation.navigation.MolarMassPersonalScreenSerializable
 import com.proyectoPdm.seashellinc.presentation.ui.components.AppButton
+import com.proyectoPdm.seashellinc.presentation.ui.screens.access.UserViewModel
 
 @Composable
 fun MolarMassScreen(
     navController: NavController,
-    viewModel : MolarMassViewModel = hiltViewModel()
+    viewModel : MolarMassViewModel = hiltViewModel(),
+    userViewModel : UserViewModel
 ) {
 
     val navigationBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
@@ -61,6 +64,9 @@ fun MolarMassScreen(
     val errorMessage = viewModel.errorMessage.value
     val filteredList by viewModel.filteredList.collectAsState()
     val query by viewModel.query.collectAsState()
+
+    val isLoggedUser by userViewModel.isLoggedUser.collectAsState()
+    val currentUser by userViewModel.currentUser.collectAsState()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -209,8 +215,14 @@ fun MolarMassScreen(
                     }
                 }
                 Spacer(Modifier.height(30.dp))
-                AppButton("Ir a lista personal", 190.dp) {
-                    navController.navigate(MolarMassPersonalScreenSerializable)
+                if (isLoggedUser) {
+                    AppButton("Ir a lista personal", 190.dp) {
+                        if (currentUser?.user?.isPremium == true) {
+                            navController.navigate(MolarMassPersonalScreenSerializable)
+                        } else {
+                            navController.navigate(BuyPremiumScreenSerializable)
+                        }
+                    }
                 }
             }
         }

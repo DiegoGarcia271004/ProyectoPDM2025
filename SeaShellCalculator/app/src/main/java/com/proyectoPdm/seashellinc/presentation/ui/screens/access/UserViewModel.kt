@@ -1,5 +1,6 @@
 package com.proyectoPdm.seashellinc.presentation.ui.screens.access
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.proyectoPdm.seashellinc.data.database.entity.CompoundEntity
@@ -11,7 +12,6 @@ import com.proyectoPdm.seashellinc.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -68,51 +68,60 @@ class UserViewModel @Inject constructor (
     private val _accessSuccess = MutableStateFlow<Boolean>(false)
     val accessSuccess = _accessSuccess.asStateFlow()
 
-    init {
+    fun logout() {
         viewModelScope.launch {
-            userId.collectLatest { id ->
-                id?.let {
-                    repository.getUserById(it).collectLatest { user ->
-                        _currentUser.value = user
-                    }
-                    repository.getMolarMassList(it).collectLatest { molarMass ->
-                        _molarMassList.value = molarMass
-                    }
-                }
+
+            Log.d("LogoutResponse", "Se ejecuta el logout del usuario")
+
+            _isLoading.value = true
+            _errorMessage.value = ""
+            _successMessage.value = ""
+
+            try {
+
+                repository.logoutUser(userId.value.toString())
+
+                _currentUser.value = null
+                _userToken.value = null
+                _userId.value = null
+                _isLoggedUser.value = false
+
+                _successMessage.value = "Sesion cerrada exitosamente."
+
+            } catch (e : Exception) {
+                _errorMessage.value = e.message ?: "Error al cerrar la sesion."
+            } finally {
+                _isLoading.value = false
             }
         }
     }
 
-    fun setAuthUser(userId : String, token : String, user : UserEntity) {
-        _userId.value = userId
-        _userToken.value = token
-        _currentUser.value = user
-        _isLoggedUser.value = true
-    }
-
-    fun clearAuthUser() {
-        viewModelScope.launch {
-            repository.clearUserData(userId.value.toString())
-        }
-        _userId.value = null
-        _userToken.value = null
-        _currentUser.value = null
-        _isLoggedUser.value = false
-    }
-
-    fun login(loginRequest : UserLoginRequest, userViewModel: UserViewModel) {
+    fun login(loginRequest : UserLoginRequest) {
 
         viewModelScope.launch {
             _isLoading.value = true
             _errorMessage.value = ""
             _successMessage.value = ""
 
-            val result = repository.loginUser(loginRequest, userViewModel)
+            val result = repository.loginUser(loginRequest)
 
             when (result) {
                 is Result.Success -> {
+                    val userEntity = result.data.first
+                    val token = result.data.second
+
+                    _currentUser.value = userEntity
+                    _userToken.value = token
+                    _userId.value = userEntity.id
+                    _isLoggedUser.value = true
+
+                    Log.d("LoginInfo", _currentUser.value.toString())
+
                     _accessSuccess.value = true
                     _successMessage.value = result.message ?: "Inicio de sesion exitoso."
+
+                    _email.value = ""
+                    _password.value = ""
                 }
 
                 is Result.Failure -> {
@@ -126,18 +135,30 @@ class UserViewModel @Inject constructor (
         }
     }
 
-    fun registerUser(userRequest: UserRegisterRequest, userViewModel: UserViewModel) {
+    fun registerUser(userRequest: UserRegisterRequest) {
         viewModelScope.launch {
             _isLoading.value = true
             _errorMessage.value = ""
             _successMessage.value = ""
 
-            val result = repository.registerUser(userRequest, userViewModel)
+            val result = repository.registerUser(userRequest)
 
             when (result) {
                 is Result.Success -> {
+
+                    val userEntity = result.data
+
+                    _currentUser.value = userEntity
+                    _userToken.value = userEntity.token
+                    _userId.value = userEntity.id
+                    _isLoggedUser.value = true
+
                     _accessSuccess.value = true
                     _successMessage.value = result.message ?: "Registro de usuario exitoso."
+
+                    _username.value = ""
+                    _email.value = ""
+                    _password.value = ""
                 }
 
                 is Result.Failure -> {
@@ -150,6 +171,8 @@ class UserViewModel @Inject constructor (
             _isLoading.value = false
         }
     }
+
+
 
     fun clearSuccessOrErrorMessage() {
         _errorMessage.value = ""

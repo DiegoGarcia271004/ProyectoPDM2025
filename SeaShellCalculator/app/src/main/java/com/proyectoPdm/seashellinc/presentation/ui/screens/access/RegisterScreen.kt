@@ -24,8 +24,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -60,7 +62,6 @@ import com.proyectoPdm.seashellinc.presentation.navigation.RegisterScreenSeriali
 import com.proyectoPdm.seashellinc.presentation.ui.components.AppGoBackButton
 import com.proyectoPdm.seashellinc.presentation.ui.components.AppTextField
 import com.proyectoPdm.seashellinc.presentation.ui.components.LogoComponent
-import com.proyectoPdm.seashellinc.presentation.ui.screens.register.RegisterViewModel
 import com.proyectoPdm.seashellinc.presentation.ui.theme.Background
 import com.proyectoPdm.seashellinc.presentation.ui.theme.Buff
 import com.proyectoPdm.seashellinc.presentation.ui.theme.CitrineBrown
@@ -71,7 +72,7 @@ import com.proyectoPdm.seashellinc.presentation.ui.theme.MontserratFontFamily
 @Composable
 fun RegisterScreen(
     navController: NavController,
-    userViewModel : UserViewModel = hiltViewModel(),
+    userViewModel : UserViewModel
 ) {
 
     val navigationBarHeigh = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
@@ -211,6 +212,25 @@ fun RegisterScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
+                        imageVector = Icons.Outlined.Person,
+                        contentDescription = null,
+                        tint = MainBlue,
+                        modifier = Modifier.size(45.dp)
+                    )
+                    Spacer(Modifier.width(10.dp))
+                    AppTextField(
+                        username,
+                        onValueChange = { newText -> userViewModel.setUsername(newText) },
+                        "Usuario"
+                    )
+                }
+                Spacer(Modifier.height(20.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
                         imageVector = Icons.Outlined.Email,
                         contentDescription = null,
                         tint = MainBlue,
@@ -250,7 +270,7 @@ fun RegisterScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        imageVector = Icons.Outlined.Lock,
+                        imageVector = Icons.Outlined.CheckCircle,
                         contentDescription = null,
                         tint = MainBlue,
                         modifier = Modifier.size(45.dp)
@@ -268,14 +288,14 @@ fun RegisterScreen(
                 Button(
                     onClick = {
 
-                        userViewModel.setUsername("default")
                         val registerRequest = UserRegisterRequest(
-                            "default",
+                            username,
                             email,
                             password
                         )
 
-                        userViewModel.registerUser(registerRequest, userViewModel)
+                        passwordConfirmValue = ""
+                        userViewModel.registerUser(registerRequest)
                     },
                     colors = ButtonDefaults.buttonColors(Color.Transparent),
                     modifier = Modifier.border(1.dp, MainBlue, RoundedCornerShape(5.dp)).width(300.dp)

@@ -74,7 +74,7 @@ fun BuyPremiumScreen() {
         ) {
             LogoComponent(modifier = Modifier.size(200.dp), 1f)
             Text(
-                "SeaShell Premium\n$0.99",
+                "SeaShell Premium\n\n$0.99",
                 fontFamily = MontserratFontFamily,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,

@@ -1,5 +1,6 @@
 package com.proyectoPdm.seashellinc.presentation.ui.screens.access
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -62,7 +63,6 @@ import com.proyectoPdm.seashellinc.presentation.ui.components.AppGoBackButton
 import com.proyectoPdm.seashellinc.presentation.ui.components.AppTextField
 import com.proyectoPdm.seashellinc.presentation.ui.components.LogoComponent
 import com.proyectoPdm.seashellinc.presentation.ui.screens.access.UserViewModel
-import com.proyectoPdm.seashellinc.presentation.ui.screens.login.LoginViewModel
 import com.proyectoPdm.seashellinc.presentation.ui.theme.Background
 import com.proyectoPdm.seashellinc.presentation.ui.theme.Buff
 import com.proyectoPdm.seashellinc.presentation.ui.theme.CitrineBrown
@@ -73,7 +73,7 @@ import com.proyectoPdm.seashellinc.presentation.ui.theme.MontserratFontFamily
 @Composable
 fun LoginScreen(
     navController: NavController,
-    userViewModel: UserViewModel = hiltViewModel()
+    userViewModel: UserViewModel
 ) {
 
     val navigationBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
@@ -150,7 +150,7 @@ fun LoginScreen(
                         .background(MainBlue)
                 ) {}
             }
-        },
+        }
     ) { innerPadding ->
 
         Box(
@@ -258,7 +258,7 @@ fun LoginScreen(
                             password
                         )
 
-                        userViewModel.login(loginRequest, userViewModel)
+                        userViewModel.login(loginRequest)
                     },
                     colors = ButtonDefaults.buttonColors(Color.Transparent),
                     modifier = Modifier.border(1.dp, MainBlue, RoundedCornerShape(5.dp)).width(300.dp)

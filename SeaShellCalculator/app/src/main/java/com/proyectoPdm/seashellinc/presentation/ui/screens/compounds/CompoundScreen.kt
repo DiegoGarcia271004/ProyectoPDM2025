@@ -191,11 +191,11 @@ fun CompoundScreen(
         }
     }
 }
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun MolarMassScreenPreview() {
-    val navController = rememberNavController() // NavController falso
-
-    MolarMassScreen(navController)
-}
+//
+//@Preview(showBackground = true, showSystemUi = true)
+//@Composable
+//fun MolarMassScreenPreview() {
+//    val navController = rememberNavController() // NavController falso
+//
+//    MolarMassScreen(navController)
+//}

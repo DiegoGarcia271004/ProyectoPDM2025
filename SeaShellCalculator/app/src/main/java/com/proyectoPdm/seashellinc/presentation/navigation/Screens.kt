@@ -38,4 +38,7 @@ object PhysicalUnitsScreenSerializable
 @Serializable
 object RegisterScreenSerializable
 
+@Serializable
+object ErrorScreenSerializable
+
 //TODO: Agregar los serializables para las páginas de calculadora

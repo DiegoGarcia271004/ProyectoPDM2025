@@ -6,7 +6,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.proyectoPdm.seashellinc.presentation.ui.screens.BalEquationScreen
+import com.proyectoPdm.seashellinc.presentation.ui.screens.BuyPremiumScreen
 import com.proyectoPdm.seashellinc.presentation.ui.screens.ChemicalUnitsScreen
+import com.proyectoPdm.seashellinc.presentation.ui.screens.error.ErrorScreen
 import com.proyectoPdm.seashellinc.presentation.ui.screens.compounds.CompoundScreen
 import com.proyectoPdm.seashellinc.presentation.ui.screens.LoadingScreen
 import com.proyectoPdm.seashellinc.presentation.ui.screens.access.LoginScreen
@@ -16,9 +18,14 @@ import com.proyectoPdm.seashellinc.presentation.ui.screens.molarMasses.MolarMass
 import com.proyectoPdm.seashellinc.presentation.ui.screens.PeriodicTable.PeriodicTableScreen
 import com.proyectoPdm.seashellinc.presentation.ui.screens.PhysicalUnitsScreen
 import com.proyectoPdm.seashellinc.presentation.ui.screens.access.RegisterScreen
+import com.proyectoPdm.seashellinc.presentation.ui.screens.access.UserViewModel
+import com.proyectoPdm.seashellinc.presentation.ui.screens.error.ErrorViewModel
 
 @Composable
-fun Navigation() {
+fun Navigation(
+    userViewModel: UserViewModel,
+    errorViewModel : ErrorViewModel
+) {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = LoadingScreenSerializable){
@@ -28,7 +35,7 @@ fun Navigation() {
         }
 
         composable<MainScreenSerializable>{
-            MainScreen(navController)
+            MainScreen(navController, userViewModel, errorViewModel)
         }
 
         composable<PhysicalUnitsScreenSerializable> {
@@ -40,7 +47,7 @@ fun Navigation() {
         }
 
         composable<MolarMassScreenSerializable> {
-            MolarMassScreen(navController)
+            MolarMassScreen(navController, userViewModel = userViewModel)
         }
 
         composable<MolarMassPersonalScreenSerializable> {
@@ -56,16 +63,24 @@ fun Navigation() {
         }
 
         composable<LoginScreenSerializable> {
-            LoginScreen(navController)
+            LoginScreen(navController, userViewModel)
         }
 
         composable<RegisterScreenSerializable> {
-            RegisterScreen(navController)
+            RegisterScreen(navController, userViewModel)
         }
 
         composable<CompoundScreenSerializable>{ compoundName ->
             val args = compoundName.toRoute<CompoundScreenSerializable>()
             CompoundScreen(navController, compoundName = args.compoundName)
+        }
+
+        composable<ErrorScreenSerializable> {
+            ErrorScreen(navController, errorViewModel)
+        }
+
+        composable<BuyPremiumScreenSerializable> {
+            BuyPremiumScreen()
         }
     }
 }

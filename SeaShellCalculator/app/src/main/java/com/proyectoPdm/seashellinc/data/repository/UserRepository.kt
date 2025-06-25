@@ -1,6 +1,5 @@
 package com.proyectoPdm.seashellinc.data.repository
 
-import android.util.Log
 import com.google.gson.Gson
 import com.proyectoPdm.seashellinc.data.database.daos.CompoundDao
 import com.proyectoPdm.seashellinc.data.database.daos.UserDao
@@ -21,7 +20,6 @@ import kotlinx.coroutines.withContext
 import com.proyectoPdm.seashellinc.data.model.Result
 import com.proyectoPdm.seashellinc.data.model.responses.FieldErrorResponse
 import com.proyectoPdm.seashellinc.data.model.responses.getErrorMessage
-import com.proyectoPdm.seashellinc.presentation.ui.screens.access.UserViewModel
 import kotlinx.coroutines.flow.Flow
 import org.json.JSONArray
 import org.json.JSONObject
@@ -73,20 +71,12 @@ class UserRepository (
         }
     }
 
-    suspend fun registerUser(userRequest : UserRegisterRequest, userViewModel: UserViewModel) : Result<UserEntity> {
+    suspend fun registerUser(userRequest : UserRegisterRequest) : Result<UserEntity> {
 
         return withContext(Dispatchers.IO) {
             try {
 
                 val response = apiService.registerUser(userRequest)
-                Log.d("ApiResponse", Gson().toJson(response.body()))
-                Log.d("ApiResponse", response.body()?.user?.user?.email ?: "email")
-                Log.d("ApiResponse", Gson().toJson(response.body()?.user?.user?.molarMassList))
-                Log.d("ApiResponse", Gson().toJson(response.body()?.user?.user?.email))
-                Log.d("ApiResponse", Gson().toJson(response.body()?.user?.user?.username))
-                Log.d("ApiResponse", Gson().toJson(response.body()?.user?.user?.isPremium))
-                Log.d("ApiResponse", Gson().toJson(response.body()?.user?.user?.id))
-                Log.d("ApiResponse", Gson().toJson(response.body()?.user?.token))
 
                 if (response.isSuccessful) {
 
@@ -99,8 +89,6 @@ class UserRepository (
                         val userData = userObjectResponse.user
 
                         val userEntity = userData.toUserEntity(token)
-
-                        userViewModel.setAuthUser(userData.id, token, userEntity)
 
                         userDao.deleteAllUsers()
                         userDao.registerUserToDatabase(userEntity)
@@ -129,20 +117,12 @@ class UserRepository (
         }
     }
 
-    suspend fun loginUser(userRequest : UserLoginRequest, userViewModel: UserViewModel) : Result<Pair<UserEntity, String>> {
+    suspend fun loginUser(userRequest : UserLoginRequest) : Result<Pair<UserEntity, String>> {
 
         return withContext(Dispatchers.IO) {
             try {
 
                 val response = apiService.loginUser(userRequest)
-
-                Log.d("ApiResponse", Gson().toJson(response.body()))
-                Log.d("ApiResponse", Gson().toJson(response.body()?.user?.user?.molarMassList))
-                Log.d("ApiResponse", Gson().toJson(response.body()?.user?.user?.email))
-                Log.d("ApiResponse", Gson().toJson(response.body()?.user?.user?.username))
-                Log.d("ApiResponse", Gson().toJson(response.body()?.user?.user?.isPremium))
-                Log.d("ApiResponse", Gson().toJson(response.body()?.user?.user?.id))
-                Log.d("ApiResponse", Gson().toJson(response.body()?.user?.token))
 
                 if (response.isSuccessful) {
 
@@ -155,8 +135,6 @@ class UserRepository (
                         val userData = loginWrapperResponse.user
 
                         val userEntity = userData.toUserEntity(token)
-
-                        userViewModel.setAuthUser(userData.id, token, userEntity)
 
                         userDao.deleteAllUsers()
                         userDao.registerUserToDatabase(userEntity)
@@ -507,7 +485,7 @@ class UserRepository (
     }
 
     // permite limpiar la sesión local al cerrar sesión
-    suspend fun clearUserData(userId : String) {
+    suspend fun logoutUser(userId : String) {
         userDao.deleteUserById(userId)
         molarMassDao.deleteAllMolarMassForUser(userId)
     }
