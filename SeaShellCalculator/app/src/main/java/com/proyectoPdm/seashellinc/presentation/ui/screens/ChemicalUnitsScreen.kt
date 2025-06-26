@@ -29,6 +29,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.proyectoPdm.seashellinc.R
+import com.proyectoPdm.seashellinc.presentation.navigation.MolalityCalculatorSerializable
+import com.proyectoPdm.seashellinc.presentation.navigation.MolarFractionCalculatorSerializable
+import com.proyectoPdm.seashellinc.presentation.navigation.MolarityCalculatorSerializable
+import com.proyectoPdm.seashellinc.presentation.navigation.NormalityCalculatorSerializable
 import com.proyectoPdm.seashellinc.presentation.ui.components.AppButton.AppButton
 import com.proyectoPdm.seashellinc.presentation.ui.components.AppGoBackButton
 import com.proyectoPdm.seashellinc.presentation.ui.theme.Background
@@ -124,22 +128,22 @@ fun ChemicalUnitsScreen(navController: NavController) {
 
             AppButton(
                 "Molaridad", 300.dp,
-                onClick = {}
+                onClick = { navController.navigate(MolarityCalculatorSerializable) }
             )
             Spacer(Modifier.height(20.dp))
             AppButton(
                 "Molalidad", 300.dp,
-                onClick = {  }
+                onClick = { navController.navigate(MolalityCalculatorSerializable) }
             )
             Spacer(Modifier.height(20.dp))
             AppButton(
                 "Normalidad", 300.dp,
-                onClick = {}
+                onClick = { navController.navigate(NormalityCalculatorSerializable) }
             )
             Spacer(Modifier.height(20.dp))
             AppButton(
                 "Fracción molar", 300.dp,
-                onClick = {}
+                onClick = { navController.navigate(MolarFractionCalculatorSerializable) }
             )
             Spacer(Modifier.height(70.dp))
 

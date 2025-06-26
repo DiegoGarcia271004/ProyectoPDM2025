@@ -65,7 +65,6 @@ fun CalcTextField(
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center
         )
-        Spacer(modifier = Modifier.height(2.dp))
         TextField(
             value = textFieldValueState,
             onValueChange = { newValue ->

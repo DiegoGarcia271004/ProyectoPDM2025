@@ -53,3 +53,15 @@ object PartsPerMillionCalculatorSerializable
 
 @Serializable
 object VolumeOverVolumeCalculatorSerializable
+
+@Serializable
+object MolarityCalculatorSerializable
+
+@Serializable
+object MolalityCalculatorSerializable
+
+@Serializable
+object NormalityCalculatorSerializable
+
+@Serializable
+object MolarFractionCalculatorSerializable

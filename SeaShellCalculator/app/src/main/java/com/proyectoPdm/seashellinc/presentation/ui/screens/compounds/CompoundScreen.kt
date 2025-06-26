@@ -68,7 +68,9 @@ fun CompoundScreen(
 ) {
 
     val navigationBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+
     viewModel.getCompound(compoundName, static)
+
     val compound by viewModel.compound.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
@@ -178,27 +180,34 @@ fun CompoundScreen(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 verticalArrangement = Arrangement.Center
                             ) {
-                                Text(
-                                    compound?.compoundName.toString(),
-                                    fontFamily = MontserratFontFamily,
-                                    fontWeight = FontWeight.Bold,
-                                    color = CitrineBrown,
-                                    fontSize = 30.sp,
-                                    textAlign = TextAlign.Center
-                                )
-                                Spacer(Modifier.height(20.dp))
-                                Text(
-                                    compound?.chemicalFormula.toString(),
-                                    fontFamily = MontserratFontFamily,
-                                    fontSize = 20.sp
-                                )
-                                Spacer(Modifier.height(20.dp))
-                                Text(
-                                    "Masa molar: \n${compound?.molarMass}",
-                                    fontFamily = MontserratFontFamily,
-                                    fontSize = 20.sp,
-                                    textAlign = TextAlign.Center
-                                )
+                                if (compound == null) {
+                                    Text(
+                                        text = "Ha ocurrido un error en la obtencion de los datos del compuesto.",
+                                        color = Color.Red
+                                    )
+                                } else {
+                                    Text(
+                                        compound?.compoundName.toString(),
+                                        fontFamily = MontserratFontFamily,
+                                        fontWeight = FontWeight.Bold,
+                                        color = CitrineBrown,
+                                        fontSize = 30.sp,
+                                        textAlign = TextAlign.Center
+                                    )
+                                    Spacer(Modifier.height(20.dp))
+                                    Text(
+                                        compound?.chemicalFormula.toString(),
+                                        fontFamily = MontserratFontFamily,
+                                        fontSize = 20.sp
+                                    )
+                                    Spacer(Modifier.height(20.dp))
+                                    Text(
+                                        "Masa molar: \n${compound?.molarMass}",
+                                        fontFamily = MontserratFontFamily,
+                                        fontSize = 20.sp,
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
                             }
                         }
                     }

@@ -25,7 +25,6 @@ class CompoundViewModel @Inject constructor(
     private val repository : UserRepository,
     private val db : SeaShellChemistryDatabase
 ) : ViewModel() {
-//    private val _compoundList = MutableStateFlow<List<CompoundEntity>>(emptyList())
     private val _staticCompoundList = MutableStateFlow<List<Compound>>(emptyList())
 
     private val _isLoading = MutableStateFlow<Boolean>(false)
@@ -55,6 +54,9 @@ class CompoundViewModel @Inject constructor(
     }
 
     fun getCompound(compoundName: String, static: Boolean = true) {
+
+        _isLoading.value = true
+
         if (static) {
             val compound = _staticCompoundList.value.find {
                 it.compoundName.contains(
@@ -62,18 +64,17 @@ class CompoundViewModel @Inject constructor(
                     ignoreCase = true
                 )
             }
-//            viewModelScope.launch {
-//                Log.e("Nombre del compuesto:", _staticCompoundList.value.first().toString())
-//            }
-
             _compound.value = if (compound?.compoundName == compoundName) {
                 compound
             } else null
+
         } else {
             viewModelScope.launch {
                 _compound.value = getCompoundForMolarMassPersonal(compoundName, db.UserDao())
             }
         }
+
+        _isLoading.value = false
     }
 
     suspend fun getCompoundForMolarMassPersonal(compoundName : String, dao : UserDao) : Compound? {
