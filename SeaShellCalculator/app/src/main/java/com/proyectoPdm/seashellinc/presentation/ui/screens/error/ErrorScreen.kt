@@ -100,7 +100,9 @@ fun ErrorScreen(
         }
     ) { innerPadding ->
         Box(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.seashelllogo),
@@ -111,32 +113,32 @@ fun ErrorScreen(
                     .offset(x = 150.dp, y = (225).dp),
                 alpha = 0.2f
             )
-        }
-        Column(Modifier.padding(innerPadding)) {
-            Spacer(Modifier.height(20.dp))
-            Row(modifier = Modifier.height(70.dp)) {
-                Spacer(Modifier.width(20.dp))
-                AppGoBackButton(80.dp) {
-                    navController.popBackStack()
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 20.dp)
+            ) {
+                Row(modifier = Modifier.height(70.dp)) {
+                    Spacer(Modifier.width(20.dp))
+                    AppGoBackButton(80.dp) {
+                        navController.popBackStack()
+                    }
                 }
             }
-
-        }
-        Column(
-            modifier = Modifier
-                .background(Background)
-                .padding(innerPadding)
-                .fillMaxHeight()
-                .fillMaxWidth()
-        ) {
-            Text(
-                errorMessage,
-                fontFamily = MontserratFontFamily,
-                fontWeight = FontWeight.Bold,
-                fontSize = 15.sp,
-                color = CitrineBrown,
-                modifier = Modifier.padding(20.dp)
-            )
+            Column(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(20.dp)
+                    .padding(top = 80.dp)
+            ) {
+                Text(
+                    text = errorMessage,
+                    fontFamily = MontserratFontFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 15.sp,
+                    color = CitrineBrown
+                )
+            }
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.proyectoPdm.seashellinc.data.remote
 
 import com.proyectoPdm.seashellinc.data.model.requests.AddMolarMassRequest
-import com.proyectoPdm.seashellinc.data.model.responses.LoginResponse
 import com.proyectoPdm.seashellinc.data.model.responses.MessageResponse
 import com.proyectoPdm.seashellinc.data.model.responses.MolarMassResponse
 import com.proyectoPdm.seashellinc.data.model.requests.PasswordRecoveryRequest
@@ -52,7 +51,7 @@ interface ApiService {
 
     @PUT("addMolarMass/{id}")
     suspend fun addNewMolarMass(
-        @Header("Authorization") token: String,
+        @Header("authorization") token: String,
         @Path("id") userId: String,
         @Body request: AddMolarMassRequest
     ): Response<UserResponse>

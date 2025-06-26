@@ -27,7 +27,13 @@ data class UpdatePasswordRequest (
 )
 
 data class AddMolarMassRequest (
-    val newMolarMass : MolarMassData
+    val newMolarMass : AddMolarMassData
+)
+
+data class AddMolarMassData (
+    val name : String,
+    val value : Double,
+    val unit : String
 )
 
 data class PasswordRecoveryRequest (

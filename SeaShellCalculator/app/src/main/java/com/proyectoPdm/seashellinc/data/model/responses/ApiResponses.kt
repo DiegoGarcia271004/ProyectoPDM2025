@@ -9,16 +9,6 @@ data class UserResponse (
     val user : UserObjectResponse
 )
 
-data class LoginUserDataWrapper (
-    val user : UserData,
-    val token : String
-)
-
-data class LoginResponse (
-    val message : String,
-    val user : LoginUserDataWrapper
-)
-
 data class MolarMassResponse (
     @SerializedName("data")
     val molarMassList : List<MolarMassData>

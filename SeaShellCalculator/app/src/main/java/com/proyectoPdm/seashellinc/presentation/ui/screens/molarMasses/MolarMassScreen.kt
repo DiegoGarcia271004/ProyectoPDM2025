@@ -46,16 +46,21 @@ import com.proyectoPdm.seashellinc.presentation.ui.theme.CitrineBrown
 import com.proyectoPdm.seashellinc.presentation.ui.theme.MainBlue
 import com.proyectoPdm.seashellinc.presentation.ui.theme.MontserratFontFamily
 import androidx.compose.runtime.getValue
+import com.proyectoPdm.seashellinc.presentation.navigation.BalEquationScreenSerializable
 import com.proyectoPdm.seashellinc.presentation.navigation.BuyPremiumScreenSerializable
+import com.proyectoPdm.seashellinc.presentation.navigation.ErrorScreenSerializable
 import com.proyectoPdm.seashellinc.presentation.navigation.MolarMassPersonalScreenSerializable
+import com.proyectoPdm.seashellinc.presentation.navigation.PeriodicTableScreenSerializable
 import com.proyectoPdm.seashellinc.presentation.ui.screens.access.UserViewModel
 import com.proyectoPdm.seashellinc.presentation.ui.components.AppButton.AppButton
+import com.proyectoPdm.seashellinc.presentation.ui.screens.error.ErrorViewModel
 
 @Composable
 fun MolarMassScreen(
     navController: NavController,
     viewModel : MolarMassViewModel = hiltViewModel(),
-    userViewModel : UserViewModel
+    userViewModel : UserViewModel,
+    errorViewModel : ErrorViewModel
 ) {
 
     val navigationBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
@@ -215,14 +220,18 @@ fun MolarMassScreen(
                     }
                 }
                 Spacer(Modifier.height(30.dp))
-                if (isLoggedUser) {
-                    AppButton("Ir a lista personal", 190.dp, onClick =  {
+                AppButton("Ir a lista personal", 190.dp, onClick =  {
+                    if (isLoggedUser) {
                         if (currentUser?.user?.isPremium == true) {
                             navController.navigate(MolarMassPersonalScreenSerializable)
                         } else {
                             navController.navigate(BuyPremiumScreenSerializable)
-                        }                    })
-                }
+                        }
+                    } else {
+                        errorViewModel.setError("Necesitas estar autenticado/a para usar las funciones Premium. Por favor, inicia sesion en tu cuenta de SeaShellCalculator o registrate.")
+                        navController.navigate(ErrorScreenSerializable)
+                    }
+                })
             }
         }
     }

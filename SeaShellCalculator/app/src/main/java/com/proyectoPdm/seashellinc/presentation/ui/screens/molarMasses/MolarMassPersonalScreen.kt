@@ -1,5 +1,7 @@
 package com.proyectoPdm.seashellinc.presentation.ui.screens.molarMasses
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,7 +25,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -33,26 +34,26 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.proyectoPdm.seashellinc.data.model.requests.AddMolarMassData
+import com.proyectoPdm.seashellinc.data.model.requests.AddMolarMassRequest
 import com.proyectoPdm.seashellinc.presentation.navigation.CompoundScreenSerializable
-import com.proyectoPdm.seashellinc.presentation.navigation.MolarMassPersonalScreenSerializable
-import com.proyectoPdm.seashellinc.presentation.ui.components.AppButton.AppButton
 import com.proyectoPdm.seashellinc.presentation.ui.components.AppGoBackButton
 import com.proyectoPdm.seashellinc.presentation.ui.components.AppTextField
 import com.proyectoPdm.seashellinc.presentation.ui.screens.access.UserViewModel
-import com.proyectoPdm.seashellinc.presentation.ui.screens.molarMasses.MolarMassPersonalViewModel
 import com.proyectoPdm.seashellinc.presentation.ui.theme.Background
 import com.proyectoPdm.seashellinc.presentation.ui.theme.Buff
 import com.proyectoPdm.seashellinc.presentation.ui.theme.CitrineBrown
@@ -64,16 +65,43 @@ import com.proyectoPdm.seashellinc.presentation.ui.theme.MontserratFontFamily
 @Composable
 fun MolarMassPersonalScreen(
     navController: NavController,
-    viewModel: MolarMassPersonalViewModel = hiltViewModel()
+    viewModel: MolarMassPersonalViewModel = hiltViewModel(),
+    userViewModel : UserViewModel
 ) {
 
     val navigationBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+    val context = LocalContext.current
 
     val isLoading by viewModel.isLoading.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
     val query by viewModel.query.collectAsState()
     val filteredList by viewModel.filteredList.collectAsState()
     val showDialog by viewModel.showDialog.collectAsState()
+
+    val molarMassName by userViewModel.newMolarMassName.collectAsState()
+    val molarMassUnit by userViewModel.newMolarMassUnit.collectAsState()
+    val molarMassValue by userViewModel.newMolarMassValue.collectAsState()
+
+    val token by userViewModel.userToken.collectAsState()
+    val id by userViewModel.userId.collectAsState()
+
+    val notValidData by userViewModel.notValidData.collectAsState()
+    val error by userViewModel.error.collectAsState()
+
+    val userErrorMessage by userViewModel.errorMessage.collectAsState()
+    val successMessage by userViewModel.successMessage.collectAsState()
+    val userIsLoading by userViewModel.isLoading.collectAsState()
+
+//    LaunchedEffect(userErrorMessage) {
+//        userViewModel.setNotValidData(true)
+//    }
+
+    LaunchedEffect(successMessage) {
+        if (successMessage.isNotEmpty()) {
+            Toast.makeText(context, successMessage, Toast.LENGTH_SHORT).show()
+        }
+        userViewModel.clearSuccessOrErrorMessage()
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -158,7 +186,7 @@ fun MolarMassPersonalScreen(
                         .fillMaxWidth(0.85f)
 
                 ) {
-                    if (isLoading) {
+                    if (isLoading || userIsLoading) {
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -219,7 +247,7 @@ fun MolarMassPersonalScreen(
                                             .fillMaxWidth()
                                             .clickable {
                                                 navController.navigate(
-                                                    CompoundScreenSerializable(item.compound.compoundName)
+                                                    CompoundScreenSerializable(item.compound.compoundName, false)
                                                 )
                                             }
                                     ) {
@@ -257,8 +285,42 @@ fun MolarMassPersonalScreen(
                     onDismissRequest = viewModel::changeShowDialog,
                     confirmButton = {
                         TextButton(onClick = {
-                            /*Agregar compuesto()*/ //TODO: Lógica de agregar compuesto
-                            viewModel.changeShowDialog()
+
+                            userViewModel.setNotValidData(false)
+
+                            if (molarMassName.isBlank() || molarMassValue.isBlank()) {
+                                userViewModel.setNotValidData(true)
+                                userViewModel.setError("Campos obligatorios vacios.")
+                                return@TextButton
+                            }
+
+                            val parsedValue = molarMassValue.toDoubleOrNull()
+
+                            if (parsedValue == null) {
+                                userViewModel.setNotValidData(true)
+                                userViewModel.setError("Valor no valido para el campo de masa molar. Ingrese un numero decimal.")
+                                return@TextButton
+                            }
+
+                            if (molarMassUnit.isBlank()) {
+                                userViewModel.setNewMolarMassUnit("Formula quimica no agregada.")
+                            }
+
+                            val requestData = AddMolarMassData(
+                                molarMassName,
+                                molarMassValue.toDouble(),
+                                molarMassUnit
+                            )
+
+                            Log.d("AddMolarMass", requestData.toString())
+
+                            userViewModel.addMolarMass(AddMolarMassRequest(requestData))
+
+                            if (!notValidData) {
+                                viewModel.changeShowDialog()
+                                Log.d("AddMolarMass", "Se ejecute el condicional de loadData")
+                                viewModel.loadData()
+                            }
                         }) {
                             Text(
                                 "Agregar",
@@ -282,23 +344,34 @@ fun MolarMassPersonalScreen(
                     text = {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             AppTextField(
-                                value = "",
-                                onValueChange = {},
+                                value = molarMassName,
+                                onValueChange = { newText ->
+                                    userViewModel.setNewMolarMassName(newText)
+                                },
                                 label = "Nombre del compuesto"
                             )
                             Spacer(Modifier.height(15.dp))
                             AppTextField(
-                                value = "",
-                                onValueChange = {},
+                                value = molarMassUnit,
+                                onValueChange = { newText ->
+                                    userViewModel.setNewMolarMassUnit(newText)
+                                },
                                 label = "Fórmula (opcional)"
                             )
                             Spacer(Modifier.height(15.dp))
                             AppTextField(
-                                value = "",
-                                onValueChange = {},
+                                value = molarMassValue,
+                                onValueChange = { newText ->
+                                    userViewModel.setNewMolarMassValue(newText)
+                                },
                                 label = "Masa molar"
                             )
-
+                            if (notValidData) {
+                                Text(
+                                    text = if (error.isNotEmpty()) error else if (userErrorMessage.isNotEmpty()) userErrorMessage else "Error",
+                                    color = Color.Red
+                                )
+                            }
                         }
                     }
                 )

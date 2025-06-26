@@ -259,7 +259,8 @@ fun MainScreen(
             })
             Spacer(Modifier.height(20.dp))
             AppButton("Tabla Periódica", 240.dp, isPremium = true, onClick =  {
-                verifyScreenToChange("PeriodicTable")            })
+                verifyScreenToChange("PeriodicTable")
+            })
             Spacer(Modifier.height(50.dp))
 
             if(isLoggedUser) {

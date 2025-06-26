@@ -1,10 +1,13 @@
 package com.proyectoPdm.seashellinc.data.model.responses
 
+import android.util.Log
 import com.google.gson.annotations.SerializedName
 import com.proyectoPdm.seashellinc.data.database.entity.CompoundEntity
 import com.proyectoPdm.seashellinc.data.database.entity.UserEntity
 import com.proyectoPdm.seashellinc.data.model.compound.Compound
 import com.proyectoPdm.seashellinc.data.model.user.User
+import java.util.UUID
+import kotlin.toString
 
 data class MolarMassData (
     @SerializedName("_id")
@@ -45,7 +48,11 @@ data class UserData (
     }
 
     fun toMolarMassEntity() : List<CompoundEntity> {
+//        Log.d("MapMolarMassList", molarMassList.toString())
         return molarMassList.map { molarMass ->
+            Log.d("MapMolarMassList", molarMass.toString())
+            Log.d("MapMolarMassList", id.toString())
+            Log.d("MapMolarMassList", molarMass.id.toString())
             CompoundEntity(
                 id = molarMass.id.toString(),
                 compound = Compound(molarMass.name, molarMass.unit, molarMass.value),

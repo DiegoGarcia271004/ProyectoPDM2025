@@ -1,5 +1,6 @@
 package com.proyectoPdm.seashellinc.data.repository
 
+import android.util.Log
 import com.google.gson.Gson
 import com.proyectoPdm.seashellinc.data.database.daos.CompoundDao
 import com.proyectoPdm.seashellinc.data.database.daos.UserDao
@@ -345,7 +346,13 @@ class UserRepository (
 
             if (response.isSuccessful) {
 
-                val compounds = response.body()?.molarMassList?.map { it.toMolarMassEntity(userId) }
+                Log.d("AddMolarMass", response.body().toString())
+                Log.d("AddMolarMass", response.body()?.molarMassList.toString())
+
+                val compounds = response.body()?.molarMassList?.map {
+                    Log.d("AddMolarMass", it.toString())
+                    it.toMolarMassEntity(userId)
+                }
                     ?: emptyList()
                 Result.Success(compounds, "Obteniendo lista de masas molares de usuarios")
 
@@ -403,34 +410,24 @@ class UserRepository (
         }
     }
 
-    suspend fun addMolarMassToList(token : String, userId : String, newMolarMass : MolarMassData) : Result<UserEntity> {
+    suspend fun addMolarMassToList(token : String, userId : String, request : AddMolarMassRequest) : Result<Unit> {
+
+        Log.d("AddMolarMass", token)
+        Log.d("AddMolarMass", userId)
+        Log.d("AddMolarMass", request.toString())
 
         return withContext(Dispatchers.IO) {
             try {
 
-                val request = AddMolarMassRequest(newMolarMass)
                 val response = apiService.addNewMolarMass("Bearer $token", userId, request)
 
                 if (response.isSuccessful) {
 
-                    val updatedUserResponse = response.body()
-                    val updatedUser = updatedUserResponse?.user?.user?.toUserEntity(token)
-                    val updatedMolarMasses = response.body()?.user?.user?.toMolarMassEntity()
+                    val addMolarMassResponse = response.body()
+                    Log.d("UserResponseWithMessage", addMolarMassResponse.toString())
+                    val message = addMolarMassResponse?.message ?: "Masa molar agregada a la lista."
 
-                    if (updatedUser != null && updatedMolarMasses != null) {
-
-                        userDao.updateUser(updatedUser)
-                        molarMassDao.deleteAllMolarMassForUser(userId)
-                        molarMassDao.insertAllCompounds(updatedMolarMasses)
-
-                        Result.Success(updatedUser, updatedUserResponse.message)
-
-                    } else {
-                        Result.Failure(
-                            Exception("No se pudo añadir la masa molar."),
-                            "Error al agregar la massa molar a la lista"
-                        )
-                    }
+                    Result.Success(Unit, message)
                 } else {
                     val errorMessage = parseApiError(response.errorBody()?.string())
                     Result.Failure(

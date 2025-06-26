@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.proyectoPdm.seashellinc.data.database.entity.CompoundEntity
 import com.proyectoPdm.seashellinc.data.database.entity.UserEntity
 import com.proyectoPdm.seashellinc.data.model.Result
+import com.proyectoPdm.seashellinc.data.model.requests.AddMolarMassRequest
 import com.proyectoPdm.seashellinc.data.model.requests.UserLoginRequest
 import com.proyectoPdm.seashellinc.data.model.requests.UserRegisterRequest
 import com.proyectoPdm.seashellinc.data.repository.UserRepository
@@ -70,8 +71,6 @@ class UserViewModel @Inject constructor (
 
     fun logout() {
         viewModelScope.launch {
-
-            Log.d("LogoutResponse", "Se ejecuta el logout del usuario")
 
             _isLoading.value = true
             _errorMessage.value = ""
@@ -181,7 +180,69 @@ class UserViewModel @Inject constructor (
         }
     }
 
+    private val _newMolarMassName = MutableStateFlow<String>("")
+    val newMolarMassName = _newMolarMassName.asStateFlow()
 
+    fun setNewMolarMassName(name : String) {
+        _newMolarMassName.value = name
+    }
+
+    private val _newMolarMassUnit = MutableStateFlow<String>("")
+    val newMolarMassUnit = _newMolarMassUnit.asStateFlow()
+
+    fun setNewMolarMassUnit(unit : String) {
+        _newMolarMassUnit.value = unit
+    }
+
+    private val _newMolarMassValue = MutableStateFlow<String>("")
+    val newMolarMassValue = _newMolarMassValue.asStateFlow()
+
+    fun setNewMolarMassValue(value : String) {
+        _newMolarMassValue.value = value
+    }
+
+    private val _notValidData = MutableStateFlow<Boolean>(false)
+    val notValidData = _notValidData.asStateFlow()
+
+    fun setNotValidData(value : Boolean) {
+        _notValidData.value = value
+    }
+
+    private val _error = MutableStateFlow<String>("")
+    val error = _error.asStateFlow()
+
+    fun setError(value : String) {
+        _error.value = value
+    }
+
+    fun addMolarMass(request : AddMolarMassRequest) {
+
+        viewModelScope.launch {
+            _isLoading.value = true
+            _errorMessage.value = ""
+            _successMessage.value = ""
+
+            when (val result = repository.addMolarMassToList(_userToken.value.toString(),
+                _userId.value.toString(), request)) {
+
+                is Result.Success -> {
+
+                    _successMessage.value = result.message ?: "Masa molar agregada exitosamente."
+
+                    _newMolarMassName.value = ""
+                    _newMolarMassValue.value = ""
+                    _newMolarMassUnit.value = ""
+                }
+
+                is Result.Failure -> {
+                    _errorMessage.value = result.message ?: "Error al agregar a masa molar a la lista."
+                    _notValidData.value = true
+                }
+            }
+
+            _isLoading.value = false
+        }
+    }
 
     fun clearSuccessOrErrorMessage() {
         _errorMessage.value = ""

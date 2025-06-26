@@ -53,6 +53,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.sp
 import com.proyectoPdm.seashellinc.data.local.elements
 import com.proyectoPdm.seashellinc.presentation.navigation.CompoundScreenSerializable
+import com.proyectoPdm.seashellinc.presentation.ui.screens.access.UserViewModel
 import com.proyectoPdm.seashellinc.presentation.ui.theme.CitrineBrown
 import com.proyectoPdm.seashellinc.presentation.ui.theme.MontserratFontFamily
 import kotlin.text.isEmpty
@@ -63,11 +64,12 @@ fun CompoundScreen(
     navController: NavController,
     compoundName : String,
     static : Boolean = true,
-    viewModel : CompoundViewModel = hiltViewModel()
+    viewModel : CompoundViewModel = hiltViewModel(),
 ) {
 
     val navigationBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-    val compound = viewModel.getCompound(compoundName, static)
+    viewModel.getCompound(compoundName, static)
+    val compound by viewModel.compound.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
 
@@ -205,11 +207,3 @@ fun CompoundScreen(
         }
     }
 }
-//
-//@Preview(showBackground = true, showSystemUi = true)
-//@Composable
-//fun MolarMassScreenPreview() {
-//    val navController = rememberNavController() // NavController falso
-//
-//        MolarMassScreen(navController)
-//}

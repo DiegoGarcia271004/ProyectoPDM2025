@@ -63,12 +63,17 @@ class MolarMassPersonalViewModel @Inject constructor(
     }
 
     fun loadData() {
+
+        Log.d("AddMolarMass", "Se ejecuta el loadData")
+
         viewModelScope.launch {
             _isLoading.value = true
             _errorMessage.value = ""
 
             try {
                 if (connectivityHelper.isNetworkAvailable()){
+
+                    Log.d("AddMolarMass", "Se intenta obtener la lista")
 
                     val user = userDao.getLoggedUser()
                     Log.d("GetMolarMassList", user.token)
