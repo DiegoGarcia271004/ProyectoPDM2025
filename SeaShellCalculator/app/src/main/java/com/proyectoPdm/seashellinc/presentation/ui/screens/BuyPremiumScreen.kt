@@ -47,6 +47,8 @@ import com.proyectoPdm.seashellinc.presentation.ui.theme.Marigold
 import com.proyectoPdm.seashellinc.presentation.ui.theme.MontserratFontFamily
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.proyectoPdm.seashellinc.billing.BillingViewModel
 import com.proyectoPdm.seashellinc.presentation.navigation.BalEquationScreenSerializable
 import com.proyectoPdm.seashellinc.presentation.navigation.ErrorScreenSerializable
 import com.proyectoPdm.seashellinc.presentation.navigation.MolarMassPersonalScreenSerializable
@@ -54,22 +56,38 @@ import com.proyectoPdm.seashellinc.presentation.navigation.PeriodicTableScreenSe
 import com.proyectoPdm.seashellinc.presentation.ui.screens.PeriodicTable.PeriodicTableScreen
 import com.proyectoPdm.seashellinc.presentation.ui.screens.error.ErrorViewModel
 import com.proyectoPdm.seashellinc.presentation.ui.theme.MainBlue
+import android.app.Activity
+import com.proyectoPdm.seashellinc.billing.PurchaseStatus
 
 @Composable
 fun BuyPremiumScreen(
     navController : NavController,
     userViewModel: UserViewModel,
     errorViewModel: ErrorViewModel,
-    screen : String
+    screen : String,
+    billingViewModel: BillingViewModel = hiltViewModel()
 ) {
 
     val navigationBarHeigh = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     val context = LocalContext.current
 
+    val activity = context as? Activity
+
     val isLoading by userViewModel.isLoading.collectAsState()
     val errorMessage by userViewModel.errorMessage.collectAsState()
     val successMessage by userViewModel.successMessage.collectAsState()
     val currentUser by userViewModel.currentUser.collectAsState()
+
+    val purchaseStatus by billingViewModel.purchaseStatus.collectAsState()
+
+    val isPurchaseLoading = purchaseStatus is PurchaseStatus.Loading
+
+    LaunchedEffect(Unit) {
+        if (purchaseStatus is PurchaseStatus.Idle) {
+            billingViewModel.initBillingManager()
+        }
+    }
+
 
     LaunchedEffect(successMessage) {
         if (successMessage.isNotEmpty()) {
@@ -103,6 +121,20 @@ fun BuyPremiumScreen(
                 errorViewModel.setError("Error en la carga de la pantalla de funcionalidad premium, sal y vuelve a entrar.")
                 navController.navigate(ErrorScreenSerializable)
             }
+        }
+    }
+
+    LaunchedEffect(purchaseStatus) {
+        when (purchaseStatus) {
+            is PurchaseStatus.Success -> {
+                userViewModel.updatedPremiumStatus(true)
+                billingViewModel.resetStatus()
+            }
+            is PurchaseStatus.Error -> {
+                userViewModel.setError((purchaseStatus as PurchaseStatus.Error).message)
+                billingViewModel.resetStatus()
+            }
+            else -> {}
         }
     }
 
@@ -183,7 +215,7 @@ fun BuyPremiumScreen(
                 }
             }
             Spacer(Modifier.height(70.dp))
-            if (isLoading) {
+            if (isLoading || isPurchaseLoading) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -204,8 +236,11 @@ fun BuyPremiumScreen(
             } else {
                 Button(
                     onClick = {
-                        userViewModel.updatedPremiumStatus(true)
+                        activity?.let {
+                            billingViewModel.launchPurchase(it, "premium")
+                        }
                     },
+                    enabled = !isPurchaseLoading,
                     colors = ButtonDefaults.buttonColors(Background),
                     shape = RoundedCornerShape(5.dp),
                     modifier = Modifier.border(3.7.dp, Marigold, RoundedCornerShape(5.dp))
