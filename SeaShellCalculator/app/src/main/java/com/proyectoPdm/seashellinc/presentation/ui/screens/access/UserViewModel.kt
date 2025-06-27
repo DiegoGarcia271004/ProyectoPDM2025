@@ -3,22 +3,31 @@ package com.proyectoPdm.seashellinc.presentation.ui.screens.access
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.proyectoPdm.seashellinc.data.database.daos.CompoundDao
+import com.proyectoPdm.seashellinc.data.database.daos.UserDao
 import com.proyectoPdm.seashellinc.data.database.entity.CompoundEntity
 import com.proyectoPdm.seashellinc.data.database.entity.UserEntity
 import com.proyectoPdm.seashellinc.data.model.Result
 import com.proyectoPdm.seashellinc.data.model.requests.AddMolarMassRequest
 import com.proyectoPdm.seashellinc.data.model.requests.UserLoginRequest
 import com.proyectoPdm.seashellinc.data.model.requests.UserRegisterRequest
+import com.proyectoPdm.seashellinc.data.model.user.User
 import com.proyectoPdm.seashellinc.data.repository.UserRepository
+import com.proyectoPdm.seashellinc.utils.ConnectivityHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class UserViewModel @Inject constructor (
-    private val repository: UserRepository
+    private val repository: UserRepository,
+    private val connectivityHelper : ConnectivityHelper,
+    private val molarMassDao : CompoundDao
 ) : ViewModel() {
 
     private val _currentUser = MutableStateFlow<UserEntity?>(null)
@@ -27,6 +36,8 @@ class UserViewModel @Inject constructor (
     private val _isLoggedUser = MutableStateFlow<Boolean>(false)
     val isLoggedUser = _isLoggedUser.asStateFlow()
 
+    //todo este estado de lista no se esta utilizando porque para obtener las masas personales se usa la api o el room en caso de no intenet\
+    //creo que se puede eliminar
     private val _molarMassList = MutableStateFlow<List<CompoundEntity>>(emptyList())
     val molarMassList = _molarMassList.asStateFlow()
 
@@ -62,6 +73,10 @@ class UserViewModel @Inject constructor (
 
     private val _errorMessage = MutableStateFlow<String>("")
     val errorMessage = _errorMessage.asStateFlow()
+
+    fun setErrorMessage(error : String) {
+        _errorMessage.value = error
+    }
 
     private val _successMessage = MutableStateFlow<String>("")
     val successMessage = _successMessage.asStateFlow()
@@ -102,36 +117,44 @@ class UserViewModel @Inject constructor (
             _errorMessage.value = ""
             _successMessage.value = ""
 
-            val result = repository.loginUser(loginRequest)
+            if (connectivityHelper.isNetworkAvailable()) {
 
-            when (result) {
-                is Result.Success -> {
-                    val userEntity = result.data.first
-                    val token = result.data.second
+                val result = repository.loginUser(loginRequest)
 
-                    _currentUser.value = userEntity
-                    _userToken.value = token
-                    _userId.value = userEntity.id
-                    _isLoggedUser.value = true
+                when (result) {
+                    is Result.Success -> {
+                        val userEntity = result.data.first
+                        val token = result.data.second
 
-                    Log.d("LoginInfo", _currentUser.value.toString())
+                        _currentUser.value = userEntity
+                        _userToken.value = token
+                        _userId.value = userEntity.id
+                        _isLoggedUser.value = true
 
-                    _accessSuccess.value = true
-                    _successMessage.value = result.message ?: "Inicio de sesion exitoso."
+                        _accessSuccess.value = true
+                        _successMessage.value = result.message ?: "Inicio de sesion exitoso."
 
-                    _email.value = ""
-                    _password.value = ""
+                        _email.value = ""
+                        _password.value = ""
+                    }
+
+                    is Result.Failure -> {
+
+                        _accessSuccess.value = false
+                        _errorMessage.value =
+                            result.message ?: "Ha ocurrido un error en el inicio de sesion"
+
+                        _email.value = ""
+                        _password.value = ""
+                    }
                 }
+            } else {
 
-                is Result.Failure -> {
+                _errorMessage.value = "Conexion a internet requerida para iniciar sesion en tu cuenta de SeaShellCalculator."
+                _accessSuccess.value = false
 
-                    _accessSuccess.value = false
-                    _errorMessage.value =
-                        result.message ?: "Ha ocurrido un error en el inicio de sesion"
-
-                    _email.value = ""
-                    _password.value = ""
-                }
+                _email.value = ""
+                _password.value = ""
             }
 
             _isLoading.value = false
@@ -144,36 +167,46 @@ class UserViewModel @Inject constructor (
             _errorMessage.value = ""
             _successMessage.value = ""
 
-            val result = repository.registerUser(userRequest)
+            if (connectivityHelper.isNetworkAvailable()) {
 
-            when (result) {
-                is Result.Success -> {
+                val result = repository.registerUser(userRequest)
 
-                    val userEntity = result.data
+                when (result) {
+                    is Result.Success -> {
 
-                    _currentUser.value = userEntity
-                    _userToken.value = userEntity.token
-                    _userId.value = userEntity.id
-                    _isLoggedUser.value = true
+                        val userEntity = result.data
 
-                    _accessSuccess.value = true
-                    _successMessage.value = result.message ?: "Registro de usuario exitoso."
+                        _currentUser.value = userEntity
+                        _userToken.value = userEntity.token
+                        _userId.value = userEntity.id
+                        _isLoggedUser.value = true
 
-                    _username.value = ""
-                    _email.value = ""
-                    _password.value = ""
+                        _accessSuccess.value = true
+                        _successMessage.value = result.message ?: "Registro de usuario exitoso."
+
+                        _username.value = ""
+                        _email.value = ""
+                        _password.value = ""
+                    }
+
+                    is Result.Failure -> {
+
+                        _accessSuccess.value = false
+                        _errorMessage.value =
+                            result.message ?: "Ha ocurrido un error en el registro"
+
+                        _username.value = ""
+                        _email.value = ""
+                        _password.value = ""
+                    }
                 }
+            } else {
 
-                is Result.Failure -> {
+                _errorMessage.value = "Conexion a internet requerida para registrarse en SeaShellCalculator."
+                _accessSuccess.value = false
 
-                    _accessSuccess.value = false
-                    _errorMessage.value =
-                        result.message ?: "Ha ocurrido un error en el registro"
-
-                    _username.value = ""
-                    _email.value = ""
-                    _password.value = ""
-                }
+                _email.value = ""
+                _password.value = ""
             }
 
             _isLoading.value = false
@@ -222,20 +255,105 @@ class UserViewModel @Inject constructor (
             _errorMessage.value = ""
             _successMessage.value = ""
 
-            when (val result = repository.addMolarMassToList(_userToken.value.toString(),
-                _userId.value.toString(), request)) {
+            if (connectivityHelper.isNetworkAvailable()) {
 
-                is Result.Success -> {
+                when (val result = repository.addMolarMassToList(
+                    _userToken.value.toString(),
+                    _userId.value.toString(), request
+                )) {
 
-                    _successMessage.value = result.message ?: "Masa molar agregada exitosamente."
+                    is Result.Success -> {
 
-                    _newMolarMassName.value = ""
-                    _newMolarMassValue.value = ""
-                    _newMolarMassUnit.value = ""
+                        _successMessage.value =
+                            result.message ?: "Masa molar agregada exitosamente."
+
+                        _newMolarMassName.value = ""
+                        _newMolarMassValue.value = ""
+                        _newMolarMassUnit.value = ""
+                    }
+
+                    is Result.Failure -> {
+                        _errorMessage.value =
+                            result.message ?: "Error al agregar a masa molar a la lista."
+                        _notValidData.value = true
+                    }
                 }
+            } else {
+                _errorMessage.value = "Conexion a internet requerida para agregar una nueva masa molar a la lista personal."
+                _notValidData.value = true
+            }
 
-                is Result.Failure -> {
-                    _errorMessage.value = result.message ?: "Error al agregar a masa molar a la lista."
+            _isLoading.value = false
+        }
+    }
+
+    fun updatedPremiumStatus(isPremium : Boolean) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _errorMessage.value = ""
+            _successMessage.value = ""
+
+            if (connectivityHelper.isNetworkAvailable()) {
+
+                when (val result = repository.updateIsPremium(
+                    _userToken.value.toString(),
+                    _userId.value.toString(),
+                    isPremium
+                )) {
+
+                    is Result.Success -> {
+                        _currentUser.value = result.data
+                        _successMessage.value =
+                            result.message ?: "Compra de SeaShellCalculator Premium exitosa."
+                    }
+
+                    is Result.Failure -> {
+                        _errorMessage.value =
+                            result.message ?: "Error en la compra de SeaShellCalculator Premium."
+                    }
+                }
+            } else {
+                _errorMessage.value = "Conexion a internet requerida para ejecutar la compra de SeaShellCalculator Premium."
+            }
+
+            _isLoading.value = false
+        }
+    }
+
+    fun deleteMolarMassFromList(molarMassId : String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _errorMessage.value = ""
+            _successMessage.value = ""
+
+            if (connectivityHelper.isNetworkAvailable()) {
+
+                when (val result = repository.deleteMolarMassFromList(
+                    userToken.value.toString(),
+                    _userId.value.toString(),
+                    molarMassId
+                )) {
+
+                    is Result.Success -> {
+                        _currentUser.value = result.data
+                        _successMessage.value =
+                            result.message ?: "Se ha eliminado la masa molar de la lista."
+                    }
+
+                    is Result.Failure -> {
+                        _errorMessage.value =
+                            result.message ?: "Error al eliminar la masa molar de la lista."
+                        _notValidData.value = true
+                    }
+                }
+            } else {
+
+                val compoundToDelete = molarMassDao.getMolarMassById(molarMassId)
+
+                if (compoundToDelete != null) {
+                    molarMassDao.deleteMolarMass(compoundToDelete)
+                } else {
+                    _errorMessage.value = "La masa molar no ha podido ser eliminada dado que no se puede encontrar. Conexion a internet requerida."
                     _notValidData.value = true
                 }
             }

@@ -171,7 +171,7 @@ fun LoginScreen(
             Spacer(Modifier.height(20.dp))
             Row(modifier = Modifier.height(70.dp)) {
                 Spacer(Modifier.width(20.dp))
-                AppGoBackButton(80.dp) {
+                AppGoBackButton(60.dp) {
                     navController.popBackStack()
                 }
             }

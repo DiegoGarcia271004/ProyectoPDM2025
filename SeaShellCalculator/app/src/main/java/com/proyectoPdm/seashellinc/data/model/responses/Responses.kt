@@ -6,7 +6,6 @@ import com.proyectoPdm.seashellinc.data.database.entity.CompoundEntity
 import com.proyectoPdm.seashellinc.data.database.entity.UserEntity
 import com.proyectoPdm.seashellinc.data.model.compound.Compound
 import com.proyectoPdm.seashellinc.data.model.user.User
-import java.util.UUID
 import kotlin.toString
 
 data class MolarMassData (
@@ -32,7 +31,7 @@ data class UserObjectResponse (
 )
 
 data class UserData (
-    @SerializedName("id")
+    @SerializedName("_id")
     val id : String,
     val username : String,
     val email : String,

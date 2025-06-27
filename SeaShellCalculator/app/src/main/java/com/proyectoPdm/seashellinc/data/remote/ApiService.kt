@@ -11,6 +11,7 @@ import com.proyectoPdm.seashellinc.data.model.requests.UpdatePremiumRequest
 import com.proyectoPdm.seashellinc.data.model.requests.UserLoginRequest
 import com.proyectoPdm.seashellinc.data.model.requests.UserRegisterRequest
 import com.proyectoPdm.seashellinc.data.model.responses.UserResponse
+import com.proyectoPdm.seashellinc.data.model.responses.UserUpdatedResponse
 import retrofit2.http.Body
 import retrofit2.http.POST
 import retrofit2.Response
@@ -30,10 +31,10 @@ interface ApiService {
 
     @PUT("premium/{id}")
     suspend fun updateIsPremium(
-        @Header("Authorization") token : String,
+        @Header("authorization") token : String,
         @Path("id") userId : String,
         @Body request : UpdatePremiumRequest
-    ) : Response<UserResponse>
+    ) : Response<UserUpdatedResponse>
 
     @PUT("credentials/{id}")
     suspend fun updateCredentialsForUser(
@@ -64,10 +65,10 @@ interface ApiService {
 
     @DELETE("deleteMolarMass/{userId}/{molarMassId}")
     suspend fun deleteMolarMass(
-        @Header("Authorization") token: String,
+        @Header("authorization") token: String,
         @Path("userId") userId: String,
         @Path("molarMassId") molarMassId: String
-    ): Response<UserResponse>
+    ): Response<UserUpdatedResponse>
 
     @POST("request-recovery")
     suspend fun requestPasswordRecovery(@Body request: PasswordRecoveryRequest): Response<MessageResponse>

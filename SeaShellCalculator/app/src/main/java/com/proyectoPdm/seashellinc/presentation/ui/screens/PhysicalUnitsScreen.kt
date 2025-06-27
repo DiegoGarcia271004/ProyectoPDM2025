@@ -123,7 +123,7 @@ fun PhysicalUnitsScreen(navController: NavController) {
 
             }
 
-            Spacer(Modifier.height(100.dp))
+            Spacer(Modifier.height(80.dp))
 
             AppButton("Porcentaje referido a la masa", 300.dp, onClick = {
                 navController.navigate(MassOverMassCalculatorSerializable)
@@ -141,7 +141,6 @@ fun PhysicalUnitsScreen(navController: NavController) {
                 navController.navigate(PartsPerMillionCalculatorSerializable)
             })
             Spacer(Modifier.height(70.dp))
-
             AppGoBackButton(112.dp, {
                 navController.popBackStack()
             })

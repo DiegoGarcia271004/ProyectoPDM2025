@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.proyectoPdm.seashellinc.presentation.navigation.MainScreenSerializable
 import com.proyectoPdm.seashellinc.presentation.ui.components.AppButton.AppButton
 import com.proyectoPdm.seashellinc.presentation.ui.components.AppGoBackButton
 import com.proyectoPdm.seashellinc.presentation.ui.components.BalancerTextField
@@ -50,6 +51,7 @@ import com.proyectoPdm.seashellinc.presentation.ui.theme.MainBlue
 @Composable
 fun EquationBalancerScreen(
     navController: NavController,
+    backOfPremium : Boolean,
     viewModel: EquationBalancerViewModel = hiltViewModel()
 ) {
     val navigationBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
@@ -116,7 +118,7 @@ fun EquationBalancerScreen(
         Column (
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = navigationBarHeight,top = paddingValues.calculateTopPadding())
+                .padding(bottom = navigationBarHeight, top = paddingValues.calculateTopPadding() + 10.dp)
                 .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -125,11 +127,15 @@ fun EquationBalancerScreen(
             ){
                 Spacer(Modifier.width(50.dp))
                 AppGoBackButton(60.dp){
+                    if(backOfPremium) {
+                        navController.navigate(MainScreenSerializable)
+                        return@AppGoBackButton
+                    }
                     navController.popBackStack()
                 }
             }
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(50.dp))
 
             //Title Screen
             Row (
@@ -152,7 +158,7 @@ fun EquationBalancerScreen(
                     color = CitrineBrown
                 )
             }
-            Spacer(Modifier.height(80.dp))
+            Spacer(Modifier.height(60.dp))
 
             BalancerTextField(
                 value = uiState.formulaInput,
@@ -226,11 +232,4 @@ fun EquationBalancerScreen(
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun EquationBalancerScreenPreview(){
-    val navController = rememberNavController()
-    EquationBalancerScreen(navController)
 }

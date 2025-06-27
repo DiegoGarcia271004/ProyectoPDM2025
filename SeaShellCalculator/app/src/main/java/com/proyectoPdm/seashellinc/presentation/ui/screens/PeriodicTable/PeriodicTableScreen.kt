@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.proyectoPdm.seashellinc.presentation.navigation.MainScreenSerializable
 import com.proyectoPdm.seashellinc.presentation.ui.components.AppGoBackButton
 import com.proyectoPdm.seashellinc.presentation.ui.components.ElementCard
 import com.proyectoPdm.seashellinc.presentation.ui.components.ElementDialog
@@ -43,6 +44,7 @@ import com.proyectoPdm.seashellinc.presentation.ui.theme.MontserratFontFamily
 @Composable
 fun PeriodicTableScreen(
     navController: NavController,
+    backOfPremium : Boolean,
     periodicTableViewModel: PeriodicTableViewModel = hiltViewModel()
 ) {
     val navigationBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
@@ -85,11 +87,16 @@ fun PeriodicTableScreen(
             ) {
                 Row(
                     modifier = Modifier
-                        .height(50.dp)
+                        .height(70.dp)
                         .fillMaxWidth()
+                        .padding(top = 20.dp, start = 10.dp)
                 ) {
                     Spacer(Modifier.width(10.dp))
-                    AppGoBackButton(75.dp) {
+                    AppGoBackButton(60.dp) {
+                        if (backOfPremium) {
+                            navController.navigate(MainScreenSerializable)
+                            return@AppGoBackButton
+                        }
                         navController.popBackStack()
                     }
                     Text(
@@ -115,6 +122,7 @@ fun PeriodicTableScreen(
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
+                            .padding(start = 10.dp, top = 20.dp)
                     ) {
                         item {
 

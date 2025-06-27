@@ -72,12 +72,7 @@ class MolarMassPersonalViewModel @Inject constructor(
 
             try {
                 if (connectivityHelper.isNetworkAvailable()){
-
-                    Log.d("AddMolarMass", "Se intenta obtener la lista")
-
                     val user = userDao.getLoggedUser()
-                    Log.d("GetMolarMassList", user.token)
-                    Log.d("GetMolarMassList", user.id)
 
                     when(val result = userRepository.getMolarMassList(user.token, user.id)){
                         is Result.Success -> {

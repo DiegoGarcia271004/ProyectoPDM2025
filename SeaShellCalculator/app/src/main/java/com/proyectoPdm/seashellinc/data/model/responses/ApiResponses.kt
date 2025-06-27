@@ -14,6 +14,12 @@ data class MolarMassResponse (
     val molarMassList : List<MolarMassData>
 )
 
+data class UserUpdatedResponse (
+    val message : String,
+    @SerializedName("user")
+    val user : UserData
+)
+
 data class MessageResponse (
     val message : String
 )

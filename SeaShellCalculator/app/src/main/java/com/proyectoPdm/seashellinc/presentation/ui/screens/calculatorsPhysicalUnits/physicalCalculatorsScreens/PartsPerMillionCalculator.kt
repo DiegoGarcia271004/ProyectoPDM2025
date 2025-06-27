@@ -115,7 +115,7 @@ fun PartsPerMillionCalculator(
         Column (
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = navigationBarHeight)
+                .padding(bottom = navigationBarHeight, top = paddingValues.calculateTopPadding())
                 .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -131,7 +131,7 @@ fun PartsPerMillionCalculator(
                 }
             }
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(40.dp))
 
             //Title Screen
             Row (

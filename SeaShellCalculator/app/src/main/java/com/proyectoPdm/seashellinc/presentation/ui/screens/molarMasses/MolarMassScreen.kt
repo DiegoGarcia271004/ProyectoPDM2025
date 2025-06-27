@@ -49,6 +49,7 @@ import androidx.compose.runtime.getValue
 import com.proyectoPdm.seashellinc.presentation.navigation.BalEquationScreenSerializable
 import com.proyectoPdm.seashellinc.presentation.navigation.BuyPremiumScreenSerializable
 import com.proyectoPdm.seashellinc.presentation.navigation.ErrorScreenSerializable
+import com.proyectoPdm.seashellinc.presentation.navigation.MainScreenSerializable
 import com.proyectoPdm.seashellinc.presentation.navigation.MolarMassPersonalScreenSerializable
 import com.proyectoPdm.seashellinc.presentation.navigation.PeriodicTableScreenSerializable
 import com.proyectoPdm.seashellinc.presentation.ui.screens.access.UserViewModel
@@ -60,7 +61,8 @@ fun MolarMassScreen(
     navController: NavController,
     viewModel : MolarMassViewModel = hiltViewModel(),
     userViewModel : UserViewModel,
-    errorViewModel : ErrorViewModel
+    errorViewModel : ErrorViewModel,
+    backOfPremium : Boolean
 ) {
 
     val navigationBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
@@ -111,6 +113,10 @@ fun MolarMassScreen(
             Row {
                 Spacer(Modifier.width(20.dp))
                 AppGoBackButton(60.dp) {
+                    if (backOfPremium) {
+                        navController.navigate(MainScreenSerializable)
+                        return@AppGoBackButton
+                    }
                     navController.popBackStack()
                 }
             }
@@ -223,9 +229,13 @@ fun MolarMassScreen(
                 AppButton("Ir a lista personal", 190.dp, onClick =  {
                     if (isLoggedUser) {
                         if (currentUser?.user?.isPremium == true) {
-                            navController.navigate(MolarMassPersonalScreenSerializable)
+                            navController.navigate(
+                                MolarMassPersonalScreenSerializable(false)
+                            )
                         } else {
-                            navController.navigate(BuyPremiumScreenSerializable)
+                            navController.navigate(
+                                BuyPremiumScreenSerializable("MolarMassPersonal")
+                            )
                         }
                     } else {
                         errorViewModel.setError("Necesitas estar autenticado/a para usar las funciones Premium. Por favor, inicia sesion en tu cuenta de SeaShellCalculator o registrate.")

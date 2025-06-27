@@ -25,37 +25,37 @@ interface CompoundDao {
     @Query("SELECT * FROM compoundList WHERE userId = :userId")
     fun getMolarMassesForUser(userId : String) : List<CompoundEntity>
 
-    @Query("SELECT * FROM compoundList WHERE userId = :userId")
-    fun getMolarMasses(userId : String) : Flow<List<CompoundEntity>>
+//    @Query("SELECT * FROM compoundList WHERE userId = :userId") NO USADA
+//    fun getMolarMasses(userId : String) : Flow<List<CompoundEntity>>
 
     //permite obtener una masa molar por su ID
     @Query("SELECT * FROM compoundList WHERE id = :id")
-    suspend fun getMolarMassById(id : String) : CompoundEntity?
+    suspend fun getMolarMassById(id : String) : CompoundEntity? //NO USADA
 
     //permite obtener la lista de compuestos
     @Query("SELECT * FROM compoundList")
     fun getCompoundList(): Flow<List<CompoundEntity>>
 
-    //permite actualizar informacion de un compuesto por su ID
-    @Query("UPDATE compoundList SET compoundName = :compoundName, chemicalFormula = :chemicalFormula, molarMass = :molarMass WHERE id = :postId")
-    suspend fun updateCompound(
-        compoundName: String,
-        chemicalFormula: String,
-        molarMass: Double,
-        postId: String
-    )
+//    //permite actualizar informacion de un compuesto por su ID
+//    @Query("UPDATE compoundList SET compoundName = :compoundName, chemicalFormula = :chemicalFormula, molarMass = :molarMass WHERE id = :postId")
+//    suspend fun updateCompound(
+//        compoundName: String,
+//        chemicalFormula: String,
+//        molarMass: Double,
+//        postId: String
+//    ) NO USADA
 
-    //permite eliminar un compuesto
+//    //permite eliminar un compuesto
     @Delete
-    suspend fun deleteMolarMass(molarMas : CompoundEntity)
+    suspend fun deleteMolarMass(molarMas : CompoundEntity) //NO USADA
 
-    //permite eliminar un compuesto por el ID de la masa molar y del usuario
-    @Query("DELETE FROM compoundList WHERE id = :molarMassId AND userId = :userId")
-    suspend fun deleteMolarMassByIdAndUserId(molarMassId : String, userId : String)
+//    //permite eliminar un compuesto por el ID de la masa molar y del usuario
+//    @Query("DELETE FROM compoundList WHERE id = :molarMassId AND userId = :userId")
+//    suspend fun deleteMolarMassByIdAndUserId(molarMassId : String, userId : String) NO USADA
 
-    //permite eliminar un compuesto por el ID
-    @Query("DELETE FROM compoundList WHERE id = :compoundId")
-    suspend fun deleteCompoundById(compoundId: String)
+//    //permite eliminar un compuesto por el ID
+//    @Query("DELETE FROM compoundList WHERE id = :compoundId")
+//    suspend fun deleteCompoundById(compoundId: String) NO USADA
 
     //permrite eliminar todas las masas molares de un usuario
     @Query("DELETE FROM compoundList WHERE userId = :userId")

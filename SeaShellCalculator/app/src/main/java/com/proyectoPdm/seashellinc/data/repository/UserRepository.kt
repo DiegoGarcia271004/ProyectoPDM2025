@@ -164,12 +164,7 @@ class UserRepository (
         }
     }
 
-    fun getUserById(userId : String) : Flow<UserEntity> {
-        return userDao.getUserById(userId)
-    }
-
     suspend fun updateIsPremium(token: String, userId: String, isPremium: Boolean): Result<UserEntity> {
-
         return withContext(Dispatchers.IO) {
             try {
 
@@ -178,18 +173,28 @@ class UserRepository (
 
                 if (response.isSuccessful) {
 
-                    val updatedUserResponse = response.body()
-                    val updatedUser = updatedUserResponse?.user?.user?.toUserEntity(token)
+                    val userResponse = response.body()
 
-                    updatedUser?.let {
-                        userDao.updateUser(it)
-                        Result.Success(it, updatedUserResponse.message)
+                    if (userResponse != null && userResponse.user != null) {
 
-                    } ?: Result.Failure(
-                        Exception("No se pudo actualizar el estado premium."),
-                        "Error en la actualizacion del estado premium. Intenta de nuevo."
-                    )
+                        val updatedUserData = userResponse.user
+                        val updatedMessage = userResponse.message
 
+                        val updatedUserEntity = updatedUserData.toUserEntity(token)
+
+                        userDao.updateUser(updatedUserEntity.copy())
+
+                        val updatedMolarMass = updatedUserData.toMolarMassEntity()
+                        molarMassDao.deleteAllMolarMassForUser(userId)
+                        molarMassDao.insertAllCompounds(updatedMolarMass)
+
+                        Result.Success(updatedUserEntity, updatedMessage)
+                    } else {
+                        Result.Failure(
+                            Exception("Respuesta invalida en la compra de SeaShellCalculator Premium."),
+                            "Error: No se ha podido ejecutar la compra de SeaShellCalculator Premium"
+                        )
+                    }
                 } else {
                     val errorMessage = parseApiError(response.errorBody()?.string())
                     Result.Failure(
@@ -202,6 +207,177 @@ class UserRepository (
             }
         }
     }
+
+    //todo estos dos metodos aun debe ser implementados en el view model del usuario y en la logica de la pantalla de login
+
+    suspend fun requestPasswordRecovery(email : String) : Result<Unit> {
+
+        return withContext(Dispatchers.IO) {
+            try {
+
+                val request = PasswordRecoveryRequest(email)
+                val response = apiService.requestPasswordRecovery(request)
+
+                if (response.isSuccessful) {
+
+                    Result.Success(Unit, response.body()?.message)
+
+                } else {
+
+                    val errorMessage = response.errorBody()?.string()
+                    Result.Failure(
+                        Exception("Error al solicitar recuperación: ${errorMessage}"),
+                        errorMessage
+                    )
+                }
+
+            } catch (e: Exception) {
+                Result.Failure(e, e.message ?: "Error de conexion o desconocido.")
+            }
+        }
+    }
+
+    suspend fun resetPassword(token : String, newPassword : String) : Result<UserEntity> {
+
+        return withContext(Dispatchers.IO) {
+            try {
+
+                val request = ResetPasswordRequest(token, newPassword)
+                val response = apiService.resetPassword(request)
+
+                if (response.isSuccessful) {
+
+                    val userUpdated = response.body()
+                    val user = userUpdated?.user?.user?.toUserEntity(token)
+
+                    user?.let {
+                        Result.Success(it, userUpdated.message)
+
+                    } ?: Result.Failure(
+                        Exception("No se pudo restablecer la contraseña."),
+                        "Error al restablecer la contraseña"
+                    )
+
+                } else {
+                    val errorMessage = parseApiError(response.errorBody()?.string())
+                    Result.Failure(
+                        Exception("Error al restablecer contraseña: ${errorMessage}"),
+                        errorMessage
+                    )
+                }
+
+            } catch (e: Exception) {
+                Result.Failure(e, e.message ?: "Error de conexion o desconocido.")
+            }
+        }
+    }
+
+    suspend fun getMolarMassList(token : String, userId : String) : Result<List<CompoundEntity>> {
+        return try {
+
+            val response = apiService.getMolarMassList("Bearer $token", userId)
+
+            if (response.isSuccessful) {
+
+                //todo aqui hay cambiar la estructura del repository, debe quedar como los demas, unicamente considerando
+                //que lo unico que se hace aqui es obtener, no cambiar nada, por lo cual solo es necesario traer la lista
+                //pero si se puede, con la estructura igual que los demas repos
+
+                val compounds = response.body()?.molarMassList?.map {
+                    Log.d("AddMolarMass", it.toString())
+                    it.toMolarMassEntity(userId)
+                }
+                    ?: emptyList()
+                Result.Success(compounds, "Obteniendo lista de masas molares de usuarios")
+
+            } else {
+
+                val errorMessage = parseApiError(response.errorBody()?.string())
+                Result.Failure(Exception(errorMessage), errorMessage)
+            }
+        } catch (e : Exception) {
+            Result.Failure(e, e.message ?: "Error de conexion o desconocido.")
+        }
+    }
+
+    suspend fun addMolarMassToList(token : String, userId : String, request : AddMolarMassRequest) : Result<Unit> {
+
+        return withContext(Dispatchers.IO) {
+            try {
+
+                val response = apiService.addNewMolarMass("Bearer $token", userId, request)
+
+                if (response.isSuccessful) {
+
+                    //todo aqui hay que cambiar la respuesta de la api, tiene que regresar el usuario como los demas de update
+                    //no solamente el mensaje de exito, asi se podra actualizar en el room el nuevo usuario y sus masas molares
+                    //eso para que cuando el usuario no tenga internet pueda acceder a todas las cosas localmente
+                    val addMolarMassResponse = response.body()
+                    val message = addMolarMassResponse?.message ?: "Masa molar agregada a la lista."
+
+                    Result.Success(Unit, message)
+                } else {
+                    val errorMessage = parseApiError(response.errorBody()?.string())
+                    Result.Failure(
+                        Exception("Error al añadir masa molar: ${errorMessage}"),
+                        errorMessage
+                    )
+                }
+            } catch (e: Exception) {
+                Result.Failure(e, e.message ?: "Error de conexion o desconocido.")
+            }
+        }
+    }
+
+    suspend fun deleteMolarMassFromList(token : String, userId : String, molarMassApiId : String) : Result<UserEntity> {
+
+        return withContext(Dispatchers.IO) {
+            try {
+
+                val response = apiService.deleteMolarMass("Bearer $token", userId, molarMassApiId)
+
+                if (response.isSuccessful) {
+
+                    val userResponse = response.body()
+
+                    if (userResponse != null && userResponse.user != null) {
+
+                        val updatedUserData = userResponse.user
+                        val updatedMessage = userResponse.message
+
+                        val updatedUserEntity = updatedUserData.toUserEntity(token)
+                        userDao.updateUser(updatedUserEntity.copy())
+
+                        val updatedMolarMassEntity = updatedUserData.toMolarMassEntity()
+                        molarMassDao.deleteAllMolarMassForUser(userId)
+                        molarMassDao.insertAllCompounds(updatedMolarMassEntity)
+
+                        Result.Success(updatedUserEntity, updatedMessage)
+                    } else {
+                        Result.Failure(
+                            Exception("Respuesta no valida al eliminar la masa molar de la lista."),
+                            "Error: No se ha podido eliminar la masa molar de la lista."
+                        )
+                    }
+                } else {
+                    val errorMessage = parseApiError(response.errorBody()?.string())
+                    Result.Failure(
+                        Exception("Error al eliminar masa molar: ${errorMessage}"),
+                        errorMessage
+                    )
+                }
+            } catch (e: Exception) {
+                Result.Failure(e, e.message ?: "Error de conexion o desconocido.")
+            }
+        }
+    }
+
+    suspend fun logoutUser(userId : String) {
+        userDao.deleteUserById(userId)
+        molarMassDao.deleteAllMolarMassForUser(userId)
+    }
+
+    //todo estos dos ultimos metodos realmente no se usaran ya que no habra funcionalidad de actualizar credenciales ni password para el usuario
 
     suspend fun updateCredentials(token : String, userId : String, username : String?, email : String?) : Result<UserEntity> {
 
@@ -271,220 +447,6 @@ class UserRepository (
                 Result.Failure(e, e.message ?: "Error de conexion o desconocido.")
             }
         }
-    }
-
-    suspend fun requestPasswordRecovery(email : String) : Result<Unit> {
-
-        return withContext(Dispatchers.IO) {
-            try {
-
-                val request = PasswordRecoveryRequest(email)
-                val response = apiService.requestPasswordRecovery(request)
-
-                if (response.isSuccessful) {
-
-                    Result.Success(Unit, response.body()?.message)
-
-                } else {
-
-                    val errorMessage = response.errorBody()?.string()
-                    Result.Failure(
-                        Exception("Error al solicitar recuperación: ${errorMessage}"),
-                        errorMessage
-                    )
-                }
-
-            } catch (e: Exception) {
-                Result.Failure(e, e.message ?: "Error de conexion o desconocido.")
-            }
-        }
-    }
-
-    suspend fun resetPassword(token : String, newPassword : String) : Result<UserEntity> {
-
-        return withContext(Dispatchers.IO) {
-            try {
-
-                val request = ResetPasswordRequest(token, newPassword)
-                val response = apiService.resetPassword(request)
-
-                if (response.isSuccessful) {
-
-                    val userUpdated = response.body()
-                    val user = userUpdated?.user?.user?.toUserEntity(token)
-
-                    user?.let {
-                        Result.Success(it, userUpdated.message)
-
-                    } ?: Result.Failure(
-                        Exception("No se pudo restablecer la contraseña."),
-                        "Error al restablecer la contraseña"
-                    )
-
-                } else {
-                    val errorMessage = parseApiError(response.errorBody()?.string())
-                    Result.Failure(
-                        Exception("Error al restablecer contraseña: ${errorMessage}"),
-                        errorMessage
-                    )
-                }
-
-            } catch (e: Exception) {
-                Result.Failure(e, e.message ?: "Error de conexion o desconocido.")
-            }
-        }
-    }
-
-    fun getMolarMassList(userId : String) : Flow<List<CompoundEntity>> {
-        return molarMassDao.getMolarMasses(userId)
-    }
-
-    suspend fun getMolarMassList(token : String, userId : String) : Result<List<CompoundEntity>> {
-        return try {
-
-            val response = apiService.getMolarMassList("Bearer $token", userId)
-
-            if (response.isSuccessful) {
-
-                Log.d("AddMolarMass", response.body().toString())
-                Log.d("AddMolarMass", response.body()?.molarMassList.toString())
-
-                val compounds = response.body()?.molarMassList?.map {
-                    Log.d("AddMolarMass", it.toString())
-                    it.toMolarMassEntity(userId)
-                }
-                    ?: emptyList()
-                Result.Success(compounds, "Obteniendo lista de masas molares de usuarios")
-
-            } else {
-
-                val errorMessage = parseApiError(response.errorBody()?.string())
-                Result.Failure(Exception(errorMessage), errorMessage)
-            }
-        } catch (e : Exception) {
-            Result.Failure(e, e.message ?: "Error de conexion o desconocido.")
-        }
-    }
-
-    suspend fun refreshMolarMassListFromApi(token : String, userId : String) : Result<Unit> {
-
-        return withContext(Dispatchers.IO) {
-            try {
-
-                val response = apiService.getMolarMassList("Bearer $token", userId)
-
-                if (response.isSuccessful) {
-
-                    val molarMasses = response.body()?.molarMassList?.map { it.toMolarMassEntity(userId) }
-
-                    if (!molarMasses.isNullOrEmpty()) {
-
-                        molarMassDao.deleteAllMolarMassForUser(userId)
-                        molarMassDao.insertAllCompounds(molarMasses)
-
-                        Result.Success(Unit, "Actualizacion de lista de masas molares exitosa.")
-
-                    } else if (response.body()?.molarMassList?.isEmpty() == true) {
-
-                        molarMassDao.deleteAllMolarMassForUser(userId)
-                        Result.Success(Unit, "Vaciando lista de masas molares")
-
-                    } else {
-                        Result.Failure(
-                            Exception("Lista de masas molares vacía."),
-                            "Lista de masas molares vacia"
-                        )
-                    }
-
-                } else {
-                    val errorMessage = getErrorMessage(response)
-                    Result.Failure(
-                        Exception("Error al obtener lista de masas molares de la API: ${errorMessage}"),
-                        errorMessage
-                    )
-                }
-
-            } catch (e: Exception) {
-                Result.Failure(e, e.message ?: "Error de conexion o desconocido.")
-            }
-        }
-    }
-
-    suspend fun addMolarMassToList(token : String, userId : String, request : AddMolarMassRequest) : Result<Unit> {
-
-        Log.d("AddMolarMass", token)
-        Log.d("AddMolarMass", userId)
-        Log.d("AddMolarMass", request.toString())
-
-        return withContext(Dispatchers.IO) {
-            try {
-
-                val response = apiService.addNewMolarMass("Bearer $token", userId, request)
-
-                if (response.isSuccessful) {
-
-                    val addMolarMassResponse = response.body()
-                    Log.d("UserResponseWithMessage", addMolarMassResponse.toString())
-                    val message = addMolarMassResponse?.message ?: "Masa molar agregada a la lista."
-
-                    Result.Success(Unit, message)
-                } else {
-                    val errorMessage = parseApiError(response.errorBody()?.string())
-                    Result.Failure(
-                        Exception("Error al añadir masa molar: ${errorMessage}"),
-                        errorMessage
-                    )
-                }
-            } catch (e: Exception) {
-                Result.Failure(e, e.message ?: "Error de conexion o desconocido.")
-            }
-        }
-    }
-
-    suspend fun deleteMolarMassFromList(token : String, userId : String, molarMassApiId : String) : Result<UserEntity> {
-
-        return withContext(Dispatchers.IO) {
-            try {
-
-                val response = apiService.deleteMolarMass("Bearer $token", userId, molarMassApiId)
-
-                if (response.isSuccessful) {
-
-                    val updatedUserResponse = response.body()
-                    val updatedUser = updatedUserResponse?.user?.user?.toUserEntity(token)
-                    val updatedMolarMasses = response.body()?.user?.user?.toMolarMassEntity()
-
-                    if (updatedUser != null && updatedMolarMasses != null) {
-
-                        userDao.updateUser(updatedUser)
-                        molarMassDao.deleteAllMolarMassForUser(userId)
-                        molarMassDao.insertAllCompounds(updatedMolarMasses)
-
-                        Result.Success(updatedUser, updatedUserResponse.message)
-
-                    } else {
-                        Result.Failure(
-                            Exception("No se pudo eliminar la masa molar."),
-                            "Error al eliminar la masa molar de la lista"
-                        )
-                    }
-                } else {
-                    val errorMessage = parseApiError(response.errorBody()?.string())
-                    Result.Failure(
-                        Exception("Error al eliminar masa molar: ${errorMessage}"),
-                        errorMessage
-                    )
-                }
-            } catch (e: Exception) {
-                Result.Failure(e, e.message ?: "Error de conexion o desconocido.")
-            }
-        }
-    }
-
-    // permite limpiar la sesión local al cerrar sesión
-    suspend fun logoutUser(userId : String) {
-        userDao.deleteUserById(userId)
-        molarMassDao.deleteAllMolarMassForUser(userId)
     }
 
 }

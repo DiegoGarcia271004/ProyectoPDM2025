@@ -109,9 +109,11 @@ fun MainScreen(
     fun verifyScreenToChange(screen : String) {
         if (isLoggedUser) {
             if (currentUser?.user?.isPremium == true) {
-                navController.navigate(if (screen == "PeriodicTable") PeriodicTableScreenSerializable else BalEquationScreenSerializable)
+                navController.navigate(if (screen == "PeriodicTable") PeriodicTableScreenSerializable(false) else BalEquationScreenSerializable(false))
             } else {
-                navController.navigate(BuyPremiumScreenSerializable)
+                navController.navigate(
+                    BuyPremiumScreenSerializable(screen)
+                )
             }
         } else {
             errorViewModel.setError("Necesitas estar autenticado/a para usar las funciones Premium. Por favor, inicia sesion en tu cuenta de SeaShellCalculator o registrate.")
@@ -251,7 +253,7 @@ fun MainScreen(
             })
             Spacer(Modifier.height(20.dp))
             AppButton("Lista de masas\nmolares", 240.dp, onClick =  {
-                navController.navigate(MolarMassScreenSerializable)
+                navController.navigate(MolarMassScreenSerializable(false))
             })
             Spacer(Modifier.height(20.dp))
             AppButton("Balanceador de\necuaciones químicas", 240.dp, isPremium = true, onClick =  {
@@ -303,8 +305,6 @@ fun MainScreen(
                     )
                 }
             }
-
-            //}
         }
     }
 }

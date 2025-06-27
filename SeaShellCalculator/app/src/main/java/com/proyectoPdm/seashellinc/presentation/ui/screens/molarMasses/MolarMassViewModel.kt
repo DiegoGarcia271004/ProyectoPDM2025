@@ -52,7 +52,6 @@ class MolarMassViewModel @Inject constructor() : ViewModel() {
                 } else {
                     _errorMessage.value = "No se ha podido obtener los datos"
                 }
-
             } catch (e : Exception) {
                 _errorMessage.value = e.message
             } finally {

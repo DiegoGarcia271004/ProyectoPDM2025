@@ -1,5 +1,6 @@
 package com.proyectoPdm.seashellinc.presentation.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -55,20 +56,24 @@ fun Navigation(
             ChemicalUnitsScreen(navController)
         }
 
-        composable<MolarMassScreenSerializable> {
-            MolarMassScreen(navController, userViewModel =  userViewModel, errorViewModel = errorViewModel)
+        composable<MolarMassScreenSerializable> { backOfPremium ->
+            val args = backOfPremium.toRoute<MolarMassScreenSerializable>()
+            MolarMassScreen(navController, userViewModel =  userViewModel, errorViewModel = errorViewModel, backOfPremium = args.backOfPremium)
         }
 
-        composable<MolarMassPersonalScreenSerializable> {
-            MolarMassPersonalScreen(navController, userViewModel =  userViewModel)
+        composable<MolarMassPersonalScreenSerializable> { backOfPremium ->
+            val args = backOfPremium.toRoute<MolarMassPersonalScreenSerializable>()
+            MolarMassPersonalScreen(navController, userViewModel =  userViewModel, backOfPremium =  args.backOfPremium)
         }
 
-        composable<BalEquationScreenSerializable> {
-            EquationBalancerScreen(navController)
+        composable<BalEquationScreenSerializable> { backOfPremium ->
+            val args = backOfPremium.toRoute<BalEquationScreenSerializable>()
+            EquationBalancerScreen(navController, backOfPremium =  args.backOfPremium)
         }
 
-        composable<PeriodicTableScreenSerializable> {
-            PeriodicTableScreen(navController)
+        composable<PeriodicTableScreenSerializable> { backOfPremium ->
+            val args = backOfPremium.toRoute<PeriodicTableScreenSerializable>()
+            PeriodicTableScreen(navController, backOfPremium = args.backOfPremium)
         }
 
         composable<LoginScreenSerializable> {
@@ -100,8 +105,10 @@ fun Navigation(
             ErrorScreen(navController, errorViewModel)
         }
 
-        composable<BuyPremiumScreenSerializable> {
-            BuyPremiumScreen(navController)
+        composable<BuyPremiumScreenSerializable> { screen ->
+            val args = screen.toRoute<BuyPremiumScreenSerializable>()
+            Log.d("Log en Navigation", args.screen)
+            BuyPremiumScreen(navController, userViewModel, errorViewModel, args.screen)
         }
 
         composable<VolumeOverVolumeCalculatorSerializable> {

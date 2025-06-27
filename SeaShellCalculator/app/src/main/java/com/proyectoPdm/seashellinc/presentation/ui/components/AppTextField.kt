@@ -20,6 +20,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.proyectoPdm.seashellinc.presentation.ui.theme.DarkBlue
 import com.proyectoPdm.seashellinc.presentation.ui.theme.MainBlue
 import com.proyectoPdm.seashellinc.presentation.ui.theme.MontserratFontFamily
 import kotlinx.coroutines.delay
@@ -44,7 +45,7 @@ fun AppTextField(
         value = value,
         onValueChange = onValueChange,
         label = {
-            Text(label, fontFamily = MontserratFontFamily, fontWeight = FontWeight.Bold)
+            Text(label, fontFamily = MontserratFontFamily, fontWeight = FontWeight.Bold, color = DarkBlue)
         },
         colors = TextFieldDefaults.colors(
             unfocusedTextColor = Color.Black,

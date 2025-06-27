@@ -147,7 +147,7 @@ fun NormalityCalculator(
                     navController.popBackStack()
                 }
             }
-            Spacer(Modifier.height(20.dp))
+            Spacer(Modifier.height(30.dp))
 
             Column (Modifier.padding(start = 50.dp).fillMaxSize()){
                 Column(
