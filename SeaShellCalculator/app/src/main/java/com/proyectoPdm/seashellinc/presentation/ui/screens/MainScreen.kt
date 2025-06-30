@@ -1,5 +1,6 @@
 package com.proyectoPdm.seashellinc.presentation.ui.screens
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -35,12 +36,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.navigation.NavController
 import com.proyectoPdm.seashellinc.R
 import com.proyectoPdm.seashellinc.presentation.navigation.BalEquationScreenSerializable
@@ -62,6 +65,9 @@ import com.proyectoPdm.seashellinc.presentation.ui.theme.MontserratFontFamily
 @Composable
 fun MainScreen(navController: NavController) {
     val navigationBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+    val context = LocalContext.current
+    val url = "https://sites.google.com/uca.edu.sv/seashellcalculator/"
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets.navigationBars,
@@ -112,7 +118,10 @@ fun MainScreen(navController: NavController) {
         },
         floatingActionButton = {
             IconButton(
-                onClick = {},
+                onClick = {
+                    val intent = Intent(Intent.ACTION_VIEW, url.toUri())
+                    context.startActivity(intent)
+                },
                 modifier = Modifier.size(50.dp),
                 colors = IconButtonDefaults.iconButtonColors(MainBlue)
             ) {
