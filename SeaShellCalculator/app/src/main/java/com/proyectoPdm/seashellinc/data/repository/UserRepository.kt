@@ -208,70 +208,6 @@ class UserRepository (
         }
     }
 
-    //todo estos dos metodos aun debe ser implementados en el view model del usuario y en la logica de la pantalla de login
-
-    suspend fun requestPasswordRecovery(email : String) : Result<Unit> {
-
-        return withContext(Dispatchers.IO) {
-            try {
-
-                val request = PasswordRecoveryRequest(email)
-                val response = apiService.requestPasswordRecovery(request)
-
-                if (response.isSuccessful) {
-
-                    Result.Success(Unit, response.body()?.message)
-
-                } else {
-
-                    val errorMessage = parseApiError(response.errorBody()?.string())
-                    Result.Failure(
-                        Exception("Error al solicitar recuperación: ${errorMessage}"),
-                        errorMessage
-                    )
-                }
-
-            } catch (e: Exception) {
-                Result.Failure(e, e.message ?: "Error de conexion o desconocido.")
-            }
-        }
-    }
-
-    suspend fun resetPassword(token : String, newPassword : String) : Result<UserEntity> {
-
-        return withContext(Dispatchers.IO) {
-            try {
-
-                val request = ResetPasswordRequest(token, newPassword)
-                val response = apiService.resetPassword(request)
-
-                if (response.isSuccessful) {
-
-                    val userUpdated = response.body()
-                    val user = userUpdated?.user?.user?.toUserEntity(token)
-
-                    user?.let {
-                        Result.Success(it, userUpdated.message)
-
-                    } ?: Result.Failure(
-                        Exception("No se pudo restablecer la contraseña."),
-                        "Error al restablecer la contraseña"
-                    )
-
-                } else {
-                    val errorMessage = parseApiError(response.errorBody()?.string())
-                    Result.Failure(
-                        Exception("Error al restablecer contraseña: ${errorMessage}"),
-                        errorMessage
-                    )
-                }
-
-            } catch (e: Exception) {
-                Result.Failure(e, e.message ?: "Error de conexion o desconocido.")
-            }
-        }
-    }
-
     suspend fun getMolarMassList(token : String, userId : String) : Result<List<CompoundEntity>> {
         return try {
 
@@ -449,4 +385,73 @@ class UserRepository (
         }
     }
 
+    //todo tambien se va omitir en esta primera version el restablecimiento de password
+
+    suspend fun requestPasswordRecovery(email : String) : Result<Unit> {
+
+        return withContext(Dispatchers.IO) {
+            try {
+
+                val request = PasswordRecoveryRequest(email)
+                val response = apiService.requestPasswordRecovery(request)
+
+                if (response.isSuccessful) {
+
+                    Log.d("SuccessRecovery", "")
+
+                    Result.Success(Unit, response.body()?.message)
+
+                } else {
+
+                    Log.d("FailureRecovery", "")
+
+                    val errorMessage = parseApiError(response.errorBody()?.string())
+                    Result.Failure(
+                        Exception("Error al solicitar recuperación: ${errorMessage}"),
+                        errorMessage
+                    )
+                }
+
+            } catch (e: Exception) {
+                Log.d("ExceptRecovery", "")
+
+                Result.Failure(e, e.message ?: "Error de conexion o desconocido.")
+            }
+        }
+    }
+
+    //    suspend fun resetPassword(token : String, newPassword : String) : Result<UserEntity> {
+//
+//        return withContext(Dispatchers.IO) {
+//            try {
+//
+//                val request = ResetPasswordRequest(token, newPassword)
+//                val response = apiService.resetPassword(request)
+//
+//                if (response.isSuccessful) {
+//
+//                    val userUpdated = response.body()
+//                    val user = userUpdated?.user?.user?.toUserEntity(token)
+//
+//                    user?.let {
+//                        Result.Success(it, userUpdated.message)
+//
+//                    } ?: Result.Failure(
+//                        Exception("No se pudo restablecer la contraseña."),
+//                        "Error al restablecer la contraseña"
+//                    )
+//
+//                } else {
+//                    val errorMessage = parseApiError(response.errorBody()?.string())
+//                    Result.Failure(
+//                        Exception("Error al restablecer contraseña: ${errorMessage}"),
+//                        errorMessage
+//                    )
+//                }
+//
+//            } catch (e: Exception) {
+//                Result.Failure(e, e.message ?: "Error de conexion o desconocido.")
+//            }
+//        }
+//    }
 }

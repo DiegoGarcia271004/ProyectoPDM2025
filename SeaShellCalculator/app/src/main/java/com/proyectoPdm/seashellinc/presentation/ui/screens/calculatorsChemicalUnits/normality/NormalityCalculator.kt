@@ -90,7 +90,6 @@ fun NormalityCalculator(
     )
 
     LaunchedEffect(molarMassForCalculatorFromMolarMassList) {
-        Log.d("NormalityLaunch", molarMassForCalculator)
         if (molarMassForCalculatorFromMolarMassList.isNotEmpty()) {
             viewModel.onSoluteMolarMassChange(molarMassForCalculatorFromMolarMassList)
         }
@@ -182,6 +181,8 @@ fun NormalityCalculator(
                 Spacer(Modifier.width(20.dp))
                 AppGoBackButton(60.dp){
                     viewModel.clearAllInputs()
+                    molarMassViewModel.setMolarMassForNormalityCalculator("")
+                    molarMassPersonalViewModel.setMolarMassForNormalityCalculator("")
                     navController.navigate(ChemicalUnitsScreenSerializable)
                 }
             }
@@ -295,7 +296,11 @@ fun NormalityCalculator(
             AppButton(
                 text = "Limpiar",
                 width = 120.dp,
-                onClick = { viewModel.clearAllInputs() }
+                onClick = {
+                    viewModel.clearAllInputs()
+                    molarMassViewModel.setMolarMassForNormalityCalculator("")
+                    molarMassPersonalViewModel.setMolarMassForNormalityCalculator("")
+                }
             )
         }
     }

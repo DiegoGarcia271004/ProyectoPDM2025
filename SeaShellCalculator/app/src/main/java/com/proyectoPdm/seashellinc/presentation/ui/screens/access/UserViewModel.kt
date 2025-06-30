@@ -379,44 +379,44 @@ class UserViewModel @Inject constructor (
         }
     }
 
-    private val _isSentEmail = MutableStateFlow<Boolean>(false)
-    val isSentEmail = _isSentEmail.asStateFlow()
+//    private val _isSentEmail = MutableStateFlow<Boolean>(false)
+//    val isSentEmail = _isSentEmail.asStateFlow()
 
-    fun requestRecoveryPassword(email : String) {
-        viewModelScope.launch {
-            _isSentEmail.value = false
-            _isLoading.value = true
-            _errorMessage.value = ""
-            _successMessage.value = ""
-
-            if (_email.value.isEmpty()) {
-                _errorMessage.value = "Ingresa tu correo electronico para solicitar restablecimiento."
-                _isLoading.value = false
-                return@launch
-            }
-
-            if (connectivityHelper.isNetworkAvailable()) {
-
-                when(val result = repository.requestPasswordRecovery(email)) {
-
-                    is Result.Success -> {
-                        _isSentEmail.value = true
-                        _successMessage.value = result.message ?: "Correo electronico de restablecimiento enviado."
-                    }
-
-                    is Result.Failure -> {
-                        _isSentEmail.value = false
-                        _errorMessage.value = result.message ?: "No se pudo solicitar el restablecimiento."
-                    }
-                }
-            } else {
-                _isSentEmail.value = false
-                _errorMessage.value = "Conexion a internet requerida para solicitar restablecimiento."
-            }
-
-            _isLoading.value = false
-        }
-    }
+//    fun requestRecoveryPassword(email : String) {
+//        viewModelScope.launch {
+//            _isSentEmail.value = false
+//            _isLoading.value = true
+//            _errorMessage.value = ""
+//            _successMessage.value = ""
+//
+//            if (_email.value.isEmpty()) {
+//                _errorMessage.value = "Ingresa tu correo electronico para solicitar restablecimiento."
+//                _isLoading.value = false
+//                return@launch
+//            }
+//
+//            if (connectivityHelper.isNetworkAvailable()) {
+//
+//                when(val result = repository.requestPasswordRecovery(email)) {
+//
+//                    is Result.Success -> {
+//                        _isSentEmail.value = true
+//                        _successMessage.value = result.message ?: "Correo electronico de restablecimiento enviado."
+//                    }
+//
+//                    is Result.Failure -> {
+//                        _isSentEmail.value = false
+//                        _errorMessage.value = result.message ?: "No se pudo solicitar el restablecimiento."
+//                    }
+//                }
+//            } else {
+//                _isSentEmail.value = false
+//                _errorMessage.value = "Conexion a internet requerida para solicitar restablecimiento."
+//            }
+//
+//            _isLoading.value = false
+//        }
+//    }
 
     fun clearSuccessOrErrorMessage() {
         _errorMessage.value = ""

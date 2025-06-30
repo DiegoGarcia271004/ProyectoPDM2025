@@ -72,6 +72,7 @@ fun Navigation(
                 backOfPremium = args.backOfPremium,
                 isCalculator = args.isCalculator,
                 screenToBack = args.screenToBack,
+                molarMassViewModel = molarMassPersonalViewModel
             )
         }
 
@@ -83,7 +84,8 @@ fun Navigation(
                 userViewModel =  userViewModel,
                 backOfPremium =  args.backOfPremium,
                 isCalculator = args.isCalculator,
-                screenToBack = args.screenToBack
+                screenToBack = args.screenToBack,
+                molarMassViewModel = molarMassViewModel
             )
         }
 

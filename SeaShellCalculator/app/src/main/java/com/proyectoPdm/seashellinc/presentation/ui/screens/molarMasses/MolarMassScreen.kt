@@ -76,6 +76,7 @@ fun MolarMassScreen(
     backOfPremium : Boolean,
     isCalculator : Boolean,
     screenToBack : String,
+    molarMassViewModel : MolarMassPersonalViewModel
 ) {
 
     val navigationBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
@@ -220,22 +221,23 @@ fun MolarMassScreen(
                                             .fillMaxWidth()
                                             .clickable {
                                                 if (isCalculator || screenToBack != "Nothing") {
-
                                                     if (screenToBack == "Molarity") {
+                                                        molarMassViewModel.setMolarMassForMolarityCalculator("")
                                                         viewModel.setMolarMassForMolarityCalculator(item.molarMass.toString())
                                                         navController.navigate(
                                                             MolarityCalculatorSerializable)
                                                     } else if (screenToBack == "Molality") {
+                                                        molarMassViewModel.setMolarMassForNormalityCalculator("")
                                                         viewModel.setMolarMassForMolalityCalculator(item.molarMass.toString())
                                                         navController.navigate(
                                                             MolalityCalculatorSerializable)
                                                     } else if (screenToBack == "Normality") {
+                                                        molarMassViewModel.setMolarMassForNormalityCalculator("")
                                                         viewModel.setMolarMassForNormalityCalculator(item.molarMass.toString())
-                                                        Log.d("MolarMassScreenName", item.compoundName)
-                                                        Log.d("MolarMassScreen", viewModel.molarMassForNormalityCalculator.value)
                                                         navController.navigate(
                                                             NormalityCalculatorSerializable)
                                                     } else if (screenToBack == "MolarFractionSolute") {
+                                                        molarMassViewModel.setMolarMassForMolarFractionSoluteCalculator("")
                                                         viewModel.setMolarMassForMolarFractionSoluteCalculator(
                                                             item.molarMass.toString()
                                                         )
@@ -243,6 +245,7 @@ fun MolarMassScreen(
                                                             MolarFractionCalculatorSerializable
                                                         )
                                                     }  else if (screenToBack == "MolarFractionSolvent") {
+                                                        molarMassViewModel.setMolarMassForMolarFractionSolventCalculator("")
                                                         viewModel.setMolarMassForMolarFractionSolventCalculator(item.molarMass.toString())
                                                         navController.navigate(
                                                             MolarFractionCalculatorSerializable)

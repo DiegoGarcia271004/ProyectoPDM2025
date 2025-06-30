@@ -188,6 +188,10 @@ fun MolarFractionCalculator(
                 Spacer(Modifier.width(20.dp))
                 AppGoBackButton(60.dp) {
                     viewModel.clearAllInputs()
+                    molarMassViewModel.setMolarMassForMolarFractionSolventCalculator("")
+                    molarMassViewModel.setMolarMassForMolarFractionSoluteCalculator("")
+                    molarMassPersonalViewModel.setMolarMassForMolarFractionSoluteCalculator("")
+                    molarMassPersonalViewModel.setMolarMassForMolarFractionSolventCalculator("")
                     navController.navigate(ChemicalUnitsScreenSerializable)
                 }
             }
@@ -307,7 +311,13 @@ fun MolarFractionCalculator(
             AppButton(
                 text = "Limpiar",
                 width = 120.dp,
-                onClick = { viewModel.clearAllInputs() }
+                onClick = {
+                    viewModel.clearAllInputs()
+                    molarMassViewModel.setMolarMassForMolarFractionSolventCalculator("")
+                    molarMassViewModel.setMolarMassForMolarFractionSoluteCalculator("")
+                    molarMassPersonalViewModel.setMolarMassForMolarFractionSoluteCalculator("")
+                    molarMassPersonalViewModel.setMolarMassForMolarFractionSolventCalculator("")
+                }
             )
         }
     }

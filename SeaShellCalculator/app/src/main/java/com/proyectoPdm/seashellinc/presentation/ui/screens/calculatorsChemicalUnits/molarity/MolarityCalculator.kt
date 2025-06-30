@@ -180,6 +180,8 @@ fun MolarityCalculator(
                 Spacer(Modifier.width(20.dp))
                 AppGoBackButton(60.dp){
                     viewModel.clearAllInputs()
+                    molarMassViewModel.setMolarMassForMolarityCalculator("")
+                    molarMassPersonalViewModel.setMolarMassForMolarityCalculator("")
                     navController.navigate(ChemicalUnitsScreenSerializable)
                 }
             }
@@ -285,7 +287,10 @@ fun MolarityCalculator(
             AppButton(
                 text = "Limpiar",
                 width = 120.dp,
-                onClick = { viewModel.clearAllInputs() }
+                onClick = {
+                    viewModel.clearAllInputs()
+                    molarMassViewModel.setMolarMassForMolarityCalculator("")
+                    molarMassPersonalViewModel.setMolarMassForMolarityCalculator("")                }
             )
         }
     }

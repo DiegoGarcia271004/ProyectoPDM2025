@@ -101,7 +101,6 @@ fun MolalityCalculator(
         }
     }
 
-
     LaunchedEffect(solute, solvent, molarity, selectedOutput) {
         when (selectedOutput) {
             "Soluto" -> viewModel.calculateRequiredSolute()
@@ -182,6 +181,8 @@ fun MolalityCalculator(
                 Spacer(Modifier.width(20.dp))
                 AppGoBackButton(60.dp){
                     viewModel.clearAllInputs()
+                    molarMassViewModel.setMolarMassForMolalityCalculator("")
+                    molarMassPersonalViewModel.setMolarMassForMolalityCalculator("")
                     navController.navigate(ChemicalUnitsScreenSerializable)
                 }
             }
@@ -286,7 +287,10 @@ fun MolalityCalculator(
             AppButton(
                 text = "Limpiar",
                 width = 120.dp,
-                onClick = { viewModel.clearAllInputs() }
+                onClick = {
+                    viewModel.clearAllInputs()
+                    molarMassViewModel.setMolarMassForMolalityCalculator("")
+                    molarMassPersonalViewModel.setMolarMassForMolalityCalculator("")                }
             )
         }
     }

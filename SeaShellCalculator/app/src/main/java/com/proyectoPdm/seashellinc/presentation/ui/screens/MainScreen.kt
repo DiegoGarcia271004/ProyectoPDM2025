@@ -1,5 +1,6 @@
 package com.proyectoPdm.seashellinc.presentation.ui.screens
 
+import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -73,6 +74,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.zIndex
+import androidx.core.net.toUri
 import com.proyectoPdm.seashellinc.billing.BillingViewModel
 import com.proyectoPdm.seashellinc.billing.PurchaseStatus
 import com.proyectoPdm.seashellinc.presentation.navigation.BuyPremiumScreenSerializable
@@ -90,6 +92,7 @@ fun MainScreen(
 
     val navigationBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     val context = LocalContext.current
+    val url = "https://sites.google.com/uca.edu.sv/seashellcalculator/"
 
     val currentUser by userViewModel.currentUser.collectAsState()
 
@@ -176,7 +179,10 @@ fun MainScreen(
         },
         floatingActionButton = {
             IconButton(
-                onClick = {},
+                onClick = {
+                    val intent = Intent(Intent.ACTION_VIEW, url.toUri())
+                    context.startActivity(intent)
+                },
                 modifier = Modifier.size(50.dp),
                 colors = IconButtonDefaults.iconButtonColors(MainBlue)
             ) {

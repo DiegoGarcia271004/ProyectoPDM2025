@@ -44,7 +44,7 @@ fun CalcTextField(
     onValueChange: (String) -> Unit,
     label: String,
     enable: Boolean,
-    info: Info?
+    info: Info? = null,
 ){
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()

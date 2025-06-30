@@ -210,7 +210,7 @@ fun BuyPremiumScreen(
                     "\nPago unico",
                     fontFamily = MontserratFontFamily,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Yellow,
+                    color = DarkBlue,
                     textAlign = TextAlign.Center,
                     fontSize = 20.sp
                 )

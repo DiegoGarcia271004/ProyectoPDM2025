@@ -88,7 +88,7 @@ fun LoginScreen(
     val password by userViewModel.password.collectAsState()
     val accessSuccess by userViewModel.accessSuccess.collectAsState()
 
-    val isSentEmail by userViewModel.isSentEmail.collectAsState()
+//    val isSentEmail by userViewModel.isSentEmail.collectAsState()
 
     LaunchedEffect(accessSuccess) {
         if (accessSuccess) {
@@ -105,12 +105,16 @@ fun LoginScreen(
     }
 
     LaunchedEffect(successMessage) {
-        if (!isSentEmail) {
-            if (successMessage.isNotEmpty()) {
-                Toast.makeText(context, successMessage, Toast.LENGTH_SHORT).show()
-            }
-            userViewModel.clearSuccessOrErrorMessage()
+        if (successMessage.isNotEmpty()) {
+            Toast.makeText(context, successMessage, Toast.LENGTH_SHORT).show()
         }
+        userViewModel.clearSuccessOrErrorMessage()
+//        if (!isSentEmail) {
+//            if (successMessage.isNotEmpty()) {
+//                Toast.makeText(context, successMessage, Toast.LENGTH_SHORT).show()
+//            }
+//            userViewModel.clearSuccessOrErrorMessage()
+//        }
     }
 
     Scaffold(
@@ -250,17 +254,17 @@ fun LoginScreen(
                         true
                     )
                 }
-                Spacer(Modifier.height(5.dp))
-                Text(
-                    "¿Olvido la contraseña?",
-                    textAlign = TextAlign.End,
-                    modifier = Modifier.width(330.dp).clickable {
-                        userViewModel.requestRecoveryPassword(email)
-                    },
-                    color = MainBlue,
-                    fontFamily = MontserratFontFamily
-                )
                 Spacer(Modifier.height(20.dp))
+//                Text(
+//                    "¿Olvido la contraseña?",
+//                    textAlign = TextAlign.End,
+//                    modifier = Modifier.width(330.dp).clickable {
+//                        userViewModel.requestRecoveryPassword(email)
+//                    },
+//                    color = MainBlue,
+//                    fontFamily = MontserratFontFamily
+//                )
+//                Spacer(Modifier.height(20.dp))
                 Button(
                     onClick = {
 
@@ -295,14 +299,14 @@ fun LoginScreen(
                 )
             }
 
-            if (isSentEmail) {
-                Text(
-                    text = successMessage,
-                    color = Color.Green,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(start = 25.dp)
-                )
-            }
+//            if (isSentEmail) {
+//                Text(
+//                    text = successMessage,
+//                    color = Color.Green,
+//                    fontWeight = FontWeight.Bold,
+//                    modifier = Modifier.padding(start = 25.dp)
+//                )
+//            }
 
             Spacer(Modifier.height(20.dp))
             Row {

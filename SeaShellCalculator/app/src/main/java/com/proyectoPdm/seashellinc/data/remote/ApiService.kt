@@ -73,6 +73,7 @@ interface ApiService {
     @POST("request-recovery")
     suspend fun requestPasswordRecovery(@Body request: PasswordRecoveryRequest): Response<MessageResponse>
 
-    @PUT("reset-password")
-    suspend fun resetPassword(@Body request: ResetPasswordRequest): Response<UserResponse>
+    //todo esta solicitud no la hace la app, la hace el cliente de la api
+//    @PUT("reset-password")
+//    suspend fun resetPassword(@Body request: ResetPasswordRequest): Response<UserResponse>
 }
