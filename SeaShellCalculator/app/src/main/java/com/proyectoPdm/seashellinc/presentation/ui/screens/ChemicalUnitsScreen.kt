@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.proyectoPdm.seashellinc.R
+import com.proyectoPdm.seashellinc.presentation.navigation.MainScreenSerializable
 import com.proyectoPdm.seashellinc.presentation.navigation.MolalityCalculatorSerializable
 import com.proyectoPdm.seashellinc.presentation.navigation.MolarFractionCalculatorSerializable
 import com.proyectoPdm.seashellinc.presentation.navigation.MolarityCalculatorSerializable
@@ -148,7 +149,7 @@ fun ChemicalUnitsScreen(navController: NavController) {
             Spacer(Modifier.height(70.dp))
 
             AppGoBackButton(112.dp, {
-                navController.popBackStack()
+                navController.navigate(MainScreenSerializable)
             })
         }
 

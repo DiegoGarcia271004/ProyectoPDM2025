@@ -123,17 +123,3 @@ fun <T> SelectionMenu(
         }
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun SelectionMenuPreview(){
-    var selectedOutput by remember { mutableStateOf(ToCalculate.CONCENTRATION) }
-
-    SelectionMenu(
-        itemList = ToCalculate.entries.toList(),
-        selectedItem = selectedOutput,
-        onItemSelected = {item -> selectedOutput = item},
-        itemContent = { item -> Text(item.label) },
-        modifier = Modifier.fillMaxWidth()
-    )
-}

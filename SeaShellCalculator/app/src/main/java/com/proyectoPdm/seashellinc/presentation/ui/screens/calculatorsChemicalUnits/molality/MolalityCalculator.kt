@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -32,30 +33,37 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import com.proyectoPdm.seashellinc.data.model.Info
 import com.proyectoPdm.seashellinc.data.model.calculators.CalculationResult
+import com.proyectoPdm.seashellinc.presentation.navigation.ChemicalUnitsScreenSerializable
 import com.proyectoPdm.seashellinc.presentation.ui.components.AppButton.AppButton
 import com.proyectoPdm.seashellinc.presentation.ui.components.AppGoBackButton
 import com.proyectoPdm.seashellinc.presentation.ui.components.CalcTextField
 import com.proyectoPdm.seashellinc.presentation.ui.components.SelectionMenu
-import com.proyectoPdm.seashellinc.presentation.ui.screens.calculatorsChemicalUnits.molarity.MolarityCalculatorViewModel
+import com.proyectoPdm.seashellinc.presentation.ui.screens.access.UserViewModel
+import com.proyectoPdm.seashellinc.presentation.ui.screens.error.ErrorViewModel
+import com.proyectoPdm.seashellinc.presentation.ui.screens.molarMasses.MolarMassPersonalViewModel
+import com.proyectoPdm.seashellinc.presentation.ui.screens.molarMasses.MolarMassViewModel
 import com.proyectoPdm.seashellinc.presentation.ui.theme.Background
 import com.proyectoPdm.seashellinc.presentation.ui.theme.CitrineBrown
 import com.proyectoPdm.seashellinc.presentation.ui.theme.DarkBlue
 import com.proyectoPdm.seashellinc.presentation.ui.theme.LightDarkBlue
 import com.proyectoPdm.seashellinc.presentation.ui.theme.MainBlue
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MolalityCalculator(
     navController: NavController,
-    viewModel: MolalityCalculatorViewModel = hiltViewModel()
+    viewModel: MolalityCalculatorViewModel = hiltViewModel(),
+    userViewModel: UserViewModel,
+    errorViewModel : ErrorViewModel,
+    molarMassPersonalViewModel: MolarMassPersonalViewModel,
+    molarMassViewModel: MolarMassViewModel
 ) {
     val navigationBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
@@ -66,6 +74,33 @@ fun MolalityCalculator(
     val soluteMolarMass by viewModel.soluteMolarMass.collectAsState()
     val molarity by viewModel.molarity.collectAsState()
     val calculationResult by viewModel.calculationResult.collectAsState()
+
+    val currentUser by userViewModel.currentUser.collectAsState()
+    val isLoggedUser by userViewModel.isLoggedUser.collectAsState()
+
+    val molarMassForCalculator by molarMassPersonalViewModel.molarMassForMolalityCalculator.collectAsState()
+    val molarMassForCalculatorFromMolarMassList by molarMassViewModel.molarMassForMolalityCalculator.collectAsState()
+
+    val info = Info(
+        isLoggedUser,
+        currentUser,
+        navController,
+        errorViewModel,
+        "Molality"
+    )
+
+    LaunchedEffect(molarMassForCalculatorFromMolarMassList) {
+        if (molarMassForCalculatorFromMolarMassList.isNotEmpty()) {
+            viewModel.onSoluteMolarMassChange(molarMassForCalculatorFromMolarMassList)
+        }
+    }
+
+    LaunchedEffect(molarMassForCalculator) {
+        if (molarMassForCalculator.isNotEmpty()) {
+            viewModel.onSoluteMolarMassChange(molarMassForCalculator)
+        }
+    }
+
 
     LaunchedEffect(solute, solvent, molarity, selectedOutput) {
         when (selectedOutput) {
@@ -147,7 +182,7 @@ fun MolalityCalculator(
                 Spacer(Modifier.width(20.dp))
                 AppGoBackButton(60.dp){
                     viewModel.clearAllInputs()
-                    navController.popBackStack()
+                    navController.navigate(ChemicalUnitsScreenSerializable)
                 }
             }
             Spacer(Modifier.height(40.dp))
@@ -203,7 +238,8 @@ fun MolalityCalculator(
                 } else solute,
                 onValueChange = { viewModel.onSoluteChange(it) },
                 label = "Soluto (g)",
-                enable = selectedOutput != "Soluto"
+                enable = selectedOutput != "Soluto",
+                info = null
             )
             Spacer(Modifier.height(15.dp))
 
@@ -211,8 +247,10 @@ fun MolalityCalculator(
                 input = soluteMolarMass,
                 onValueChange = { viewModel.onSoluteMolarMassChange(it) },
                 label = "Masa molar (g/mol)",
-                enable = true
+                enable = true,
+                info = info
             )
+
             Spacer(Modifier.height(15.dp))
 
             CalcTextField(
@@ -225,7 +263,8 @@ fun MolalityCalculator(
                 }    else solvent,
                 onValueChange = { viewModel.onSolventChange(it) },
                 label = "Solvente (kg)",
-                enable = selectedOutput != "Solvente"
+                enable = selectedOutput != "Solvente",
+                info = null
             )
             Spacer(Modifier.height(15.dp))
 
@@ -239,7 +278,8 @@ fun MolalityCalculator(
                 }    else molarity,
                 onValueChange = { viewModel.onMolarityChange(it) },
                 label = "Molalidad (mol/kg)",
-                enable = selectedOutput != "Molalidad"
+                enable = selectedOutput != "Molalidad",
+                info = null
             )
             Spacer(Modifier.height(20.dp))
 

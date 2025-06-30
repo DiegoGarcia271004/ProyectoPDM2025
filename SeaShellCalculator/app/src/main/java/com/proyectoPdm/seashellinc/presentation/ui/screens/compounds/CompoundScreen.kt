@@ -117,9 +117,22 @@ fun CompoundScreen(
                 }
             }
 
+            Spacer(Modifier.height(20.dp))
+
+            //todo si no se pone mas centrado pues dejar la pantalla sin titulo
+            Text(
+                text = "Detalles\nCompuesto",
+                color = CitrineBrown,
+                fontFamily = MontserratFontFamily,
+                fontWeight = FontWeight.Bold,
+                fontSize = 25.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(start = 130.dp, top = 60.dp)
+            )
+
             Column(
                 modifier = Modifier
-                    .padding(16.dp)
+                    .padding(5.dp)
                     .fillMaxSize()
                     .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -129,7 +142,7 @@ fun CompoundScreen(
                     modifier = Modifier
                         .clip(RoundedCornerShape(5.dp))
                         .background(MainBlue)
-                        .padding(20.dp)
+                        .padding(10.dp)
                         .height(400.dp)
                         .fillMaxWidth(0.85f)
 

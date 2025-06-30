@@ -195,7 +195,8 @@ fun PartsPerMillionCalculator(
                 } else solute,
                 onValueChange = { viewModel.onSoluteChange(it) },
                 label = "Soluto (mg)",
-                enable = selectedOutput != ToCalculate.SOLUTE
+                enable = selectedOutput != ToCalculate.SOLUTE,
+                info = null
             )
             Spacer(Modifier.height(20.dp))
 
@@ -209,7 +210,8 @@ fun PartsPerMillionCalculator(
                 } else solvent,
                 onValueChange = { viewModel.onSolventChange(it) },
                 label = "Solvente (L)",
-                enable = selectedOutput != ToCalculate.SOLVENT
+                enable = selectedOutput != ToCalculate.SOLVENT,
+                info = null
             )
             Spacer(Modifier.height(20.dp))
 
@@ -223,7 +225,8 @@ fun PartsPerMillionCalculator(
                 } else concentration,
                 onValueChange = { viewModel.onConcentrationChange(it) },
                 label = "Concentración (ppm)",
-                enable = selectedOutput != ToCalculate.CONCENTRATION
+                enable = selectedOutput != ToCalculate.CONCENTRATION,
+                info = null
             )
             Spacer(Modifier.height(40.dp))
 

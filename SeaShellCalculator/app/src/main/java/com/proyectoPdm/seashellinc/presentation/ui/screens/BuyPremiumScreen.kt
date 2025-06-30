@@ -57,7 +57,10 @@ import com.proyectoPdm.seashellinc.presentation.ui.screens.PeriodicTable.Periodi
 import com.proyectoPdm.seashellinc.presentation.ui.screens.error.ErrorViewModel
 import com.proyectoPdm.seashellinc.presentation.ui.theme.MainBlue
 import android.app.Activity
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.remember
 import com.proyectoPdm.seashellinc.billing.PurchaseStatus
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun BuyPremiumScreen(
@@ -65,7 +68,7 @@ fun BuyPremiumScreen(
     userViewModel: UserViewModel,
     errorViewModel: ErrorViewModel,
     screen : String,
-    billingViewModel: BillingViewModel = hiltViewModel()
+    billingViewModel: BillingViewModel
 ) {
 
     val navigationBarHeigh = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
@@ -78,19 +81,15 @@ fun BuyPremiumScreen(
     val successMessage by userViewModel.successMessage.collectAsState()
     val currentUser by userViewModel.currentUser.collectAsState()
 
+    val isPayPremiumSuccess by userViewModel.isPayPremiumSuccess.collectAsState()
+    val isPayPremiumFailure by userViewModel.isPayPremiumFailure.collectAsState()
+
     val purchaseStatus by billingViewModel.purchaseStatus.collectAsState()
 
     val isPurchaseLoading = purchaseStatus is PurchaseStatus.Loading
 
-    LaunchedEffect(Unit) {
-        if (purchaseStatus is PurchaseStatus.Idle) {
-            billingViewModel.initBillingManager()
-        }
-    }
-
-
     LaunchedEffect(successMessage) {
-        if (successMessage.isNotEmpty()) {
+        if (successMessage.isNotEmpty() && isPayPremiumSuccess) {
             Toast.makeText(context, successMessage, Toast.LENGTH_SHORT).show()
         }
         userViewModel.clearSuccessOrErrorMessage()
@@ -103,37 +102,41 @@ fun BuyPremiumScreen(
         }
     }
 
-    LaunchedEffect(currentUser) {
-        if (currentUser?.user?.isPremium == true) {
-            if (screen == "MolarMassPersonal")
-                navController.navigate(
-                    MolarMassPersonalScreenSerializable(true)
-                )
-            else if (screen == "PeriodicTable")
-                navController.navigate(
-                    PeriodicTableScreenSerializable(true)
-                )
-            else if (screen == "BalEquation")
-                navController.navigate(
-                    BalEquationScreenSerializable(true)
-                )
-            else {
-                errorViewModel.setError("Error en la carga de la pantalla de funcionalidad premium, sal y vuelve a entrar.")
-                navController.navigate(ErrorScreenSerializable)
-            }
-        }
-    }
-
     LaunchedEffect(purchaseStatus) {
         when (purchaseStatus) {
             is PurchaseStatus.Success -> {
-                userViewModel.updatedPremiumStatus(true)
                 billingViewModel.resetStatus()
+                userViewModel.setIsPayPremiumSuccess(true)
+                if (currentUser?.user?.isPremium == true) {
+                    if (screen == "MolarMassPersonal")
+                        navController.navigate(
+                            MolarMassPersonalScreenSerializable(true, false, "Nothing")
+                        )
+                    else if (screen == "PeriodicTable")
+                        navController.navigate(
+                            PeriodicTableScreenSerializable(true)
+                        )
+                    else if (screen == "BalEquation")
+                        navController.navigate(
+                            BalEquationScreenSerializable(true)
+                        )
+                    else {
+                        errorViewModel.setError("Error en la carga de la pantalla de funcionalidad premium, sal y vuelve a entrar.")
+                        navController.navigate(ErrorScreenSerializable)
+                    }
+                } else {
+                    errorViewModel.setError("No se pudo confirmar el pago de SeaShellCalculator Premium.")
+                    navController.navigate(ErrorScreenSerializable)
+                }
             }
+
             is PurchaseStatus.Error -> {
-                userViewModel.setError((purchaseStatus as PurchaseStatus.Error).message)
+                userViewModel.updatedPremiumStatus(false, true)
                 billingViewModel.resetStatus()
+                errorViewModel.setError((purchaseStatus as PurchaseStatus.Error).message)
+                navController.navigate(ErrorScreenSerializable)
             }
+
             else -> {}
         }
     }
@@ -176,45 +179,6 @@ fun BuyPremiumScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             LogoComponent(modifier = Modifier.size(200.dp), 1f)
-            Text(
-                "SeaShell Premium\n\n$0.99",
-                fontFamily = MontserratFontFamily,
-                fontWeight = FontWeight.Bold,
-                color = Color.White,
-                textAlign = TextAlign.Center,
-                fontSize = 36.sp
-            )
-            Text(screen)
-            Spacer(Modifier.height(75.dp))
-            Column(
-                modifier = Modifier
-                    .padding(start = 16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.Start
-            ) {
-                benefitList.forEach { item ->
-                    Row {
-                        Text(
-                            "•",
-                            modifier = Modifier.padding(end = 8.dp),
-                            fontFamily = MontserratFontFamily,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White,
-                            textAlign = TextAlign.Center,
-                            fontSize = 20.sp
-                        )
-                        Text(
-                            item, fontFamily = MontserratFontFamily,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White,
-                            textAlign = TextAlign.Center,
-                            fontSize = 20.sp
-                        )
-                        Spacer(Modifier.height(50.dp))
-                    }
-                }
-            }
-            Spacer(Modifier.height(70.dp))
             if (isLoading || isPurchaseLoading) {
                 Box(
                     modifier = Modifier
@@ -234,10 +198,62 @@ fun BuyPremiumScreen(
                     }
                 }
             } else {
+                Text(
+                    "SeaShell Premium\n\n$0.99",
+                    fontFamily = MontserratFontFamily,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    textAlign = TextAlign.Center,
+                    fontSize = 36.sp
+                )
+                Text(
+                    "\nPago unico",
+                    fontFamily = MontserratFontFamily,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Yellow,
+                    textAlign = TextAlign.Center,
+                    fontSize = 20.sp
+                )
+                Spacer(Modifier.height(75.dp))
+                Column(
+                    modifier = Modifier
+                        .padding(start = 16.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    benefitList.forEach { item ->
+                        Row {
+                            Text(
+                                "•",
+                                modifier = Modifier.padding(end = 8.dp),
+                                fontFamily = MontserratFontFamily,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White,
+                                textAlign = TextAlign.Center,
+                                fontSize = 20.sp
+                            )
+                            Text(
+                                item, fontFamily = MontserratFontFamily,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White,
+                                textAlign = TextAlign.Center,
+                                fontSize = 20.sp
+                            )
+                            Spacer(Modifier.height(50.dp))
+                        }
+                    }
+                }
+                Spacer(Modifier.height(70.dp))
                 Button(
                     onClick = {
-                        activity?.let {
-                            billingViewModel.launchPurchase(it, "premium")
+                        if (purchaseStatus is PurchaseStatus.Idle) {
+                            billingViewModel.initBillingManager()
+                            userViewModel.updatedPremiumStatus(true, false)
+                            if (!isPayPremiumFailure) {
+                                activity?.let {
+                                    billingViewModel.launchPurchase(it, "premium")
+                                }
+                            }
                         }
                     },
                     enabled = !isPurchaseLoading,

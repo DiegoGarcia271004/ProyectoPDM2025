@@ -1,15 +1,12 @@
 package com.proyectoPdm.seashellinc.presentation.ui.screens.molarMasses
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -23,7 +20,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -52,12 +48,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.proyectoPdm.seashellinc.data.model.requests.AddMolarMassData
 import com.proyectoPdm.seashellinc.data.model.requests.AddMolarMassRequest
 import com.proyectoPdm.seashellinc.presentation.navigation.CompoundScreenSerializable
+import com.proyectoPdm.seashellinc.presentation.navigation.MolalityCalculatorSerializable
+import com.proyectoPdm.seashellinc.presentation.navigation.MolarFractionCalculatorSerializable
 import com.proyectoPdm.seashellinc.presentation.navigation.MolarMassScreenSerializable
+import com.proyectoPdm.seashellinc.presentation.navigation.MolarityCalculatorSerializable
+import com.proyectoPdm.seashellinc.presentation.navigation.NormalityCalculatorSerializable
 import com.proyectoPdm.seashellinc.presentation.ui.components.AppGoBackButton
 import com.proyectoPdm.seashellinc.presentation.ui.components.AppTextField
 import com.proyectoPdm.seashellinc.presentation.ui.screens.access.UserViewModel
@@ -72,9 +71,11 @@ import com.proyectoPdm.seashellinc.presentation.ui.theme.MontserratFontFamily
 @Composable
 fun MolarMassPersonalScreen(
     navController: NavController,
-    viewModel: MolarMassPersonalViewModel = hiltViewModel(),
+    viewModel: MolarMassPersonalViewModel,
     userViewModel : UserViewModel,
-    backOfPremium : Boolean
+    backOfPremium : Boolean,
+    isCalculator : Boolean,
+    screenToBack : String
 ) {
 
     val navigationBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
@@ -157,7 +158,7 @@ fun MolarMassPersonalScreen(
                 AppGoBackButton(60.dp) {
                     if (backOfPremium) {
                         navController.navigate(
-                            MolarMassScreenSerializable(true)
+                            MolarMassScreenSerializable(true, false, "Nothing")
                         )
                         return@AppGoBackButton
                     }
@@ -168,7 +169,7 @@ fun MolarMassPersonalScreen(
             Spacer(Modifier.height(20.dp))
 
             Text(
-                "Lista personal\ncompuestos químicos",
+                if (isCalculator) "Selecciona una\nmasa molar" else "Lista personal\ncompuestos químicos",
                 color = CitrineBrown,
                 fontFamily = MontserratFontFamily,
                 fontWeight = FontWeight.Bold,
@@ -265,6 +266,35 @@ fun MolarMassPersonalScreen(
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .clickable {
+                                                if (isCalculator || screenToBack != "Nothing") {
+                                                    if (screenToBack == "Molarity") {
+                                                        viewModel.setMolarMassForMolarityCalculator(item.compound.molarMass.toString())
+                                                        navController.navigate(
+                                                            MolarityCalculatorSerializable)
+                                                    } else if (screenToBack == "Molality") {
+                                                        viewModel.setMolarMassForMolalityCalculator(item.compound.molarMass.toString())
+                                                        navController.navigate(
+                                                            MolalityCalculatorSerializable)
+                                                    } else if (screenToBack == "Normaliity") {
+                                                        viewModel.setMolarMassForNormalityCalculator(item.compound.molarMass.toString())
+                                                        navController.navigate(
+                                                            NormalityCalculatorSerializable)
+                                                    } else if (screenToBack == "MolarFractionSolute") {
+                                                        viewModel.setMolarMassForMolarFractionSoluteCalculator(
+                                                            item.compound.molarMass.toString()
+                                                        )
+                                                        navController.navigate(
+                                                            MolarFractionCalculatorSerializable
+                                                        )
+                                                    }  else if (screenToBack == "MolarFractionSolvent") {
+                                                        viewModel.setMolarMassForMolarFractionSolventCalculator(item.compound.molarMass.toString())
+                                                        navController.navigate(
+                                                            MolarFractionCalculatorSerializable)
+                                                    } else return@clickable
+
+                                                    return@clickable
+                                                }
+
                                                 navController.navigate(
                                                     CompoundScreenSerializable(item.compound.compoundName, false)
                                                 )
@@ -344,8 +374,10 @@ fun MolarMassPersonalScreen(
                             userViewModel.addMolarMass(AddMolarMassRequest(requestData))
 
                             if (!notValidData) {
+                                //todo aqui por alguna razon cuando hay un error en validacion al agregar justo despues no cierra el dialogo, aunque deberia
                                 viewModel.changeShowDialog()
                                 viewModel.loadData()
+                                userViewModel.clearSuccessOrErrorMessage()
                             }
                         }) {
                             Text(
@@ -364,7 +396,10 @@ fun MolarMassPersonalScreen(
                             fontFamily = MontserratFontFamily
                         ) },
                     dismissButton = {
-                        TextButton(onClick = viewModel::changeShowDialog) {
+                        TextButton(onClick = {
+                            viewModel.changeShowDialog()
+                            userViewModel.clearSuccessOrErrorMessage()
+                        }) {
                             Text(
                                 "Cerrar",
                                 fontFamily = MontserratFontFamily,

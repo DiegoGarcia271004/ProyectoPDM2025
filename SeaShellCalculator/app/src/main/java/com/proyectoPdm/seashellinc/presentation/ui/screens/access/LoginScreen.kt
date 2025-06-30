@@ -67,6 +67,7 @@ import com.proyectoPdm.seashellinc.presentation.ui.screens.access.UserViewModel
 import com.proyectoPdm.seashellinc.presentation.ui.theme.Background
 import com.proyectoPdm.seashellinc.presentation.ui.theme.Buff
 import com.proyectoPdm.seashellinc.presentation.ui.theme.CitrineBrown
+import com.proyectoPdm.seashellinc.presentation.ui.theme.DarkBlue
 import com.proyectoPdm.seashellinc.presentation.ui.theme.MainBlue
 import com.proyectoPdm.seashellinc.presentation.ui.theme.MontserratFontFamily
 
@@ -87,9 +88,14 @@ fun LoginScreen(
     val password by userViewModel.password.collectAsState()
     val accessSuccess by userViewModel.accessSuccess.collectAsState()
 
+    val isSentEmail by userViewModel.isSentEmail.collectAsState()
+
     LaunchedEffect(accessSuccess) {
         if (accessSuccess) {
+
             userViewModel.resetAccessSuccessState()
+            userViewModel.clearSuccessOrErrorMessage()
+
             navController.navigate(MainScreenSerializable) {
                 popUpTo(LoginScreenSerializable) {
                     inclusive = true
@@ -99,10 +105,12 @@ fun LoginScreen(
     }
 
     LaunchedEffect(successMessage) {
-        if (successMessage.isNotEmpty()) {
-            Toast.makeText(context, successMessage, Toast.LENGTH_SHORT).show()
+        if (!isSentEmail) {
+            if (successMessage.isNotEmpty()) {
+                Toast.makeText(context, successMessage, Toast.LENGTH_SHORT).show()
+            }
+            userViewModel.clearSuccessOrErrorMessage()
         }
-        userViewModel.clearSuccessOrErrorMessage()
     }
 
     Scaffold(
@@ -246,7 +254,9 @@ fun LoginScreen(
                 Text(
                     "¿Olvido la contraseña?",
                     textAlign = TextAlign.End,
-                    modifier = Modifier.width(330.dp),
+                    modifier = Modifier.width(330.dp).clickable {
+                        userViewModel.requestRecoveryPassword(email)
+                    },
                     color = MainBlue,
                     fontFamily = MontserratFontFamily
                 )
@@ -280,6 +290,15 @@ fun LoginScreen(
                 Text(
                     text = errorMessage,
                     color = Color.Red,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(start = 25.dp)
+                )
+            }
+
+            if (isSentEmail) {
+                Text(
+                    text = successMessage,
+                    color = Color.Green,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(start = 25.dp)
                 )

@@ -27,10 +27,18 @@ object LoginScreenSerializable
 object MainScreenSerializable
 
 @Serializable
-data class MolarMassPersonalScreenSerializable(val backOfPremium : Boolean = false)
+data class MolarMassPersonalScreenSerializable(
+    val backOfPremium : Boolean = false,
+    val isCalculator : Boolean,
+    val screenToBack : String,
+)
 
 @Serializable
-data class MolarMassScreenSerializable(val backOfPremium : Boolean = false)
+data class MolarMassScreenSerializable(
+    val backOfPremium : Boolean = false,
+    val isCalculator : Boolean,
+    val screenToBack : String,
+)
 
 @Serializable
 object PhysicalUnitsScreenSerializable

@@ -37,11 +37,17 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.proyectoPdm.seashellinc.data.model.Info
 import com.proyectoPdm.seashellinc.data.model.calculators.CalculationResult
+import com.proyectoPdm.seashellinc.presentation.navigation.ChemicalUnitsScreenSerializable
 import com.proyectoPdm.seashellinc.presentation.ui.components.AppButton.AppButton
 import com.proyectoPdm.seashellinc.presentation.ui.components.AppGoBackButton
 import com.proyectoPdm.seashellinc.presentation.ui.components.CalcTextField
 import com.proyectoPdm.seashellinc.presentation.ui.components.SelectionMenu
+import com.proyectoPdm.seashellinc.presentation.ui.screens.access.UserViewModel
+import com.proyectoPdm.seashellinc.presentation.ui.screens.error.ErrorViewModel
+import com.proyectoPdm.seashellinc.presentation.ui.screens.molarMasses.MolarMassPersonalViewModel
+import com.proyectoPdm.seashellinc.presentation.ui.screens.molarMasses.MolarMassViewModel
 import com.proyectoPdm.seashellinc.presentation.ui.theme.Background
 import com.proyectoPdm.seashellinc.presentation.ui.theme.CitrineBrown
 import com.proyectoPdm.seashellinc.presentation.ui.theme.DarkBlue
@@ -51,7 +57,11 @@ import com.proyectoPdm.seashellinc.presentation.ui.theme.MainBlue
 @Composable
 fun MolarFractionCalculator(
     navController: NavController,
-    viewModel: MolarFractionCalculatorViewModel = hiltViewModel()
+    viewModel: MolarFractionCalculatorViewModel = hiltViewModel(),
+    userViewModel : UserViewModel,
+    errorViewModel : ErrorViewModel,
+    molarMassViewModel : MolarMassViewModel,
+    molarMassPersonalViewModel : MolarMassPersonalViewModel
 ) {
     val navigationBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
@@ -63,6 +73,39 @@ fun MolarFractionCalculator(
     val solventMolarMass by viewModel.solventMolarMass.collectAsState()
     val molarFraction by viewModel.molarFraction.collectAsState()
     val calculationResult by viewModel.calculationResult.collectAsState()
+
+    val currentUser by userViewModel.currentUser.collectAsState()
+    val isLoggedUser by userViewModel.isLoggedUser.collectAsState()
+
+    val molarMassForSoluteCalculator by molarMassPersonalViewModel.molarMassForMolarFractionSoluteCalculator.collectAsState()
+    val molarMassForSoluteCalculatorFromMolarMassList by molarMassViewModel.molarMassForMolarFractionSoluteCalculator.collectAsState()
+
+    val molarMassForSolventCalculator by molarMassPersonalViewModel.molarMassForMolarFractionSolventCalculator.collectAsState()
+    val molarMassForSolventCalculatorFromMolarMassList by molarMassViewModel.molarMassForMolarFractionSolventCalculator.collectAsState()
+
+    LaunchedEffect(molarMassForSoluteCalculatorFromMolarMassList) {
+        if (molarMassForSoluteCalculatorFromMolarMassList.isNotEmpty()) {
+            viewModel.onSoluteMolarMassChange(molarMassForSoluteCalculatorFromMolarMassList)
+        }
+    }
+
+    LaunchedEffect(molarMassForSoluteCalculator) {
+        if (molarMassForSoluteCalculator.isNotEmpty()) {
+            viewModel.onSoluteMolarMassChange(molarMassForSoluteCalculator)
+        }
+    }
+
+    LaunchedEffect(molarMassForSolventCalculatorFromMolarMassList) {
+        if (molarMassForSolventCalculatorFromMolarMassList.isNotEmpty()) {
+            viewModel.onSolventMolarMassChange(molarMassForSolventCalculatorFromMolarMassList)
+        }
+    }
+
+    LaunchedEffect(molarMassForSolventCalculator) {
+        if (molarMassForSolventCalculator.isNotEmpty()) {
+            viewModel.onSolventMolarMassChange(molarMassForSolventCalculator)
+        }
+    }
 
     LaunchedEffect(solute, solvent, soluteMolarMass, solventMolarMass, selectedOutput) {
         when (selectedOutput) {
@@ -145,7 +188,7 @@ fun MolarFractionCalculator(
                 Spacer(Modifier.width(20.dp))
                 AppGoBackButton(60.dp) {
                     viewModel.clearAllInputs()
-                    navController.popBackStack()
+                    navController.navigate(ChemicalUnitsScreenSerializable)
                 }
             }
             Spacer(Modifier.height(30.dp))
@@ -208,7 +251,8 @@ fun MolarFractionCalculator(
                 input = solute,
                 onValueChange = { viewModel.onSoluteChange(it) },
                 label = "Soluto (g)",
-                enable = true
+                enable = true,
+                info = null
             )
             Spacer(Modifier.height(15.dp))
 
@@ -216,7 +260,14 @@ fun MolarFractionCalculator(
                 input = soluteMolarMass,
                 onValueChange = { viewModel.onSoluteMolarMassChange(it) },
                 label = "Masa molar soluto (g/mol)",
-                enable = true
+                enable = true,
+                info = Info(
+                    isLoggedUser,
+                    currentUser,
+                    navController,
+                    errorViewModel,
+                    "MolarFractionSolute"
+                )
             )
             Spacer(Modifier.height(15.dp))
 
@@ -224,7 +275,8 @@ fun MolarFractionCalculator(
                 input = solvent,
                 onValueChange = { viewModel.onSolventChange(it) },
                 label = "Solvente (g)",
-                enable = true
+                enable = true,
+                info = null
             )
             Spacer(Modifier.height(15.dp))
 
@@ -232,7 +284,14 @@ fun MolarFractionCalculator(
                 input = solventMolarMass,
                 onValueChange = { viewModel.onSolventMolarMassChange(it) },
                 label = "Masa molar solvente (g/mol)",
-                enable = true
+                enable = true,
+                info = Info(
+                    isLoggedUser,
+                    currentUser,
+                    navController,
+                    errorViewModel,
+                    "MolarFractionSolvent"
+                )
             )
             Spacer(Modifier.height(15.dp))
 
@@ -240,7 +299,8 @@ fun MolarFractionCalculator(
                 input = molarFraction,
                 onValueChange = { /* this thing cannot be modified */ },
                 label = "Fracción molar",
-                enable = false
+                enable = false,
+                info = null
             )
             Spacer(Modifier.height(20.dp))
 

@@ -198,7 +198,7 @@ class UserRepository (
                 } else {
                     val errorMessage = parseApiError(response.errorBody()?.string())
                     Result.Failure(
-                        Exception("Error al actualizar estado premium: ${errorMessage}"),
+                        Exception("Error en la compra de SeaShellCalculator Premium."),
                         errorMessage
                     )
                 }
@@ -224,7 +224,7 @@ class UserRepository (
 
                 } else {
 
-                    val errorMessage = response.errorBody()?.string()
+                    val errorMessage = parseApiError(response.errorBody()?.string())
                     Result.Failure(
                         Exception("Error al solicitar recuperación: ${errorMessage}"),
                         errorMessage

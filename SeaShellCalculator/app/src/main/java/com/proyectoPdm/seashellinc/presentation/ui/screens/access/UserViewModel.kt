@@ -36,11 +36,6 @@ class UserViewModel @Inject constructor (
     private val _isLoggedUser = MutableStateFlow<Boolean>(false)
     val isLoggedUser = _isLoggedUser.asStateFlow()
 
-    //todo este estado de lista no se esta utilizando porque para obtener las masas personales se usa la api o el room en caso de no intenet\
-    //creo que se puede eliminar
-    private val _molarMassList = MutableStateFlow<List<CompoundEntity>>(emptyList())
-    val molarMassList = _molarMassList.asStateFlow()
-
     private val _userToken = MutableStateFlow<String?>("")
     val userToken = _userToken.asStateFlow()
 
@@ -251,6 +246,7 @@ class UserViewModel @Inject constructor (
     fun addMolarMass(request : AddMolarMassRequest) {
 
         viewModelScope.launch {
+            _notValidData.value = false
             _isLoading.value = true
             _errorMessage.value = ""
             _successMessage.value = ""
@@ -287,13 +283,25 @@ class UserViewModel @Inject constructor (
         }
     }
 
-    fun updatedPremiumStatus(isPremium : Boolean) {
+    val _isPayPremiumSuccess = MutableStateFlow<Boolean>(false)
+    val isPayPremiumSuccess = _isPayPremiumSuccess.asStateFlow()
+
+    fun setIsPayPremiumSuccess(value : Boolean) {
+        _isPayPremiumSuccess.value = value
+    }
+
+    val _isPayPremiumFailure = MutableStateFlow<Boolean>(false)
+    val isPayPremiumFailure = _isPayPremiumFailure.asStateFlow()
+
+    fun updatedPremiumStatus(isPremium : Boolean, isReset : Boolean) {
         viewModelScope.launch {
-            _isLoading.value = true
+            _isPayPremiumSuccess.value = false
+            _isPayPremiumFailure.value = false
+            _isLoading.value = if (isReset) false else true
             _errorMessage.value = ""
             _successMessage.value = ""
 
-            if (connectivityHelper.isNetworkAvailable()) {
+            if (connectivityHelper.isNetworkAvailable() || isReset) {
 
                 when (val result = repository.updateIsPremium(
                     _userToken.value.toString(),
@@ -303,17 +311,26 @@ class UserViewModel @Inject constructor (
 
                     is Result.Success -> {
                         _currentUser.value = result.data
-                        _successMessage.value =
-                            result.message ?: "Compra de SeaShellCalculator Premium exitosa."
+                        if (!isReset)
+                            _successMessage.value =
+                                result.message ?: "Compra de SeaShellCalculator Premium exitosa."
                     }
 
                     is Result.Failure -> {
-                        _errorMessage.value =
-                            result.message ?: "Error en la compra de SeaShellCalculator Premium."
+                        if (!isReset) {
+                            _isPayPremiumFailure.value = true
+                            _errorMessage.value =
+                                result.message
+                                    ?: "Error en la compra de SeaShellCalculator Premium."
+                        }
                     }
                 }
             } else {
-                _errorMessage.value = "Conexion a internet requerida para ejecutar la compra de SeaShellCalculator Premium."
+                if (!isReset) {
+                    _isPayPremiumFailure.value = true
+                    _errorMessage.value =
+                        "Conexion a internet requerida para ejecutar la compra de SeaShellCalculator Premium."
+                }
             }
 
             _isLoading.value = false
@@ -356,6 +373,45 @@ class UserViewModel @Inject constructor (
                     _errorMessage.value = "La masa molar no ha podido ser eliminada dado que no se puede encontrar. Conexion a internet requerida."
                     _notValidData.value = true
                 }
+            }
+
+            _isLoading.value = false
+        }
+    }
+
+    private val _isSentEmail = MutableStateFlow<Boolean>(false)
+    val isSentEmail = _isSentEmail.asStateFlow()
+
+    fun requestRecoveryPassword(email : String) {
+        viewModelScope.launch {
+            _isSentEmail.value = false
+            _isLoading.value = true
+            _errorMessage.value = ""
+            _successMessage.value = ""
+
+            if (_email.value.isEmpty()) {
+                _errorMessage.value = "Ingresa tu correo electronico para solicitar restablecimiento."
+                _isLoading.value = false
+                return@launch
+            }
+
+            if (connectivityHelper.isNetworkAvailable()) {
+
+                when(val result = repository.requestPasswordRecovery(email)) {
+
+                    is Result.Success -> {
+                        _isSentEmail.value = true
+                        _successMessage.value = result.message ?: "Correo electronico de restablecimiento enviado."
+                    }
+
+                    is Result.Failure -> {
+                        _isSentEmail.value = false
+                        _errorMessage.value = result.message ?: "No se pudo solicitar el restablecimiento."
+                    }
+                }
+            } else {
+                _isSentEmail.value = false
+                _errorMessage.value = "Conexion a internet requerida para solicitar restablecimiento."
             }
 
             _isLoading.value = false

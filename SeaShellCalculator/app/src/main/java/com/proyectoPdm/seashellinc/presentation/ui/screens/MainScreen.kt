@@ -38,6 +38,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -68,12 +69,16 @@ import com.proyectoPdm.seashellinc.presentation.ui.theme.CitrineBrown
 import com.proyectoPdm.seashellinc.presentation.ui.theme.MainBlue
 import com.proyectoPdm.seashellinc.presentation.ui.theme.MontserratFontFamily
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.zIndex
+import com.proyectoPdm.seashellinc.billing.BillingViewModel
+import com.proyectoPdm.seashellinc.billing.PurchaseStatus
 import com.proyectoPdm.seashellinc.presentation.navigation.BuyPremiumScreenSerializable
 import com.proyectoPdm.seashellinc.presentation.navigation.ErrorScreenSerializable
 import com.proyectoPdm.seashellinc.presentation.ui.screens.error.ErrorViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -253,7 +258,7 @@ fun MainScreen(
             })
             Spacer(Modifier.height(20.dp))
             AppButton("Lista de masas\nmolares", 240.dp, onClick =  {
-                navController.navigate(MolarMassScreenSerializable(false))
+                navController.navigate(MolarMassScreenSerializable(false, false, "Nothing"))
             })
             Spacer(Modifier.height(20.dp))
             AppButton("Balanceador de\necuaciones químicas", 240.dp, isPremium = true, onClick =  {

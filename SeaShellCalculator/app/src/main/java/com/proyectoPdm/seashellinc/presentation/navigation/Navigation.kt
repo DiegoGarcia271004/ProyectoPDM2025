@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import com.proyectoPdm.seashellinc.billing.BillingViewModel
 import com.proyectoPdm.seashellinc.presentation.ui.screens.BuyPremiumScreen
 import com.proyectoPdm.seashellinc.presentation.ui.screens.chemicalEquationBalancer.EquationBalancerScreen
 import com.proyectoPdm.seashellinc.presentation.ui.screens.ChemicalUnitsScreen
@@ -30,11 +31,16 @@ import com.proyectoPdm.seashellinc.presentation.ui.screens.calculatorsPhysicalUn
 import com.proyectoPdm.seashellinc.presentation.ui.screens.calculatorsPhysicalUnits.physicalCalculatorsScreens.MassOverVolumeCalculator
 import com.proyectoPdm.seashellinc.presentation.ui.screens.calculatorsPhysicalUnits.physicalCalculatorsScreens.PartsPerMillionCalculator
 import com.proyectoPdm.seashellinc.presentation.ui.screens.calculatorsPhysicalUnits.physicalCalculatorsScreens.VolumeOverVolumeCalculator
+import com.proyectoPdm.seashellinc.presentation.ui.screens.molarMasses.MolarMassPersonalViewModel
+import com.proyectoPdm.seashellinc.presentation.ui.screens.molarMasses.MolarMassViewModel
 
 @Composable
 fun Navigation(
     userViewModel: UserViewModel,
-    errorViewModel : ErrorViewModel
+    errorViewModel : ErrorViewModel,
+    billingViewModel: BillingViewModel,
+    molarMassViewModel: MolarMassViewModel,
+    molarMassPersonalViewModel: MolarMassPersonalViewModel
 ) {
     val navController = rememberNavController()
 
@@ -58,12 +64,27 @@ fun Navigation(
 
         composable<MolarMassScreenSerializable> { backOfPremium ->
             val args = backOfPremium.toRoute<MolarMassScreenSerializable>()
-            MolarMassScreen(navController, userViewModel =  userViewModel, errorViewModel = errorViewModel, backOfPremium = args.backOfPremium)
+            MolarMassScreen(
+                navController,
+                molarMassViewModel,
+                userViewModel =  userViewModel,
+                errorViewModel = errorViewModel,
+                backOfPremium = args.backOfPremium,
+                isCalculator = args.isCalculator,
+                screenToBack = args.screenToBack,
+            )
         }
 
         composable<MolarMassPersonalScreenSerializable> { backOfPremium ->
             val args = backOfPremium.toRoute<MolarMassPersonalScreenSerializable>()
-            MolarMassPersonalScreen(navController, userViewModel =  userViewModel, backOfPremium =  args.backOfPremium)
+            MolarMassPersonalScreen(
+                navController,
+                viewModel = molarMassPersonalViewModel,
+                userViewModel =  userViewModel,
+                backOfPremium =  args.backOfPremium,
+                isCalculator = args.isCalculator,
+                screenToBack = args.screenToBack
+            )
         }
 
         composable<BalEquationScreenSerializable> { backOfPremium ->
@@ -108,7 +129,7 @@ fun Navigation(
         composable<BuyPremiumScreenSerializable> { screen ->
             val args = screen.toRoute<BuyPremiumScreenSerializable>()
             Log.d("Log en Navigation", args.screen)
-            BuyPremiumScreen(navController, userViewModel, errorViewModel, args.screen)
+            BuyPremiumScreen(navController, userViewModel, errorViewModel, args.screen, billingViewModel)
         }
 
         composable<VolumeOverVolumeCalculatorSerializable> {
@@ -116,19 +137,43 @@ fun Navigation(
         }
 
         composable<MolarityCalculatorSerializable>(){
-            MolarityCalculator(navController)
+            MolarityCalculator(
+                navController,
+                userViewModel = userViewModel,
+                errorViewModel = errorViewModel,
+                molarMassViewModel = molarMassViewModel,
+                molarMassPersonalViewModel = molarMassPersonalViewModel
+            )
         }
 
         composable<MolalityCalculatorSerializable>(){
-            MolalityCalculator(navController)
+            MolalityCalculator(
+                navController,
+                userViewModel = userViewModel,
+                errorViewModel = errorViewModel,
+                molarMassViewModel = molarMassViewModel,
+                molarMassPersonalViewModel = molarMassPersonalViewModel
+            )
         }
 
         composable<NormalityCalculatorSerializable>(){
-            NormalityCalculator(navController)
+            NormalityCalculator(
+                navController,
+                userViewModel = userViewModel,
+                errorViewModel = errorViewModel,
+                molarMassViewModel = molarMassViewModel,
+                molarMassPersonalViewModel = molarMassPersonalViewModel
+            )
         }
 
         composable<MolarFractionCalculatorSerializable>(){
-            MolarFractionCalculator(navController)
+            MolarFractionCalculator(
+                navController,
+                userViewModel = userViewModel,
+                errorViewModel = errorViewModel,
+                molarMassViewModel = molarMassViewModel,
+                molarMassPersonalViewModel = molarMassPersonalViewModel,
+            )
         }
     }
 }

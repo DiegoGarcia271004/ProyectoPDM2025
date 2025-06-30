@@ -1,5 +1,6 @@
 package com.proyectoPdm.seashellinc.presentation.ui.screens.calculatorsChemicalUnits.normality
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,11 +38,17 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.proyectoPdm.seashellinc.data.model.Info
 import com.proyectoPdm.seashellinc.data.model.calculators.CalculationResult
+import com.proyectoPdm.seashellinc.presentation.navigation.ChemicalUnitsScreenSerializable
 import com.proyectoPdm.seashellinc.presentation.ui.components.AppButton.AppButton
 import com.proyectoPdm.seashellinc.presentation.ui.components.AppGoBackButton
 import com.proyectoPdm.seashellinc.presentation.ui.components.CalcTextField
 import com.proyectoPdm.seashellinc.presentation.ui.components.SelectionMenu
+import com.proyectoPdm.seashellinc.presentation.ui.screens.access.UserViewModel
+import com.proyectoPdm.seashellinc.presentation.ui.screens.error.ErrorViewModel
+import com.proyectoPdm.seashellinc.presentation.ui.screens.molarMasses.MolarMassPersonalViewModel
+import com.proyectoPdm.seashellinc.presentation.ui.screens.molarMasses.MolarMassViewModel
 import com.proyectoPdm.seashellinc.presentation.ui.theme.Background
 import com.proyectoPdm.seashellinc.presentation.ui.theme.CitrineBrown
 import com.proyectoPdm.seashellinc.presentation.ui.theme.DarkBlue
@@ -51,7 +58,11 @@ import com.proyectoPdm.seashellinc.presentation.ui.theme.MainBlue
 @Composable
 fun NormalityCalculator(
     navController: NavController,
-    viewModel: NormalityCalculatorViewModel = hiltViewModel()
+    viewModel: NormalityCalculatorViewModel = hiltViewModel(),
+    userViewModel: UserViewModel,
+    errorViewModel : ErrorViewModel,
+    molarMassPersonalViewModel: MolarMassPersonalViewModel,
+    molarMassViewModel: MolarMassViewModel
 ) {
     val navigationBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
@@ -63,6 +74,33 @@ fun NormalityCalculator(
     val normality by viewModel.normality.collectAsState()
     val valencyUnits by viewModel.valencyUnits.collectAsState()
     val calculationResult by viewModel.calculationResult.collectAsState()
+
+    val currentUser by userViewModel.currentUser.collectAsState()
+    val isLoggedUser by userViewModel.isLoggedUser.collectAsState()
+
+    val molarMassForCalculator by molarMassPersonalViewModel.molarMassForNormalityCalculator.collectAsState()
+    val molarMassForCalculatorFromMolarMassList by molarMassViewModel.molarMassForNormalityCalculator.collectAsState()
+
+    val info = Info(
+        isLoggedUser,
+        currentUser,
+        navController,
+        errorViewModel,
+        "Normality"
+    )
+
+    LaunchedEffect(molarMassForCalculatorFromMolarMassList) {
+        Log.d("NormalityLaunch", molarMassForCalculator)
+        if (molarMassForCalculatorFromMolarMassList.isNotEmpty()) {
+            viewModel.onSoluteMolarMassChange(molarMassForCalculatorFromMolarMassList)
+        }
+    }
+
+    LaunchedEffect(molarMassForCalculator) {
+        if (molarMassForCalculator.isNotEmpty()) {
+            viewModel.onSoluteMolarMassChange(molarMassForCalculator)
+        }
+    }
 
     LaunchedEffect(solute, solution, soluteMolarMass, valencyUnits, normality, selectedOutput) {
         when (selectedOutput) {
@@ -144,7 +182,7 @@ fun NormalityCalculator(
                 Spacer(Modifier.width(20.dp))
                 AppGoBackButton(60.dp){
                     viewModel.clearAllInputs()
-                    navController.popBackStack()
+                    navController.navigate(ChemicalUnitsScreenSerializable)
                 }
             }
             Spacer(Modifier.height(30.dp))
@@ -200,7 +238,8 @@ fun NormalityCalculator(
                 } else solute,
                 onValueChange = { viewModel.onSoluteChange(it) },
                 label = "Soluto (g)",
-                enable = selectedOutput != "Soluto"
+                enable = selectedOutput != "Soluto",
+                info = null
             )
             Spacer(Modifier.height(15.dp))
 
@@ -208,15 +247,18 @@ fun NormalityCalculator(
                 input = soluteMolarMass,
                 onValueChange = { viewModel.onSoluteMolarMassChange(it) },
                 label = "Masa molar (g/mol)",
-                enable = true
+                enable = true,
+                info = info
             )
+
             Spacer(Modifier.height(15.dp))
 
             CalcTextField(
                 input = valencyUnits,
                 onValueChange = { viewModel.onValencyUnitsChange(it) },
                 label = "Unidades de valencia",
-                enable = true
+                enable = true,
+                info = null
             )
             Spacer(Modifier.height(15.dp))
 
@@ -230,7 +272,8 @@ fun NormalityCalculator(
                 }    else solution,
                 onValueChange = { viewModel.onSolutionChange(it) },
                 label = "Solución (L)",
-                enable = selectedOutput != "Solución"
+                enable = selectedOutput != "Solución",
+                info = null
             )
             Spacer(Modifier.height(15.dp))
 
@@ -244,7 +287,8 @@ fun NormalityCalculator(
                 }    else normality,
                 onValueChange = { viewModel.onNormalityChange(it) },
                 label = "Normalidad (Eq/L)",
-                enable = selectedOutput != "Normalidad"
+                enable = selectedOutput != "Normalidad",
+                info = null
             )
             Spacer(Modifier.height(20.dp))
 

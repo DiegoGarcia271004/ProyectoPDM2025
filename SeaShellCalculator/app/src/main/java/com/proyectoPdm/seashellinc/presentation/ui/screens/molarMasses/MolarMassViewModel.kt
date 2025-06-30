@@ -1,10 +1,10 @@
 package com.proyectoPdm.seashellinc.presentation.ui.screens.molarMasses
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.proyectoPdm.seashellinc.data.database.entity.CompoundEntity
 import com.proyectoPdm.seashellinc.data.local.compounds
 import com.proyectoPdm.seashellinc.data.model.compound.Compound
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -39,6 +39,42 @@ class MolarMassViewModel @Inject constructor() : ViewModel() {
             ) == true
         }
     }.stateIn(viewModelScope, SharingStarted.Companion.Lazily, emptyList())
+
+    private val _molarMassForMolarityCalculator = MutableStateFlow<String>("")
+    val molarMassForMolarityCalculator = _molarMassForMolarityCalculator.asStateFlow()
+
+    fun setMolarMassForMolarityCalculator(value : String) {
+        _molarMassForMolarityCalculator.value = value
+    }
+
+    private val _molarMassForMolalityCalculator = MutableStateFlow<String>("")
+    val molarMassForMolalityCalculator = _molarMassForMolalityCalculator.asStateFlow()
+
+    fun setMolarMassForMolalityCalculator(value : String) {
+        _molarMassForMolalityCalculator.value = value
+    }
+
+    private val _molarMassForMolarFractionSoluteCalculator = MutableStateFlow<String>("")
+    val molarMassForMolarFractionSoluteCalculator = _molarMassForMolarFractionSoluteCalculator.asStateFlow()
+
+    fun setMolarMassForMolarFractionSoluteCalculator(value : String) {
+        _molarMassForMolarFractionSoluteCalculator.value = value
+    }
+
+    private val _molarMassForMolarFractionSolventCalculator = MutableStateFlow<String>("")
+    val molarMassForMolarFractionSolventCalculator = _molarMassForMolarFractionSolventCalculator.asStateFlow()
+
+    fun setMolarMassForMolarFractionSolventCalculator(value : String) {
+        _molarMassForMolarFractionSolventCalculator.value = value
+    }
+
+    private val _molarMassForNormalityCalculator = MutableStateFlow<String>("")
+    val molarMassForNormalityCalculator = _molarMassForNormalityCalculator.asStateFlow()
+
+    fun setMolarMassForNormalityCalculator(value : String) {
+        Log.d("MolarMassViewModel", value)
+        _molarMassForNormalityCalculator.value = value
+    }
 
     init {
         viewModelScope.launch {

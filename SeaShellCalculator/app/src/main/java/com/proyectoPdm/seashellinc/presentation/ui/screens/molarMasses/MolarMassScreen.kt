@@ -1,5 +1,6 @@
 package com.proyectoPdm.seashellinc.presentation.ui.screens.molarMasses
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +28,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,23 +48,34 @@ import com.proyectoPdm.seashellinc.presentation.ui.theme.CitrineBrown
 import com.proyectoPdm.seashellinc.presentation.ui.theme.MainBlue
 import com.proyectoPdm.seashellinc.presentation.ui.theme.MontserratFontFamily
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import com.proyectoPdm.seashellinc.billing.BillingViewModel
+import com.proyectoPdm.seashellinc.billing.PurchaseStatus
 import com.proyectoPdm.seashellinc.presentation.navigation.BalEquationScreenSerializable
 import com.proyectoPdm.seashellinc.presentation.navigation.BuyPremiumScreenSerializable
 import com.proyectoPdm.seashellinc.presentation.navigation.ErrorScreenSerializable
 import com.proyectoPdm.seashellinc.presentation.navigation.MainScreenSerializable
+import com.proyectoPdm.seashellinc.presentation.navigation.MolalityCalculatorSerializable
+import com.proyectoPdm.seashellinc.presentation.navigation.MolarFractionCalculatorSerializable
 import com.proyectoPdm.seashellinc.presentation.navigation.MolarMassPersonalScreenSerializable
+import com.proyectoPdm.seashellinc.presentation.navigation.MolarityCalculatorSerializable
+import com.proyectoPdm.seashellinc.presentation.navigation.NormalityCalculatorSerializable
 import com.proyectoPdm.seashellinc.presentation.navigation.PeriodicTableScreenSerializable
 import com.proyectoPdm.seashellinc.presentation.ui.screens.access.UserViewModel
 import com.proyectoPdm.seashellinc.presentation.ui.components.AppButton.AppButton
+import com.proyectoPdm.seashellinc.presentation.ui.screens.calculatorsChemicalUnits.molarFraction.MolarFractionCalculatorViewModel
 import com.proyectoPdm.seashellinc.presentation.ui.screens.error.ErrorViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun MolarMassScreen(
     navController: NavController,
-    viewModel : MolarMassViewModel = hiltViewModel(),
+    viewModel : MolarMassViewModel,
     userViewModel : UserViewModel,
     errorViewModel : ErrorViewModel,
-    backOfPremium : Boolean
+    backOfPremium : Boolean,
+    isCalculator : Boolean,
+    screenToBack : String,
 ) {
 
     val navigationBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
@@ -128,7 +141,7 @@ fun MolarMassScreen(
                 Spacer(Modifier.height(10.dp))
 
                 Text(
-                    "Lista de \ncompuestos químicos",
+                    if (isCalculator) "Selecciona una\nmasa molar" else "Lista de \ncompuestos químicos",
                     color = CitrineBrown,
                     fontFamily = MontserratFontFamily,
                     fontWeight = FontWeight.Bold,
@@ -206,6 +219,38 @@ fun MolarMassScreen(
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .clickable {
+                                                if (isCalculator || screenToBack != "Nothing") {
+
+                                                    if (screenToBack == "Molarity") {
+                                                        viewModel.setMolarMassForMolarityCalculator(item.molarMass.toString())
+                                                        navController.navigate(
+                                                            MolarityCalculatorSerializable)
+                                                    } else if (screenToBack == "Molality") {
+                                                        viewModel.setMolarMassForMolalityCalculator(item.molarMass.toString())
+                                                        navController.navigate(
+                                                            MolalityCalculatorSerializable)
+                                                    } else if (screenToBack == "Normality") {
+                                                        viewModel.setMolarMassForNormalityCalculator(item.molarMass.toString())
+                                                        Log.d("MolarMassScreenName", item.compoundName)
+                                                        Log.d("MolarMassScreen", viewModel.molarMassForNormalityCalculator.value)
+                                                        navController.navigate(
+                                                            NormalityCalculatorSerializable)
+                                                    } else if (screenToBack == "MolarFractionSolute") {
+                                                        viewModel.setMolarMassForMolarFractionSoluteCalculator(
+                                                            item.molarMass.toString()
+                                                        )
+                                                        navController.navigate(
+                                                            MolarFractionCalculatorSerializable
+                                                        )
+                                                    }  else if (screenToBack == "MolarFractionSolvent") {
+                                                        viewModel.setMolarMassForMolarFractionSolventCalculator(item.molarMass.toString())
+                                                        navController.navigate(
+                                                            MolarFractionCalculatorSerializable)
+                                                    } else return@clickable
+
+                                                    return@clickable
+                                                }
+
                                                 navController.navigate(
                                                     CompoundScreenSerializable(item.compoundName)
                                                 )
@@ -226,22 +271,24 @@ fun MolarMassScreen(
                     }
                 }
                 Spacer(Modifier.height(30.dp))
-                AppButton("Ir a lista personal", 190.dp, onClick =  {
-                    if (isLoggedUser) {
-                        if (currentUser?.user?.isPremium == true) {
-                            navController.navigate(
-                                MolarMassPersonalScreenSerializable(false)
-                            )
+                if (!isCalculator) {
+                    AppButton("Ir a lista personal", 190.dp, onClick = {
+                        if (isLoggedUser) {
+                            if (currentUser?.user?.isPremium == true) {
+                                navController.navigate(
+                                    MolarMassPersonalScreenSerializable(false, false, "Nothing")
+                                )
+                            } else {
+                                navController.navigate(
+                                    BuyPremiumScreenSerializable("MolarMassPersonal")
+                                )
+                            }
                         } else {
-                            navController.navigate(
-                                BuyPremiumScreenSerializable("MolarMassPersonal")
-                            )
+                            errorViewModel.setError("Necesitas estar autenticado/a para usar las funciones Premium. Por favor, inicia sesion en tu cuenta de SeaShellCalculator o registrate.")
+                            navController.navigate(ErrorScreenSerializable)
                         }
-                    } else {
-                        errorViewModel.setError("Necesitas estar autenticado/a para usar las funciones Premium. Por favor, inicia sesion en tu cuenta de SeaShellCalculator o registrate.")
-                        navController.navigate(ErrorScreenSerializable)
-                    }
-                })
+                    })
+                }
             }
         }
     }
