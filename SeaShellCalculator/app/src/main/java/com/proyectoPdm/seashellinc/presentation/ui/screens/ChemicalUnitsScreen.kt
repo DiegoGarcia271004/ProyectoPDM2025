@@ -148,7 +148,7 @@ fun ChemicalUnitsScreen(navController: NavController) {
             )
             Spacer(Modifier.height(70.dp))
 
-            AppGoBackButton(112.dp, {
+            AppGoBackButton(80.dp, {
                 navController.navigate(MainScreenSerializable)
             })
         }

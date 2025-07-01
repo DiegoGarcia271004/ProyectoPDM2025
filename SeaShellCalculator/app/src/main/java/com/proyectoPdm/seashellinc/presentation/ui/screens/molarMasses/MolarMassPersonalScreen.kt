@@ -134,17 +134,19 @@ fun MolarMassPersonalScreen(
             }
         },
         floatingActionButton = {
-            IconButton(
-                onClick = viewModel::changeShowDialog,
-                modifier = Modifier.size(50.dp).shadow(15.dp, RoundedCornerShape(50.dp)),
-                colors = IconButtonDefaults.iconButtonColors(CitrineBrown)
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Add,
-                    contentDescription = "Ayuda",
-                    tint = Buff,
-                    modifier = Modifier.size(30.dp)
-                )
+            if (!isCalculator) {
+                IconButton(
+                    onClick = viewModel::changeShowDialog,
+                    modifier = Modifier.size(50.dp).shadow(15.dp, RoundedCornerShape(50.dp)),
+                    colors = IconButtonDefaults.iconButtonColors(CitrineBrown)
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Add,
+                        contentDescription = "Ayuda",
+                        tint = Buff,
+                        modifier = Modifier.size(30.dp)
+                    )
+                }
             }
         }
     ) { paddingValues ->
@@ -176,7 +178,7 @@ fun MolarMassPersonalScreen(
                 fontWeight = FontWeight.Bold,
                 fontSize = 25.sp,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(start = 60.dp)
+                modifier = Modifier.padding(start = if (isCalculator) 120.dp else 60.dp)
             )
 
             Column(
@@ -318,21 +320,23 @@ fun MolarMassPersonalScreen(
                                                 fontSize = 15.sp,
                                                 fontWeight = FontWeight.Bold
                                             )
-                                            TextButton(onClick = {
+                                            if (!isCalculator) {
+                                                TextButton(onClick = {
 
-                                                userViewModel.setNotValidData(false)
-                                                userViewModel.deleteMolarMassFromList(item.id)
+                                                    userViewModel.setNotValidData(false)
+                                                    userViewModel.deleteMolarMassFromList(item.id)
 
-                                                if (!notValidData) {
-                                                    viewModel.loadData()
+                                                    if (!notValidData) {
+                                                        viewModel.loadData()
+                                                    }
+                                                }) {
+                                                    Text(
+                                                        "Borrar",
+                                                        fontFamily = MontserratFontFamily,
+                                                        fontWeight = FontWeight.Bold,
+                                                        color = DarkBlue
+                                                    )
                                                 }
-                                            }) {
-                                                Text(
-                                                    "Borrar",
-                                                    fontFamily = MontserratFontFamily,
-                                                    fontWeight = FontWeight.Bold,
-                                                    color = DarkBlue
-                                                )
                                             }
                                         }
                                     }

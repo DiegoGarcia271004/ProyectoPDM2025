@@ -1,6 +1,7 @@
 package com.proyectoPdm.seashellinc.presentation.ui.screens.molarMasses
 
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.proyectoPdm.seashellinc.data.database.SeaShellChemistryDatabase
@@ -102,6 +103,7 @@ class MolarMassPersonalViewModel @Inject constructor(
                 if (connectivityHelper.isNetworkAvailable()){
                     val user = userDao.getLoggedUser()
 
+                    Log.d("MolarMassPersonalViewModel", user.token)
                     when(val result = userRepository.getMolarMassList(user.token, user.id)){
                         is Result.Success -> {
                             _compoundList.value = result.data

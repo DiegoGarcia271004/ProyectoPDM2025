@@ -1,5 +1,6 @@
 package com.proyectoPdm.seashellinc.presentation.ui.components
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -26,6 +27,7 @@ import com.proyectoPdm.seashellinc.presentation.ui.components.AppButton.AppButto
 import com.proyectoPdm.seashellinc.presentation.ui.screens.error.ErrorViewModel
 import com.proyectoPdm.seashellinc.presentation.ui.theme.Buff
 import com.proyectoPdm.seashellinc.presentation.ui.theme.MainBlue
+import com.proyectoPdm.seashellinc.presentation.ui.theme.Marigold
 import com.proyectoPdm.seashellinc.presentation.ui.theme.MontserratFontFamily
 
 @Composable
@@ -42,7 +44,7 @@ fun ListsOptions(
 
         button(onClick =  {
             navController.navigate(MolarMassScreenSerializable(false, true, screen))
-        }, "Masas molares")
+        }, "Masas molares", false)
 
         Spacer(modifier = Modifier.width(10.dp))
 
@@ -61,15 +63,25 @@ fun ListsOptions(
                 errorViewModel.setError("Necesitas estar autenticado/a para usar las funciones Premium. Por favor, inicia sesion en tu cuenta de SeaShellCalculator o registrate.")
                 navController.navigate(ErrorScreenSerializable)
             }
-        }, "Lista personal")
+        }, "Lista personal", true)
     }
 }
 
 @Composable
 fun button(
     onClick : () -> Unit,
-    text : String
+    text : String,
+    isPremium : Boolean
 ) {
+
+    val modifier = if (isPremium) {
+        Modifier
+            .width(140.dp).height(45.dp)
+            .border(3.7.dp, Marigold, RoundedCornerShape(5.dp))
+    } else {
+        Modifier.width(140.dp).height(45.dp)
+    }
+
     Button(
         onClick = {
             onClick()
@@ -77,7 +89,7 @@ fun button(
         colors = ButtonDefaults.buttonColors(MainBlue),
         shape = RoundedCornerShape(5.dp),
         enabled = true,
-        modifier = Modifier.width(140.dp).height(45.dp)
+        modifier = modifier
     ) {
         Text(
             text,

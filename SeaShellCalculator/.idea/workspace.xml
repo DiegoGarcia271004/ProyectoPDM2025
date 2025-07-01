@@ -11,19 +11,9 @@
   <component name="ChangeListManager">
     <list default="true" id="40054d47-976a-4570-a125-6cab842ec29b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/data/remote/ApiService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/data/remote/ApiService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/data/repository/UserRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/data/repository/UserRepository.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/navigation/Navigation.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/navigation/Navigation.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/components/CalcTextField.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/components/CalcTextField.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/BuyPremiumScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/BuyPremiumScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/MainScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/MainScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/access/LoginScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/access/LoginScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/access/UserViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/access/UserViewModel.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/calculatorsChemicalUnits/molality/MolalityCalculator.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/calculatorsChemicalUnits/molality/MolalityCalculator.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/calculatorsChemicalUnits/molarFraction/MolarFractionCalculator.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/calculatorsChemicalUnits/molarFraction/MolarFractionCalculator.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/calculatorsChemicalUnits/molarity/MolarityCalculator.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/calculatorsChemicalUnits/molarity/MolarityCalculator.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/calculatorsChemicalUnits/normality/NormalityCalculator.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/calculatorsChemicalUnits/normality/NormalityCalculator.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/components/ElementDialog.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/components/ElementDialog.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/molarMasses/MolarMassPersonalScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/molarMasses/MolarMassPersonalScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/molarMasses/MolarMassPersonalViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/molarMasses/MolarMassPersonalViewModel.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/molarMasses/MolarMassScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/proyectoPdm/seashellinc/presentation/ui/screens/molarMasses/MolarMassScreen.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -34,7 +24,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=LocalEmulator, isTemplate=false, identifier=path=C:\Users\user\.android\avd\Medium_Phone.avd)]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=PhysicalDevice, isTemplate=false, identifier=serial=R58T11HK39V)]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />

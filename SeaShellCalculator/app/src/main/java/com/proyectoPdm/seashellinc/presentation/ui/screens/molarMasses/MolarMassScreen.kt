@@ -227,7 +227,7 @@ fun MolarMassScreen(
                                                         navController.navigate(
                                                             MolarityCalculatorSerializable)
                                                     } else if (screenToBack == "Molality") {
-                                                        molarMassViewModel.setMolarMassForNormalityCalculator("")
+                                                        molarMassViewModel.setMolarMassForMolalityCalculator("")
                                                         viewModel.setMolarMassForMolalityCalculator(item.molarMass.toString())
                                                         navController.navigate(
                                                             MolalityCalculatorSerializable)
@@ -275,7 +275,7 @@ fun MolarMassScreen(
                 }
                 Spacer(Modifier.height(30.dp))
                 if (!isCalculator) {
-                    AppButton("Ir a lista personal", 190.dp, onClick = {
+                    AppButton("Ir a lista personal", 190.dp, isPremium = true, onClick = {
                         if (isLoggedUser) {
                             if (currentUser?.user?.isPremium == true) {
                                 navController.navigate(

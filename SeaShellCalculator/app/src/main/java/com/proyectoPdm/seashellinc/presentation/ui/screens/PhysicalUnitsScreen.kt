@@ -141,7 +141,7 @@ fun PhysicalUnitsScreen(navController: NavController) {
                 navController.navigate(PartsPerMillionCalculatorSerializable)
             })
             Spacer(Modifier.height(70.dp))
-            AppGoBackButton(112.dp, {
+            AppGoBackButton(80.dp, {
                 navController.popBackStack()
             })
 

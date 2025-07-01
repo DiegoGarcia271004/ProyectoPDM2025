@@ -3,11 +3,15 @@ package com.proyectoPdm.seashellinc.presentation.ui.components
 
 import android.app.AlertDialog
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,92 +36,77 @@ import com.proyectoPdm.seashellinc.presentation.ui.theme.MainBlue
 
 @Composable
 fun ElementDialog(element: Element?, changeShowDialog: (Element?) -> Unit) {
-    AlertDialog(
-        containerColor = Background,
-        onDismissRequest = { changeShowDialog(element) },
-        confirmButton = {
-            TextButton(onClick = { changeShowDialog(element) }) {
-                Text(
-                    "Cerrar",
-                    fontFamily = MontserratFontFamily,
-                    fontWeight = FontWeight.Bold,
-                    color = DarkBlue
-                )
-            }
-        },
-        title = {
-            Text(
-                text = element?.name.toString(),
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
-                fontFamily = MontserratFontFamily,
-                color = MainBlue
-            )
-        },
-        text = {
+
+    val borderColor = getCategoryColor(element?.category)
+
+    Dialog(onDismissRequest = { changeShowDialog(null) }) {
+        Box(
+            modifier = Modifier
+                .border(width = 4.dp, color = borderColor, shape = RoundedCornerShape(12.dp))
+                .background(color = Background, shape = RoundedCornerShape(12.dp))
+                .padding(20.dp)
+        ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = element?.name.toString(),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 22.sp,
+                    fontFamily = MontserratFontFamily,
+                    color = MainBlue
+                )
+                Spacer(modifier = Modifier.height(10.dp))
                 Row {
-                    Text(
-                        "Símbolo: ",
-                        fontFamily = MontserratFontFamily,
-                        fontSize = 20.sp,
-                        color = Color.Black
-                    )
+                    Text("Símbolo: ", fontSize = 20.sp, fontFamily = MontserratFontFamily)
                     Text(
                         element?.symbol.toString(),
-                        fontFamily = MontserratFontFamily,
-                        fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        color = CitrineBrown
+                        fontSize = 20.sp,
+                        color = CitrineBrown,
+                        fontFamily = MontserratFontFamily
                     )
                 }
+
+                Spacer(modifier = Modifier.height(5.dp))
                 Row {
-                    Text(
-                        "Categoría: ",
-                        fontFamily = MontserratFontFamily,
-                        fontSize = 20.sp,
-                        color = Color.Black
-                    )
+                    Text("Categoría: ", fontSize = 20.sp, fontFamily = MontserratFontFamily)
                     Text(
                         element?.category?.getSpanishName().toString(),
-                        fontFamily = MontserratFontFamily,
-                        fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        color = CitrineBrown
+                        fontSize = 20.sp,
+                        color = CitrineBrown,
+                        fontFamily = MontserratFontFamily
                     )
                 }
+
+                Spacer(modifier = Modifier.height(5.dp))
                 Row {
-                    Text(
-                        "Número Atómico: ",
-                        fontFamily = MontserratFontFamily,
-                        fontSize = 20.sp,
-                        color = Color.Black
-                    )
+                    Text("Número Atómico: ", fontSize = 20.sp, fontFamily = MontserratFontFamily)
                     Text(
                         element?.atomicNumber.toString(),
-                        fontFamily = MontserratFontFamily,
-                        fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        color = CitrineBrown
-                    )
-
-                }
-                Row {
-                    Text(
-                        "Masa Atómica: ",
-                        fontFamily = MontserratFontFamily,
                         fontSize = 20.sp,
-                        color = Color.Black
+                        color = CitrineBrown,
+                        fontFamily = MontserratFontFamily
                     )
+                }
+
+                Spacer(modifier = Modifier.height(5.dp))
+                Row {
+                    Text("Masa Atómica: ", fontSize = 20.sp, fontFamily = MontserratFontFamily)
                     Text(
                         element?.atomicMass.toString(),
-                        fontFamily = MontserratFontFamily,
-                        fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        color = CitrineBrown
+                        fontSize = 20.sp,
+                        color = CitrineBrown,
+                        fontFamily = MontserratFontFamily
                     )
+                }
+
+                Spacer(modifier = Modifier.height(15.dp))
+                TextButton(onClick = { changeShowDialog(null) }) {
+                    Text("Cerrar", fontFamily = MontserratFontFamily, fontWeight = FontWeight.Bold, color = MainBlue)
                 }
             }
         }
-    )
+    }
 }
